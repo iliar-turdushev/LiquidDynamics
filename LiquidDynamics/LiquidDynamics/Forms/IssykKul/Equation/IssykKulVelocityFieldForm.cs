@@ -31,8 +31,6 @@ namespace LiquidDynamics.Forms.IssykKul.Equation
 
       private void buttonResetClick(object sender, EventArgs e)
       {
-         _timer.Enabled = false;
-
          try
          {
             Solution solution = _dataProvider.Reset(readN(), readM(), readTau(), readTheta(),
@@ -48,11 +46,6 @@ namespace LiquidDynamics.Forms.IssykKul.Equation
       }
 
       private void buttonStepClick(object sender, EventArgs e)
-      {
-         _timer.Enabled = true;
-      }
-
-      private void timerTick(object sender, EventArgs e)
       {
          Solution solution = _dataProvider.Step();
          drawVelocityField(solution);

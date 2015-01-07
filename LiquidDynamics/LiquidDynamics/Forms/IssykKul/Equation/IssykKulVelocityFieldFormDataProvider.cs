@@ -43,7 +43,7 @@ namespace LiquidDynamics.Forms.IssykKul.Equation
 
          _problemParameters = getParameters(parameters, xMax, yMax);
 
-         var scheme = new IntegroInterpolatingSchemeImproved(_problemParameters, _grid, tau);
+         var scheme = new Scheme(_problemParameters, _grid, tau);
 
          _x = Mathematics.Numerical.Grid.Create(0.0, xMax / StretchCoefficients.L0, n + 1);
          _y = Mathematics.Numerical.Grid.Create(0.0, yMax / StretchCoefficients.L0, m + 1);
@@ -57,7 +57,7 @@ namespace LiquidDynamics.Forms.IssykKul.Equation
                                                         new InitialCondition(u, v),
                                                         new IterationProcessParameters(sigma, delta, k, u),
                                                         new IterationProcessParameters(sigma, delta, k, v),
-                                                        surface, ZeidelMethodType.Improved);
+                                                        surface);
          IterationMethodResult result = _solver.Begin();
 
          return new Solution(getVelocityField(result, _grid, _x, _y), _bounds);

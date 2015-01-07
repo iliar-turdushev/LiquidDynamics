@@ -26,29 +26,16 @@ namespace BarotropicComponentProblem
       }
 
       public static IterationProcess NewBarotropicComponentProblemSolver(
-         IProblem problem,
+         IBarotropicComponentProblem problem,
          IterationProcessParameters parametersU,
          IterationProcessParameters parametersV,
-         Grid x, Grid y, int[,] surface,
-         ZeidelMethodType zeidelMethodType)
+         Grid x, Grid y, int[,] surface)
       {
          checkParams(problem, parametersU, parametersV, x, y);
 
-         ZeidelMethodBase methodU;
-         ZeidelMethodBase methodV;
-
-         if (zeidelMethodType == ZeidelMethodType.Simple)
-         {
-            methodU = new StommelModelZeidelMethodU((IStommelModelProblem) problem, x, y);
-            methodV = new StommelModelZeidelMethodV((IStommelModelProblem) problem, x, y);
-         }
-         else
-         {
-            methodU = new BarotropicComponentZeidelMethodU((IBarotropicComponentProblem) problem, x, y, surface);
-            methodV = new BarotropicComponentZeidelMethodV((IBarotropicComponentProblem) problem, x, y, surface);
-         }
-
-         return new IterationProcess(parametersU, parametersV, methodU, methodV);
+         return new IterationProcess(parametersU, parametersV,
+                                     new BarotropicComponentZeidelMethodU2(problem, x, y, surface),
+                                     new BarotropicComponentZeidelMethodV2(problem, x, y, surface));
       }
 
       public IterationMethodResult Solve()

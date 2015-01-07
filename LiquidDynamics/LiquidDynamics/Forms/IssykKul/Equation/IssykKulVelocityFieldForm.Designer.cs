@@ -32,12 +32,10 @@ namespace LiquidDynamics.Forms.IssykKul.Equation
       /// </summary>
       private void InitializeComponent()
       {
-         this.components = new System.ComponentModel.Container();
          this._graphControl = new ControlLibrary.Controls.GraphControl();
          this._paletteControl = new ControlLibrary.Controls.PaletteControl();
          this._toolStrip = new System.Windows.Forms.ToolStrip();
          this._buttonReset = new System.Windows.Forms.ToolStripButton();
-         this._buttonStep = new System.Windows.Forms.ToolStripButton();
          this._labelN = new System.Windows.Forms.ToolStripLabel();
          this._textBoxN = new System.Windows.Forms.ToolStripTextBox();
          this._labelM = new System.Windows.Forms.ToolStripLabel();
@@ -52,7 +50,7 @@ namespace LiquidDynamics.Forms.IssykKul.Equation
          this._textBoxDelta = new System.Windows.Forms.ToolStripTextBox();
          this._labelK = new System.Windows.Forms.ToolStripLabel();
          this._textBoxK = new System.Windows.Forms.ToolStripTextBox();
-         this._timer = new System.Windows.Forms.Timer(this.components);
+         this._buttonStep = new System.Windows.Forms.ToolStripButton();
          this._toolStrip.SuspendLayout();
          this.SuspendLayout();
          // 
@@ -111,15 +109,6 @@ namespace LiquidDynamics.Forms.IssykKul.Equation
          this._buttonReset.Name = "_buttonReset";
          this._buttonReset.Size = new System.Drawing.Size(23, 22);
          this._buttonReset.Click += new System.EventHandler(this.buttonResetClick);
-         // 
-         // _buttonStep
-         // 
-         this._buttonStep.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-         this._buttonStep.Image = global::LiquidDynamics.Properties.Resources.StepForward;
-         this._buttonStep.ImageTransparentColor = System.Drawing.Color.Magenta;
-         this._buttonStep.Name = "_buttonStep";
-         this._buttonStep.Size = new System.Drawing.Size(23, 22);
-         this._buttonStep.Click += new System.EventHandler(this.buttonStepClick);
          // 
          // _labelN
          // 
@@ -212,9 +201,14 @@ namespace LiquidDynamics.Forms.IssykKul.Equation
          this._textBoxK.Size = new System.Drawing.Size(50, 25);
          this._textBoxK.Text = "1000";
          // 
-         // _timer
+         // _buttonStep
          // 
-         this._timer.Tick += new System.EventHandler(this.timerTick);
+         this._buttonStep.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+         this._buttonStep.Image = global::LiquidDynamics.Properties.Resources.StepForward;
+         this._buttonStep.ImageTransparentColor = System.Drawing.Color.Magenta;
+         this._buttonStep.Name = "_buttonStep";
+         this._buttonStep.Size = new System.Drawing.Size(23, 22);
+         this._buttonStep.Click += new System.EventHandler(this.buttonStepClick);
          // 
          // IssykKulVelocityFieldForm
          // 
@@ -255,6 +249,5 @@ namespace LiquidDynamics.Forms.IssykKul.Equation
       private System.Windows.Forms.ToolStripLabel _labelK;
       private System.Windows.Forms.ToolStripTextBox _textBoxK;
       private System.Windows.Forms.ToolStripButton _buttonStep;
-      private System.Windows.Forms.Timer _timer;
    }
 }

@@ -19,6 +19,7 @@ namespace BarotropicComponentProblem.TestProblem
       private readonly double _epsilon;
       private readonly double _a;
       private double[,] _f;
+      private double[,] _g;
 
       private InitialCondition _initialCondition;
 
@@ -44,7 +45,7 @@ namespace BarotropicComponentProblem.TestProblem
          Check.NotNull(initialCondition, "initialCondition");
 
          _initialCondition = initialCondition;
-         _f = initializeF(initialCondition);
+         initializeRightPart(initialCondition);
       }
 
       public SquareGridFunction TransformU(SquareGridFunction u)
@@ -84,7 +85,7 @@ namespace BarotropicComponentProblem.TestProblem
 
       public double G(int i, int j)
       {
-         throw new NotSupportedException();
+         return _g[i, j];
       }
 
       private double getEpsilon()
@@ -117,7 +118,7 @@ namespace BarotropicComponentProblem.TestProblem
          return f2 * r * rho0 / Pi * Cos(Pi * x / r) * Sin(Pi * y / q);
       }
 
-      private double[,] initializeF(InitialCondition initialCondition)
+      private void initializeRightPart(InitialCondition initialCondition)
       {
          var u = initialCondition.U;
          var v = initialCondition.V;
@@ -134,9 +135,8 @@ namespace BarotropicComponentProblem.TestProblem
 
          var theta = 2.0 / (h * tau * (1.0 + _theta)) * (1.0 + tau * mu * (_chi - _theta) / 2.0);
 
-         // Функции phi1 и phi2.
-         var phi1 = new double[n, m];
-         var phi2 = new double[n, m];
+         _g = new double[n, m];
+         _f = new double[n, m];
 
          for (var i = 0; i < n; i++)
          {
@@ -145,67 +145,10 @@ namespace BarotropicComponentProblem.TestProblem
             for (var j = 0; j < m; j++)
             {
                var y = yGrid.Get(j);
-               phi1[i, j] = tauX(y) / (rho0 * h) + theta * u[i, j];
-               phi2[i, j] = tauY(x, y) / (rho0 * h) + theta * v[i, j];
+               _g[i, j] = tauX(y) / (rho0 * h) + theta * u[i, j];
+               _f[i, j] = tauY(x, y) / (rho0 * h) + theta * v[i, j];
             }
          }
-
-         // Производная функции phi1 по переменной y.
-         var hy = yGrid.Step;
-         var phi1Dy = new double[n, m];
-
-         for (var i = 0; i < n; i++)
-         {
-            phi1Dy[i, 0] = (phi1[i, 1] - phi1[i, 0]) / hy;
-         }
-
-         for (var i = 0; i < n; i++)
-         {
-            for (var j = 1; j < m - 1; j++)
-            {
-               phi1Dy[i, j] = (phi1[i, j + 1] - phi1[i, j - 1]) / (2 * hy);
-            }
-         }
-
-         for (var i = 0; i < n; i++)
-         {
-            phi1Dy[i, m - 1] = (phi1[i, m - 1] - phi1[i, m - 2]) / hy;
-         }
-
-         // Производная функции phi2 по переменной x.
-         var hx = xGrid.Step;
-         var phi2Dx = new double[n, m];
-
-         for (var j = 0; j < m; j++)
-         {
-            phi2Dx[0, j] = (phi2[1, j] - phi2[0, j]) / hx;
-         }
-
-         for (var j = 0; j < m; j++)
-         {
-            for (var i = 1; i < n - 1; i++)
-            {
-               phi2Dx[i, j] = (phi2[i + 1, j] - phi2[i - 1, j]) / (2 * hx);
-            }
-         }
-
-         for (var j = 0; j < m; j++)
-         {
-            phi2Dx[n - 1, j] = (phi2[n - 1, j] - phi2[n - 2, j]) / hx;
-         }
-
-         // Функция f.
-         var f = new double[n, m];
-
-         for (var i = 0; i < n; i++)
-         {
-            for (var j = 0; j < m; j++)
-            {
-               f[i, j] = phi2Dx[i, j] - phi1Dy[i, j];
-            }
-         }
-
-         return f;
       }
 
       private SquareGridFunction transform(SquareGridFunction solution, SquareGridFunction initialCondition)

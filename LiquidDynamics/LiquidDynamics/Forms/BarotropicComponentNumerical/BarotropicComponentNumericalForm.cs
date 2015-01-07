@@ -21,9 +21,6 @@ namespace LiquidDynamics.Forms.BarotropicComponentNumerical
       private const string DifferentialScheme1 = "Разностная схема 1";
       private const string DifferentialScheme2 = "Разностная схема 2";
       private const string IntegroInterpolatingScheme = "ПВИИМ";
-      private const string DifferentialScheme1Improved = "Разностная схема 1 (улучшенная)";
-      private const string DifferentialScheme2Improved = "Разностная схема 2 (улучшенная)";
-      private const string IntegroInterpolatingSchemeImproved = "ПВИИМ (улучшенная)";
 
       private static readonly IPaletteDrawingTools PaletteDrawingTools = PaletteFactory.CreateBluePalette();
 
@@ -57,9 +54,6 @@ namespace LiquidDynamics.Forms.BarotropicComponentNumerical
          _comboBoxScheme.Items.Add(DifferentialScheme1);
          _comboBoxScheme.Items.Add(DifferentialScheme2);
          _comboBoxScheme.Items.Add(IntegroInterpolatingScheme);
-         _comboBoxScheme.Items.Add(DifferentialScheme1Improved);
-         _comboBoxScheme.Items.Add(DifferentialScheme2Improved);
-         _comboBoxScheme.Items.Add(IntegroInterpolatingSchemeImproved);
          _comboBoxScheme.SelectedItem = DifferentialScheme1;
          
          _exactSolutionPaletteControl.PaletteDrawingTools = PaletteDrawingTools;
@@ -302,17 +296,8 @@ namespace LiquidDynamics.Forms.BarotropicComponentNumerical
             case DifferentialScheme2:
                return SchemeType.DifferentialScheme2;
 
-            case IntegroInterpolatingScheme:
-               return SchemeType.IntegroInterpolatingScheme;
-
-            case DifferentialScheme1Improved:
-               return SchemeType.DifferentialScheme1Improved;
-
-            case DifferentialScheme2Improved:
-               return SchemeType.DifferentialScheme2Improved;
-
             default: // IntegroInterpolatingScheme.
-               return SchemeType.IntegroInterpolatingSchemeImproved;
+               return SchemeType.IntegroInterpolatingScheme;
          }
       }
 
@@ -349,8 +334,7 @@ namespace LiquidDynamics.Forms.BarotropicComponentNumerical
       private double readTheta()
       {
          const double max = 1.0;
-         var schemeType = (string) _comboBoxScheme.SelectedItem;
-         var min = schemeType == DifferentialScheme1 || schemeType == DifferentialScheme1Improved ? 0.0 : -1.0;
+         var min = (string) _comboBoxScheme.SelectedItem == DifferentialScheme1 ? 0.0 : -1.0;
          var value = readDoubleValue(_textBoxTheta.Text, "Theta");
 
          if (value >= min && value <= max)

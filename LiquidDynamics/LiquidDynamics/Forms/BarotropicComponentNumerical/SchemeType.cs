@@ -4,9 +4,6 @@ namespace LiquidDynamics.Forms.BarotropicComponentNumerical
    {
       DifferentialScheme1,
       DifferentialScheme2,
-      IntegroInterpolatingScheme,
-      DifferentialScheme1Improved,
-      DifferentialScheme2Improved,
-      IntegroInterpolatingSchemeImproved
+      IntegroInterpolatingScheme
    }
 }

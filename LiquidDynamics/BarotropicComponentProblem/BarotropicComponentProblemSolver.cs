@@ -15,7 +15,6 @@ namespace BarotropicComponentProblem
       private readonly IterationProcessParameters _iterationProcessParametersU;
       private readonly IterationProcessParameters _iterationProcessParametersV;
       private readonly int[,] _surface;
-      private readonly ZeidelMethodType _zeidelMethodType;
 
       private IterationMethodResult _previousResult;
 
@@ -25,8 +24,7 @@ namespace BarotropicComponentProblem
          InitialCondition initialCondition,
          IterationProcessParameters iterationProcessParametersU,
          IterationProcessParameters iterationProcessParametersV,
-         int[,] surface,
-         ZeidelMethodType zeidelMethodType)
+         int[,] surface)
       {
          Check.NotNull(problem, "problem");
          Check.NotNull(gridParameters, "gridParameters");
@@ -41,7 +39,6 @@ namespace BarotropicComponentProblem
          _iterationProcessParametersU = iterationProcessParametersU;
          _iterationProcessParametersV = iterationProcessParametersV;
          _surface = surface;
-         _zeidelMethodType = zeidelMethodType;
 
          Time = BeginTime;
       }
@@ -55,8 +52,7 @@ namespace BarotropicComponentProblem
          var iterationProcess =
             IterationProcess.NewBarotropicComponentProblemSolver(_problem,
                                                                  _iterationProcessParametersU, _iterationProcessParametersV,
-                                                                 _gridParameters.X, _gridParameters.Y, _surface,
-                                                                 _zeidelMethodType);
+                                                                 _gridParameters.X, _gridParameters.Y, _surface);
 
          _previousResult = getResult(iterationProcess.Solve());
 
@@ -77,8 +73,7 @@ namespace BarotropicComponentProblem
                                           _previousResult.IterationResultV.Approximation);
          var iterationProcess =
             IterationProcess.NewBarotropicComponentProblemSolver(_problem, parametersU, parametersV,
-                                                                 _gridParameters.X, _gridParameters.Y, _surface,
-                                                                 _zeidelMethodType);
+                                                                 _gridParameters.X, _gridParameters.Y, _surface);
 
          _previousResult = getResult(iterationProcess.Solve());
 

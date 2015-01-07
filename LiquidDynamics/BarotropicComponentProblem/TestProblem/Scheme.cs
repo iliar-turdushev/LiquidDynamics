@@ -1,12 +1,11 @@
 ﻿using System;
 using BarotropicComponentProblem.IssykKulGrid;
 using Common;
-using Common.Attributes;
 using Mathematics.Numerical;
 
 namespace BarotropicComponentProblem.TestProblem
 {
-   public sealed class IntegroInterpolatingSchemeImproved : IDynamicProblem
+   public sealed class Scheme : IDynamicProblem
    {
       private const double Pi = Math.PI;
 
@@ -36,7 +35,7 @@ namespace BarotropicComponentProblem.TestProblem
       private Double[,] _f;
       private Double[,] _g;
 
-      public IntegroInterpolatingSchemeImproved(ProblemParameters problemParameters, IssykKulGrid2D grid, double tau)
+      public Scheme(ProblemParameters problemParameters, IssykKulGrid2D grid, double tau)
       {
          Check.NotNull(problemParameters, "problemParameters");
          Check.NotNull(grid, "grid");
@@ -433,7 +432,6 @@ namespace BarotropicComponentProblem.TestProblem
          return indexOffset;
       }
 
-      [Todo("Заменить использование типа Double на обычный встроенный double")]
       private sealed class Double
       {
          public double Value;

@@ -2,7 +2,7 @@ using Mathematics.Numerical;
 
 namespace BarotropicComponentProblem
 {
-   public interface IDynamicProblem : IBarotropicComponentProblem, IStommelModelProblem
+   public interface IDynamicProblem : IBarotropicComponentProblem
    {
       void SetInitialCondition(InitialCondition initialCondition);
       SquareGridFunction TransformU(SquareGridFunction u);

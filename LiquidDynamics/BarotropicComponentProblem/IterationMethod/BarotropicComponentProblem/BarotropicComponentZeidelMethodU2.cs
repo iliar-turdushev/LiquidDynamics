@@ -1,12 +1,17 @@
+using System.Diagnostics;
+using Mathematics.Helpers;
 using Mathematics.Numerical;
 
 namespace BarotropicComponentProblem.IterationMethod.BarotropicComponentProblem
 {
-   internal sealed class BarotropicComponentZeidelMethodU : BarotropicComponentZeidelMethodBase
+   internal sealed class BarotropicComponentZeidelMethodU2 : BarotropicComponentZeidelMethodBase
    {
-      internal BarotropicComponentZeidelMethodU(IBarotropicComponentProblem problem, Grid x, Grid y)
+      private readonly int[,] _surface;
+
+      internal BarotropicComponentZeidelMethodU2(IBarotropicComponentProblem problem, Grid x, Grid y, int[,] surface)
          : base(problem, x, y)
       {
+         _surface = surface;
       }
 
       internal override SquareGridFunction Next(SquareGridFunction previous)
@@ -17,23 +22,43 @@ namespace BarotropicComponentProblem.IterationMethod.BarotropicComponentProblem
 
          for (var i = 1; i < n - 1; i++)
          {
-            current[i, 0] = getBottom(i, previous, current);
+            if (_surface[i - 1, 0] == 1 && _surface[i, 0] == 1)
+               current[i, 0] = getBottom(i, 0, previous, current);
 
             for (var j = 1; j < m - 1; j++)
             {
-               current[i, j] = getCentral(i, j, previous, current);
+               int count =
+                  (_surface[i - 1, j - 1] == 1 ? 1 : 0) +
+                  (_surface[i - 1, j] == 1     ? 1 : 0) +
+                  (_surface[i, j - 1] == 1     ? 1 : 0) +
+                  (_surface[i, j] == 1         ? 1 : 0);
+
+               if (count == 4)
+                  current[i, j] = getCentral(i, j, previous, current);
+               else if (count == 3)
+                  current[i, j] = 0;
+               else if (count == 2)
+               {
+                  if (_surface[i - 1, j] == 1 && _surface[i, j] == 1)
+                     current[i, j] = getBottom(i, j, previous, current);
+                  else if (_surface[i - 1, j - 1] == 1 && _surface[i, j - 1] == 1)
+                     current[i, j] = getTop(i, j, previous, current);
+                  else
+                     current[i, j] = 0;
+               }
+               else if (count <= 1)
+                  current[i, j] = 0;
             }
 
-            current[i, m - 1] = getTop(i, previous, current);
+            if (_surface[i - 1, m - 2] == 1 && _surface[i, m - 2] == 1)
+               current[i, m - 1] = getTop(i, m - 1, previous, current);
          }
 
          return new SquareGridFunction(X, Y, current);
       }
 
-      private double getBottom(int i, SquareGridFunction previous, double[,] current)
+      private double getBottom(int i, int j, SquareGridFunction previous, double[,] current)
       {
-         const int j = 0;
-
          var dx = X.Step;
          var dy = Y.Step;
 
@@ -49,15 +74,13 @@ namespace BarotropicComponentProblem.IterationMethod.BarotropicComponentProblem
          var d = 0.5 * k1 * dy / dx +
                  0.5 * k2 * dy / dx +
                  c2 * k(i, j) * dx / dy;
-         var r = getBottomR(i);
+         var r = getBottomR(i, j);
 
          return (n - r) / d;
       }
 
-      private double getBottomR(int i)
+      private double getBottomR(int i, int j)
       {
-         const int j = 0;
-
          var dx = X.Step;
          var dy = Y.Step;
 
@@ -69,6 +92,8 @@ namespace BarotropicComponentProblem.IterationMethod.BarotropicComponentProblem
          double c6 = cMinus(rx(i - 1, j));
          double b = bUp(i, j);
          double k = kUp(i, j);
+
+         Debug.Assert(!k.IsZero());
 
          return
             -f(i + 1, j + 1) * 0.25 * c1 * c2 -
@@ -126,6 +151,9 @@ namespace BarotropicComponentProblem.IterationMethod.BarotropicComponentProblem
          double b2 = bDown(i, j);
          double k2 = kDown(i, j);
 
+         Debug.Assert(!k1.IsZero());
+         Debug.Assert(!k2.IsZero());
+
          double result =
             -f(i + 1, j + 1) * 0.25 * c1 * c2 -
             f(i + 1, j) * 0.25 * (c3 - c4) * c2 +
@@ -144,10 +172,8 @@ namespace BarotropicComponentProblem.IterationMethod.BarotropicComponentProblem
          return result / (dx * dy);
       }
 
-      private double getTop(int i, SquareGridFunction previous, double[,] current)
+      private double getTop(int i, int j, SquareGridFunction previous, double[,] current)
       {
-         var j = Y.Nodes - 1;
-
          var dx = X.Step;
          var dy = Y.Step;
 
@@ -163,15 +189,13 @@ namespace BarotropicComponentProblem.IterationMethod.BarotropicComponentProblem
          var d = 0.5 * k1 * dy / dx +
                  0.5 * k2 * dy / dx +
                  c1 * k(i, j) * dx / dy;
-         var r = getTopR(i);
+         var r = getTopR(i, j);
 
          return (n - r) / d;
       }
 
-      private double getTopR(int i)
+      private double getTopR(int i, int j)
       {
-         int j = Y.Nodes - 1;
-
          var dx = X.Step;
          var dy = Y.Step;
 
@@ -183,6 +207,8 @@ namespace BarotropicComponentProblem.IterationMethod.BarotropicComponentProblem
          double c6 = cMinus(rx(i - 1, j));
          double b = bDown(i, j);
          double k = kDown(i, j);
+
+         Debug.Assert(!k.IsZero());
 
          return
             f(i + 1, j) * 0.25 * c1 * c2 +

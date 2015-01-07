@@ -142,7 +142,7 @@
          // 
          this._comboBoxScheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
          this._comboBoxScheme.Name = "_comboBoxScheme";
-         this._comboBoxScheme.Size = new System.Drawing.Size(150, 25);
+         this._comboBoxScheme.Size = new System.Drawing.Size(121, 25);
          // 
          // _labelTheta
          // 

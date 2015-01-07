@@ -73,8 +73,7 @@ namespace LiquidDynamics.Forms.BarotropicComponentNumerical
             new InitialCondition(u, v),
             new IterationProcessParameters(sigma, delta, k, u),
             new IterationProcessParameters(sigma, delta, k, v),
-            getDesk(_x.Nodes, _y.Nodes),
-            getZeidelMethodType(schemeType)
+            getDesk(_x.Nodes, _y.Nodes)
             );
 
          ErrorContainer = new ErrorContainer();
@@ -82,7 +81,7 @@ namespace LiquidDynamics.Forms.BarotropicComponentNumerical
 
          return new BarotropicComponentResult(squareVelocityField, squareVelocityField, 0, 0, _time);
       }
-      
+
       internal BarotropicComponentResult Step()
       {
          _time += _tau;
@@ -128,31 +127,8 @@ namespace LiquidDynamics.Forms.BarotropicComponentNumerical
             case SchemeType.DifferentialScheme2:
                return new DifferentialScheme2(problemParameters, solverGridParameters, theta, chi);
 
-            case SchemeType.IntegroInterpolatingScheme:
-               return new IntegroInterpolatingScheme(problemParameters, solverGridParameters);
-
-            case SchemeType.DifferentialScheme1Improved:
-               return new DifferentialScheme1Improved(problemParameters, solverGridParameters, theta);
-
-            case SchemeType.DifferentialScheme2Improved:
-               return new DifferentialScheme2Improved(problemParameters, solverGridParameters, theta, chi);
-
             default: // IntegroInterpolatingScheme.
                return getCommonScheme(solverGridParameters, problemParameters);
-         }
-      }
-
-      private static ZeidelMethodType getZeidelMethodType(SchemeType schemeType)
-      {
-         switch (schemeType)
-         {
-            case SchemeType.DifferentialScheme1:
-            case SchemeType.DifferentialScheme2:
-            case SchemeType.IntegroInterpolatingScheme:
-               return ZeidelMethodType.Simple;
-
-            default:
-               return ZeidelMethodType.Improved;
          }
       }
 
@@ -185,7 +161,7 @@ namespace LiquidDynamics.Forms.BarotropicComponentNumerical
          }
 
          var grid = new IssykKulGrid2D(cells, hx, hy);
-         return new IntegroInterpolatingSchemeImproved(problemParameters, grid, gridParameters.Tau);
+         return new Scheme(problemParameters, grid, gridParameters.Tau);
       }
 
       private static int[,] getDesk(int n, int m)
