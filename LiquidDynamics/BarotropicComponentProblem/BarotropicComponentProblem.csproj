@@ -51,11 +51,9 @@
     <Compile Include="IssykKulGrid\IssykKulGridBuilder.cs" />
     <Compile Include="IStommelModelProblem.cs" />
     <Compile Include="IterationMethod\BarotropicComponentProblem\BarotropicComponentZeidelMethodBase.cs" />
-    <Compile Include="IterationMethod\BarotropicComponentProblem\BarotropicComponentZeidelMethodU2.cs" />
-    <Compile Include="IterationMethod\BarotropicComponentProblem\BarotropicComponentZeidelMethodV2.cs" />
-    <Compile Include="IterationMethod\StommelModel\StommelModelZeidelMethodBase.cs" />
     <Compile Include="IterationMethod\BarotropicComponentProblem\BarotropicComponentZeidelMethodU.cs" />
     <Compile Include="IterationMethod\BarotropicComponentProblem\BarotropicComponentZeidelMethodV.cs" />
+    <Compile Include="IterationMethod\StommelModel\StommelModelZeidelMethodBase.cs" />
     <Compile Include="IterationProcess.cs" />
     <Compile Include="IProblem.cs" />
     <Compile Include="IterationMethodResult.cs" />
@@ -85,7 +83,6 @@
     <Compile Include="TestProblem\DifferentialScheme1.cs" />
     <Compile Include="TestProblem\DifferentialScheme2.cs" />
     <Compile Include="TestProblem\IntegroInterpolatingScheme.cs" />
-    <Compile Include="TestProblem\Scheme.cs" />
     <Compile Include="TestProblem\StretchCoefficients.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -43,7 +43,7 @@ namespace LiquidDynamics.Forms.IssykKul.Equation
 
          _problemParameters = getParameters(parameters, xMax, yMax);
 
-         var scheme = new Scheme(_problemParameters, _grid, tau);
+         var scheme = new IntegroInterpolatingScheme(_problemParameters, _grid, tau);
 
          _x = Mathematics.Numerical.Grid.Create(0.0, xMax / StretchCoefficients.L0, n + 1);
          _y = Mathematics.Numerical.Grid.Create(0.0, yMax / StretchCoefficients.L0, m + 1);

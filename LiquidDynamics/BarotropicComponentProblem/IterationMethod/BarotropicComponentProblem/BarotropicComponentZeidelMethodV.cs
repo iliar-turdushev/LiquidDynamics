@@ -1,12 +1,17 @@
+using System.Diagnostics;
+using Mathematics.Helpers;
 using Mathematics.Numerical;
 
 namespace BarotropicComponentProblem.IterationMethod.BarotropicComponentProblem
 {
    internal sealed class BarotropicComponentZeidelMethodV : BarotropicComponentZeidelMethodBase
    {
-      internal BarotropicComponentZeidelMethodV(IBarotropicComponentProblem problem, Grid x, Grid y)
+      private readonly int[,] _surface;
+
+      internal BarotropicComponentZeidelMethodV(IBarotropicComponentProblem problem, Grid x, Grid y, int[,] surface)
          : base(problem, x, y)
       {
+         _surface = surface;
       }
 
       internal override SquareGridFunction Next(SquareGridFunction previous)
@@ -17,23 +22,43 @@ namespace BarotropicComponentProblem.IterationMethod.BarotropicComponentProblem
 
          for (var j = 1; j < m - 1; j++)
          {
-            current[0, j] = getLeft(j, previous, current);
+            if (_surface[0, j] == 1 && _surface[0, j - 1] == 1)
+               current[0, j] = getLeft(0, j, previous, current);
 
             for (var i = 1; i < n - 1; i++)
             {
-               current[i, j] = getCentral(i, j, previous, current);
+               int count =
+                  (_surface[i - 1, j - 1] == 1 ? 1 : 0) +
+                  (_surface[i - 1, j] == 1 ?     1 : 0) +
+                  (_surface[i, j - 1] == 1 ?     1 : 0) +
+                  (_surface[i, j] == 1 ?         1 : 0);
+
+               if (count == 4)
+                  current[i, j] = getCentral(i, j, previous, current);
+               else if (count == 3)
+                  current[i, j] = 0;
+               else if (count == 2)
+               {
+                  if (_surface[i, j] == 1 && _surface[i, j - 1] == 1)
+                     current[i, j] = getLeft(i, j, previous, current);
+                  else if (_surface[i - 1, j] == 1 && _surface[i - 1, j - 1] == 1)
+                     current[i, j] = getRight(i, j, previous, current);
+                  else
+                     current[i, j] = 0;
+               }
+               else if (count <= 1)
+                  current[i, j] = 0;
             }
 
-            current[n - 1, j] = getRight(j, previous, current);
+            if (_surface[n - 2, j] == 1 && _surface[n - 2, j - 1] == 1)
+               current[n - 1, j] = getRight(n - 1, j, previous, current);
          }
 
          return new SquareGridFunction(X, Y, current);
       }
 
-      private double getLeft(int j, SquareGridFunction previous, double[,] current)
+      private double getLeft(int i, int j, SquareGridFunction previous, double[,] current)
       {
-         const int i = 0;
-
          var dx = X.Step;
          var dy = Y.Step;
 
@@ -49,15 +74,13 @@ namespace BarotropicComponentProblem.IterationMethod.BarotropicComponentProblem
                  dx / dy * k2 / 2.0 * current[i, j - 1] +
                  dy / dx * c1 * epsilon(i + 1, j) * previous[i + 1, j];
          var d = dx / dy * k1 / 2.0 + dx / dy * k2 / 2.0 + dy / dx * c2 * epsilon(i, j);
-         var r = getLeftR(j);
+         var r = getLeftR(i, j);
 
          return (n - r) / d;
       }
 
-      private double getLeftR(int j)
+      private double getLeftR(int i, int j)
       {
-         const int i = 0;
-
          var dx = X.Step;
          var dy = Y.Step;
 
@@ -147,10 +170,8 @@ namespace BarotropicComponentProblem.IterationMethod.BarotropicComponentProblem
          return result / (dx * dy);
       }
 
-      private double getRight(int j, SquareGridFunction previous, double[,] current)
+      private double getRight(int i, int j, SquareGridFunction previous, double[,] current)
       {
-         var i = X.Nodes - 1;
-
          var dx = X.Step;
          var dy = Y.Step;
 
@@ -166,15 +187,13 @@ namespace BarotropicComponentProblem.IterationMethod.BarotropicComponentProblem
                  dx / dy * k2 / 2.0 * current[i, j - 1] +
                  dy / dx * c2 * epsilon(i - 1, j) * current[i - 1, j];
          var d = dx / dy * k1 / 2.0 + dx / dy * k2 / 2.0 + dy / dx * c1 * epsilon(i, j);
-         var r = getRightR(j);
+         var r = getRightR(i, j);
 
          return (n - r) / d;
       }
 
-      private double getRightR(int j)
+      private double getRightR(int i, int j)
       {
-         var i = X.Nodes - 1;
-
          var dx = X.Step;
          var dy = Y.Step;
 

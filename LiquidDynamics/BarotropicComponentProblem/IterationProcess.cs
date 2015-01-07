@@ -34,8 +34,8 @@ namespace BarotropicComponentProblem
          checkParams(problem, parametersU, parametersV, x, y);
 
          return new IterationProcess(parametersU, parametersV,
-                                     new BarotropicComponentZeidelMethodU2(problem, x, y, surface),
-                                     new BarotropicComponentZeidelMethodV2(problem, x, y, surface));
+                                     new BarotropicComponentZeidelMethodU(problem, x, y, surface),
+                                     new BarotropicComponentZeidelMethodV(problem, x, y, surface));
       }
 
       public IterationMethodResult Solve()

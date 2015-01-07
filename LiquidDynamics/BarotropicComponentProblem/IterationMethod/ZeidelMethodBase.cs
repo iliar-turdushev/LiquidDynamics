@@ -43,14 +43,12 @@ namespace BarotropicComponentProblem.IterationMethod
       protected double rx(int i, int j)
       {
          double epsilon = epsilonRight(i, j);
-         Debug.Assert(!epsilon.IsZero());
          return 0.5 * X.Step * aRight(i, j) / epsilon;
       }
 
       protected double ry(int i, int j)
       {
          double k = kUp(i, j);
-         Debug.Assert(!k.IsZero());
          return 0.5 * Y.Step * bUp(i, j) / k;
       }
 

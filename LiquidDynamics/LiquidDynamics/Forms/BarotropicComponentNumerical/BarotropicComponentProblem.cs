@@ -161,7 +161,7 @@ namespace LiquidDynamics.Forms.BarotropicComponentNumerical
          }
 
          var grid = new IssykKulGrid2D(cells, hx, hy);
-         return new Scheme(problemParameters, grid, gridParameters.Tau);
+         return new IntegroInterpolatingScheme(problemParameters, grid, gridParameters.Tau);
       }
 
       private static int[,] getDesk(int n, int m)
