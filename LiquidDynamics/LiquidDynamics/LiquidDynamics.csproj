@@ -1,0 +1,349 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9FED0792-B5B2-4763-9C4C-4AF132957519}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LiquidDynamics</RootNamespace>
+    <AssemblyName>LiquidDynamics</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="Tao.OpenGl, Version=2.1.0.12, Culture=neutral, PublicKeyToken=1ca010269a4501ef, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\TaoFramework\Tao.OpenGl.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Tao.Platform.Windows, Version=1.0.0.5, Culture=neutral, PublicKeyToken=701104b2da67a104, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\TaoFramework\Tao.Platform.Windows.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controls\GraphParametersControl.xaml.cs">
+      <DependentUpon>GraphParametersControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BarotropicComponentNumerical\BarotropicComponentNumericalForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BarotropicComponentNumerical\BarotropicComponentNumericalForm.Designer.cs">
+      <DependentUpon>BarotropicComponentNumericalForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BarotropicComponentNumerical\BarotropicComponentProblem.cs" />
+    <Compile Include="Forms\BarotropicComponentNumerical\BarotropicComponentResult.cs" />
+    <Compile Include="Forms\BarotropicComponentNumerical\ErrorContainer.cs" />
+    <Compile Include="Forms\BarotropicComponentNumerical\GraphType.cs" />
+    <Compile Include="Forms\BarotropicComponentNumerical\GridParameters.cs" />
+    <Compile Include="Forms\BarotropicComponentNumerical\SchemeType.cs" />
+    <Compile Include="Forms\BarotropicComponent\BarotropicComponentForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BarotropicComponent\BarotropicComponentForm.Designer.cs">
+      <DependentUpon>BarotropicComponentForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BarotropicComponent\BarotropicComponentDataProvider.cs" />
+    <Compile Include="Forms\EkmanSpiral\EkmanSpiralDataProvider.cs" />
+    <Compile Include="Forms\EkmanSpiral\EkmanSpiralForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EkmanSpiral\EkmanSpiralForm.Designer.cs">
+      <DependentUpon>EkmanSpiralForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EkmanSpiral\EkmanSpiralGraphs.cs" />
+    <Compile Include="Forms\InvalidFieldValueException.cs" />
+    <Compile Include="Forms\IssykKul\BoundsCalculator.cs" />
+    <Compile Include="Forms\IssykKul\CellInfo.cs" />
+    <Compile Include="Forms\IssykKul\Equation\IssykKulVelocityFieldForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\IssykKul\Equation\IssykKulVelocityFieldForm.Designer.cs">
+      <DependentUpon>IssykKulVelocityFieldForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\IssykKul\Equation\IssykKulVelocityFieldFormDataProvider.cs" />
+    <Compile Include="Forms\IssykKul\Equation\Solution.cs" />
+    <Compile Include="Forms\IssykKul\InterpolationResult.cs" />
+    <Compile Include="Forms\IssykKul\Interpolation\IssykKulInterpolationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\IssykKul\Interpolation\IssykKulInterpolationForm.Designer.cs">
+      <DependentUpon>IssykKulInterpolationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\IssykKul\IssykKulDataReader.cs" />
+    <Compile Include="Forms\IssykKul\IssykKulDisplayData.cs" />
+    <Compile Include="Forms\IssykKul\Grid\IssykKulGridForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\IssykKul\Grid\IssykKulGridForm.Designer.cs">
+      <DependentUpon>IssykKulGridForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\IssykKul\IssykKulFormDataProvider.cs" />
+    <Compile Include="Forms\IssykKul\IssykKulGraphData.cs" />
+    <Compile Include="Forms\IssykKul\Wind\BuildWindResult.cs" />
+    <Compile Include="Forms\IssykKul\Wind\IssykKulWindCalculator.cs" />
+    <Compile Include="Forms\IssykKul\Wind\IssykKulWindForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\IssykKul\Wind\IssykKulWindForm.Designer.cs">
+      <DependentUpon>IssykKulWindForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\IssykKul\Wind\IssykKulWindFormDataProvider.cs" />
+    <Compile Include="Forms\IssykKul\Wind\SantashWindCalculator.cs" />
+    <Compile Include="Forms\IssykKul\Wind\UlanWindCalculator.cs" />
+    <Compile Include="Forms\IssykKul\Wind\WindCalculatorBase.cs" />
+    <Compile Include="Forms\IssykKul\Wind\WindParameters.cs" />
+    <Compile Include="Forms\IssykKul\Wind\WindType.cs" />
+    <Compile Include="Forms\Kriging\InterpolationResult.cs" />
+    <Compile Include="Forms\Kriging\Kriging.cs" />
+    <Compile Include="Forms\Kriging\KrigingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Kriging\KrigingForm.Designer.cs">
+      <DependentUpon>KrigingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Kriging\Parameters.cs" />
+    <Compile Include="Forms\ParametersForms\ParametersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ParametersForms\ParametersForm.Designer.cs">
+      <DependentUpon>ParametersForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StommelModel\BarotropicComponentInfo.cs" />
+    <Compile Include="Forms\StommelModel\StommelModel.cs" />
+    <Compile Include="Forms\StommelModel\StommelModelForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\StommelModel\StommelModelForm.Designer.cs">
+      <DependentUpon>StommelModelForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StommelModel\StommelModelParameters.cs" />
+    <Compile Include="Forms\StommelModel\StommelModelSolution.cs" />
+    <Compile Include="Forms\Upwelling\UpwellingDataProvider.cs" />
+    <Compile Include="Forms\Upwelling\UpwellingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Upwelling\UpwellingForm.Designer.cs">
+      <DependentUpon>UpwellingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DynamicDataProvider.cs" />
+    <Compile Include="Forms\VelocityField\SquareVelocityFieldBase.cs" />
+    <Compile Include="Forms\VelocityField\UVSquareVelocityField.cs" />
+    <Compile Include="Forms\VelocityField\SquareVelocityFieldForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\VelocityField\SquareVelocityFieldForm.Designer.cs">
+      <DependentUpon>SquareVelocityFieldForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\VelocityField\UWSquareVelocityField.cs" />
+    <Compile Include="Forms\VelocityField\VWSquareVelocityField.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controls\ProblemParametersControl.xaml.cs">
+      <DependentUpon>ProblemParametersControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ParametersForms\GraphParameters.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <None Include="App.config" />
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BarotropicComponentProblem\BarotropicComponentProblem.csproj">
+      <Project>{3F69D813-351D-4A9F-AFBE-42238E842C07}</Project>
+      <Name>BarotropicComponentProblem</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{7DE8D18E-75CC-4A51-8506-9580CCE220BD}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ControlLibrary\ControlLibrary.csproj">
+      <Project>{9CA34D83-D81C-424B-BE6D-7920C244F6E8}</Project>
+      <Name>ControlLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Mathematics\Mathematics.csproj">
+      <Project>{AF3CABB3-9268-4AEE-B3F0-0E686B487F0D}</Project>
+      <Name>Mathematics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ModelProblem\ModelProblem.csproj">
+      <Project>{6394D489-5338-4216-A11C-1308D7D4CC09}</Project>
+      <Name>ModelProblem</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Forms\BarotropicComponentNumerical\BarotropicComponentNumericalForm.resx">
+      <DependentUpon>BarotropicComponentNumericalForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BarotropicComponent\BarotropicComponentForm.resx">
+      <DependentUpon>BarotropicComponentForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EkmanSpiral\EkmanSpiralForm.resx">
+      <DependentUpon>EkmanSpiralForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\IssykKul\Equation\IssykKulVelocityFieldForm.resx">
+      <DependentUpon>IssykKulVelocityFieldForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\IssykKul\Interpolation\IssykKulInterpolationForm.resx">
+      <DependentUpon>IssykKulInterpolationForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\IssykKul\Grid\IssykKulGridForm.resx">
+      <DependentUpon>IssykKulGridForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\IssykKul\Wind\IssykKulWindForm.resx">
+      <DependentUpon>IssykKulWindForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Kriging\KrigingForm.resx">
+      <DependentUpon>KrigingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ParametersForms\ParametersForm.resx">
+      <DependentUpon>ParametersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\StommelModel\StommelModelForm.resx">
+      <DependentUpon>StommelModelForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Upwelling\UpwellingForm.resx">
+      <DependentUpon>UpwellingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\VelocityField\SquareVelocityFieldForm.resx">
+      <DependentUpon>SquareVelocityFieldForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Controls\GraphParametersControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ProblemParametersControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\IssykKulGraphData" />
+    <None Include="Resources\Stop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Pause.png" />
+    <Resource Include="Resources\Start.png" />
+    <Resource Include="Resources\StepBackward.png" />
+    <Resource Include="Resources\Stepforward.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Minus.png" />
+    <Resource Include="Resources\Plus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\IssykKulData" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Settings.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

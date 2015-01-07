@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3F69D813-351D-4A9F-AFBE-42238E842C07}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BarotropicComponentProblem</RootNamespace>
+    <AssemblyName>BarotropicComponentProblem</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BarotropicComponent.cs" />
+    <Compile Include="BarotropicComponentProblemSolver.cs" />
+    <Compile Include="GridParameters.cs" />
+    <Compile Include="IBarotropicComponentProblem.cs" />
+    <Compile Include="InitialCondition.cs" />
+    <Compile Include="IssykKulGrid\GridCell.cs" />
+    <Compile Include="IssykKulGrid\IssykKulGrid2D.cs" />
+    <Compile Include="IssykKulGrid\IssykKulGrid3D.cs" />
+    <Compile Include="IssykKulGrid\IssykKulGridBuilder.cs" />
+    <Compile Include="IStommelModelProblem.cs" />
+    <Compile Include="IterationMethod\BarotropicComponentProblem\BarotropicComponentZeidelMethodBase.cs" />
+    <Compile Include="IterationMethod\BarotropicComponentProblem\BarotropicComponentZeidelMethodU.cs" />
+    <Compile Include="IterationMethod\BarotropicComponentProblem\BarotropicComponentZeidelMethodV.cs" />
+    <Compile Include="IterationMethod\StommelModel\StommelModelZeidelMethodBase.cs" />
+    <Compile Include="IterationMethod\ZeidelMethodType.cs" />
+    <Compile Include="IterationProcess.cs" />
+    <Compile Include="IProblem.cs" />
+    <Compile Include="IterationMethodResult.cs" />
+    <Compile Include="IndexOffset.cs" />
+    <Compile Include="IterationMethod\IterationProcessParameters.cs" />
+    <Compile Include="IterationMethod\IterationResult.cs" />
+    <Compile Include="IterationMethod\IterationStatus.cs" />
+    <Compile Include="Kriging\Gamma2.cs" />
+    <Compile Include="Kriging\Gamma3.cs" />
+    <Compile Include="Kriging\Gamma4.cs" />
+    <Compile Include="Kriging\Gamma5.cs" />
+    <Compile Include="Kriging\GaussMethod.cs" />
+    <Compile Include="Kriging\IVariogram.cs" />
+    <Compile Include="Kriging\KrigingMethod.cs" />
+    <Compile Include="Kriging\KrigingMethodInterpolation.cs" />
+    <Compile Include="Kriging\KrigingMethodParameters.cs" />
+    <Compile Include="Kriging\Gamma1.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="IterationMethod\ZeidelIterationProcess.cs" />
+    <Compile Include="IterationMethod\ZeidelMethodBase.cs" />
+    <Compile Include="IterationMethod\StommelModel\StommelModelZeidelMethodU.cs" />
+    <Compile Include="IterationMethod\StommelModel\StommelModelZeidelMethodV.cs" />
+    <Compile Include="StommelModelProblem\StommelModelProblem.cs" />
+    <Compile Include="StommelModelProblem\StommelModelSolution.cs" />
+    <Compile Include="ProblemParameters.cs" />
+    <Compile Include="IDynamicProblem.cs" />
+    <Compile Include="TestProblem\DifferentialScheme1.cs" />
+    <Compile Include="TestProblem\DifferentialScheme1Improved.cs" />
+    <Compile Include="TestProblem\DifferentialScheme2.cs" />
+    <Compile Include="TestProblem\DifferentialScheme2Improved.cs" />
+    <Compile Include="TestProblem\IntegroInterpolatingScheme.cs" />
+    <Compile Include="TestProblem\IntegroInterpolatingSchemeImproved.cs" />
+    <Compile Include="TestProblem\StretchCoefficients.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{7DE8D18E-75CC-4A51-8506-9580CCE220BD}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Mathematics\Mathematics.csproj">
+      <Project>{AF3CABB3-9268-4AEE-B3F0-0E686B487F0D}</Project>
+      <Name>Mathematics</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

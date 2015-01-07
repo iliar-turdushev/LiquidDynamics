@@ -1,0 +1,87 @@
+﻿<UserControl x:Class="LiquidDynamics.Controls.GraphParametersControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ParametersForms="clr-namespace:LiquidDynamics.Forms.ParametersForms" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance Type=ParametersForms:GraphParameters}" x:ClassModifier="internal">
+    <UserControl.Resources>
+        <Style x:Key="groupBox" TargetType="GroupBox">
+            <Setter Property="Grid.Column" Value="0"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+
+        <Style x:Key="label" TargetType="Label">
+            <Setter Property="Grid.Column" Value="0"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+
+        <Style x:Key="textBox" TargetType="TextBox">
+            <Setter Property="Grid.Column" Value="1"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+    </UserControl.Resources>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <GroupBox Style="{StaticResource groupBox}" Grid.Row="0" Header="Временная сетка">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Style="{StaticResource label}" Grid.Row="0" Content="Шаг по времени:"/>
+                <TextBox Style="{StaticResource textBox}" Grid.Row="0" Text="{Binding Path=TimeStep, Mode=TwoWay}"/>
+            </Grid>
+        </GroupBox>
+        
+        <GroupBox Style="{StaticResource groupBox}" Grid.Row="1" Header="Поле скоростей">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Style="{StaticResource label}" Grid.Row="0" Content="Число узлов по оси OX:"/>
+                <TextBox Style="{StaticResource textBox}" Grid.Row="0" Text="{Binding Path=XCoordinatesCount, Mode=TwoWay}"/>
+
+                <Label Style="{StaticResource label}" Grid.Row="1" Content="Число узлов по оси OY:"/>
+                <TextBox Style="{StaticResource textBox}" Grid.Row="1" Text="{Binding Path=YCoordinatesCount, Mode=TwoWay}"/>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Style="{StaticResource groupBox}" Grid.Row="2" Header="Спираль Экмана">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Style="{StaticResource label}" Grid.Row="0" Content="Число узлов по оси OZ:"/>
+                <TextBox Style="{StaticResource textBox}" Grid.Row="0" Text="{Binding Path=ZCoordinatesCount, Mode=TwoWay}"/>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</UserControl>

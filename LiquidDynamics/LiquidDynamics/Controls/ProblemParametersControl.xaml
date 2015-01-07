@@ -1,0 +1,185 @@
+﻿<UserControl x:Class="LiquidDynamics.Controls.ProblemParametersControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ModelProblem="clr-namespace:ModelProblem;assembly=ModelProblem"
+             mc:Ignorable="d" d:DesignHeight="400" d:DesignWidth="400"
+             d:DataContext="{d:DesignInstance Type=ModelProblem:Parameters}" x:ClassModifier="internal">
+    <UserControl.Resources>
+        <Style x:Key="groupBox" TargetType="GroupBox">
+            <Setter Property="Grid.Column" Value="0"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        
+        <Style x:Key="label" TargetType="Label">
+            <Setter Property="Grid.Column" Value="0"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+
+        <Style x:Key="textBox" TargetType="TextBox">
+            <Setter Property="Grid.Column" Value="1"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <ScrollViewer CanContentScroll="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <GroupBox Style="{StaticResource groupBox}" Grid.Row="0" Header="Плотность жидкости">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Style="{StaticResource label}" Grid.Row="0" Content="Rho0:"/>
+                        <TextBox Style="{StaticResource textBox}" Grid.Row="0" Text="{Binding Path=Rho0, Mode=TwoWay}"/>
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Style="{StaticResource groupBox}" Grid.Row="1" Header="Параметры, задающие силу Кориолиса">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Style="{StaticResource label}" Grid.Row="0" Content="L0:"/>
+                        <TextBox Style="{StaticResource textBox}" Grid.Row="0" Text="{Binding Path=SmallL0, Mode=TwoWay}"/>
+
+                        <Label Style="{StaticResource label}" Grid.Row="1" Content="Beta:"/>
+                        <TextBox Style="{StaticResource textBox}" Grid.Row="1" Text="{Binding Path=Beta, Mode=TwoWay}"/>
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Style="{StaticResource groupBox}" Grid.Row="2" Header="Размеры бассейна">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Style="{StaticResource label}" Grid.Row="0" Content="R:"/>
+                        <TextBox Style="{StaticResource textBox}" Grid.Row="0" Text="{Binding Path=SmallR, Mode=TwoWay}"/>
+
+                        <Label Style="{StaticResource label}" Grid.Row="1" Content="Q:"/>
+                        <TextBox Style="{StaticResource textBox}" Grid.Row="1" Text="{Binding Path=SmallQ, Mode=TwoWay}"/>
+
+                        <Label Style="{StaticResource label}" Grid.Row="2" Content="H:"/>
+                        <TextBox Style="{StaticResource textBox}" Grid.Row="2" Text="{Binding Path=H, Mode=TwoWay}"/>
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Style="{StaticResource groupBox}" Grid.Row="3" Header="Коэффициент вертикальной турбулентной вязкости">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Style="{StaticResource label}" Grid.Row="0" Content="Nu:"/>
+                        <TextBox Style="{StaticResource textBox}" Grid.Row="0" Text="{Binding Path=Nu, Mode=TwoWay}"/>
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Style="{StaticResource groupBox}" Grid.Row="4" Header="Параметр, характеризующий трение о дно водоема">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Style="{StaticResource label}" Grid.Row="0" Content="Mu:"/>
+                        <TextBox Style="{StaticResource textBox}" Grid.Row="0" Text="{Binding Path=Mu, Mode=TwoWay}"/>
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Style="{StaticResource groupBox}" Grid.Row="5" Header="Параметры силы ветра">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Style="{StaticResource label}" Grid.Row="0" Content="F1:"/>
+                        <TextBox Style="{StaticResource textBox}" Grid.Row="0" Text="{Binding Path=F1, Mode=TwoWay}"/>
+
+                        <Label Style="{StaticResource label}" Grid.Row="1" Content="F2:"/>
+                        <TextBox Style="{StaticResource textBox}" Grid.Row="1" Text="{Binding Path=F2, Mode=TwoWay}"/>
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Style="{StaticResource groupBox}" Grid.Row="6" Header="Параметры, возникшие при решении задачи">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Style="{StaticResource label}" Grid.Row="0" Content="K:"/>
+                        <TextBox Style="{StaticResource textBox}" Grid.Row="0" Text="{Binding Path=SmallK, Mode=TwoWay}"/>
+
+                        <Label Style="{StaticResource label}" Grid.Row="1" Content="M:"/>
+                        <TextBox Style="{StaticResource textBox}" Grid.Row="1" Text="{Binding Path=SmallM, Mode=TwoWay}"/>
+
+                        <Label Style="{StaticResource label}" Grid.Row="2" Content="S1:"/>
+                        <TextBox Style="{StaticResource textBox}" Grid.Row="2" Text="{Binding Path=S1, Mode=TwoWay}"/>
+
+                        <Label Style="{StaticResource label}" Grid.Row="3" Content="S2:"/>
+                        <TextBox Style="{StaticResource textBox}" Grid.Row="3" Text="{Binding Path=S2, Mode=TwoWay}"/>
+
+                        <Label Style="{StaticResource label}" Grid.Row="4" Content="Phi:"/>
+                        <TextBox Style="{StaticResource textBox}" Grid.Row="4" Text="{Binding Path=Phi, Mode=TwoWay}"/>
+                    </Grid>
+                </GroupBox>
+
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

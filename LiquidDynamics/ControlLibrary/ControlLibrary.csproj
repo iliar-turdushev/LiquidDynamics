@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9CA34D83-D81C-424B-BE6D-7920C244F6E8}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ControlLibrary</RootNamespace>
+    <AssemblyName>ControlLibrary</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="Tao.FreeGlut, Version=2.4.0.2, Culture=neutral, PublicKeyToken=6e602a6ad6c0d06d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\TaoFramework\Tao.FreeGlut.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Tao.OpenGl, Version=2.1.0.12, Culture=neutral, PublicKeyToken=1ca010269a4501ef, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\TaoFramework\Tao.OpenGl.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Tao.Platform.Windows, Version=1.0.0.5, Culture=neutral, PublicKeyToken=701104b2da67a104, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\TaoFramework\Tao.Platform.Windows.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BluePalette.cs" />
+    <Compile Include="Graphs\Graphs2D\CurveDrawer.cs" />
+    <Compile Include="Graphs\Graphs2D\FilledRectangleDrawer.cs" />
+    <Compile Include="Graphs\Graphs2D\LinesDrawer.cs" />
+    <Compile Include="Graphs\Graphs2D\PointsDrawer.cs" />
+    <Compile Include="Graphs\Graphs2D\RectangleDrawer.cs" />
+    <Compile Include="Graphs\Graphs2D\SquareVelocityFieldDrawer.cs" />
+    <Compile Include="Graphs\Graphs3D\Curve3DDrawer.cs" />
+    <Compile Include="Drawing\IPaletteDrawingTools.cs" />
+    <Compile Include="Drawing\PaletteFactory.cs" />
+    <Compile Include="BlueRedPalette.cs" />
+    <Compile Include="Graphs\Graphs3D\CustomDrawer.cs" />
+    <Compile Include="Graphs\Graphs3D\IGraphDrawer3D.cs" />
+    <Compile Include="Graphs\Graphs3D\Lines3DDrawer.cs" />
+    <Compile Include="Graphs\Graphs3D\Points3DDrawer.cs" />
+    <Compile Include="Graphs\Graphs3D\Rectangles3DDrawer.cs" />
+    <Compile Include="Graphs\Graphs3D\Surface3DDrawer.cs" />
+    <Compile Include="LegendItem.cs" />
+    <Compile Include="Types\Bounds.cs" />
+    <Compile Include="Types\Bounds3D.cs" />
+    <Compile Include="CoordinatesConverter.cs" />
+    <Compile Include="Types\Curve3D.cs" />
+    <Compile Include="Controls\Graph3DControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\GraphControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Graphs\Graphs2D\IGraphDrawer.cs" />
+    <Compile Include="PaletteBase.cs" />
+    <Compile Include="Controls\PaletteControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Types\Line3D.cs" />
+    <Compile Include="Types\Point3D.cs" />
+    <Compile Include="Types\Rectangle3D.cs" />
+    <Compile Include="Types\SquareVelocityField.cs" />
+    <Compile Include="Graphs\Graphs2D\PalettedSquareVelocityFieldDrawer.cs" />
+    <Compile Include="Types\Surface3D.cs" />
+    <Compile Include="Types\UpwellingData.cs" />
+    <Compile Include="Types\Vector.cs" />
+    <Compile Include="Graphs\Graphs2D\UpwellingDrawer.cs" />
+    <Compile Include="Types\VectorScalingMode.cs" />
+    <Compile Include="Types\ZDirection.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{7DE8D18E-75CC-4A51-8506-9580CCE220BD}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
