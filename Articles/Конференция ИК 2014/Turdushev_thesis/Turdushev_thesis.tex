@@ -1,0 +1,79 @@
+\documentclass[12pt,a4paper,reqno]{amsart}
+\renewcommand{\baselinestretch}{1.2}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{anysize}
+\marginsize{2.cm}{2.cm}{1.cm}{1.cm}
+
+\begin{document}
+\begin{minipage}[b]{15cm}
+\footnotesize{\emph{The V Congress of Turkic World Mathematicians,
+Bulan-Sogottu, Kyrgyzstan, June 5-7, 2014} \qquad}
+\end{minipage}
+\bigskip
+
+\title{ON CALCULATION OF INTEGRAL PARTS OF MOTION \\
+IN THE THREE-DIMENSIONAL WIND FLOWS MODEL}
+\maketitle
+
+\begin{center}
+Iliar Turdushev\textsuperscript{1}, Sergey Skliar\textsuperscript{1,2} \\
+\textsuperscript{1}KRSU, Kyrgyzstan, Bishkek; \textsuperscript{2}AUCA, Kyrgyzstan,
+ Bishkek \\
+iliar.turdushev@gmail.com, sklyar51@gmail.com
+\end{center}
+\bigskip
+
+In general formulation the mathematical model of wind flows of liquid in reservoir is
+ described by the non-stationary initial-boundary value problem for the system of
+ nonlinear equations which can be solved only using numerical methods [1]. Taking into
+ account the specific of Issyk-Kul Lake the general model was simplified and some classes
+ of its analytical solutions in the areas of special form were found in [2]. The
+ algorithms of the model that was proposed in [2] suppose calculation of the integral
+ parts $U$ and $V$ of the horizontal components of the velocity vector. For this purpose
+ the next system of equations is solved:
+\begin{equation}
+\begin{cases}
+\displaystyle\frac{\partial U}{\partial t} + \mu U - \ell V =
+ -\frac{H}{\rho_0}\frac{\partial P^s}{\partial x} + \frac{\tau_x}{\rho_0}, \\[12pt]
+\displaystyle\frac{\partial V}{\partial t} + \mu V + \ell U =
+ -\frac{H}{\rho_0}\frac{\partial P^s}{\partial y} + \frac{\tau_y}{\rho_0}, \\[12pt]
+\displaystyle\frac{\partial U}{\partial x} + \frac{\partial V}{\partial y} = 0,
+ (x, y) \in \Omega_0, t > 0.
+\end{cases}
+\end{equation}
+\begin{align}
+\{(x, y) \in \partial \Omega_0\}&: U n_x + V n_y = 0, \\
+t = 0&: U = U_0, V = V_0.
+\end{align}
+
+The problem (1)-(3) is considered in the two-dimensional area $\Omega_0$ that
+ describes the surface of reservoir. The set $\partial \Omega_0$ is the border
+ of the area $\Omega_0$.
+
+In the system of equations (1)-(3) the next notations are used: $U = U(t, x, y)$ and
+ $V = V(t, x, y)$ are integral parts of the horizontal components of velocity vector;
+ $P^s = P^{s}(t, x, y)$ is a pressure on the undisturbed area $\Omega_0$; $H = H(x, y)$
+ describes the bottom contour of reservoir; $\tau_x = \tau_{x}(t, x, y), \tau_y =
+ \tau_{y}(t, x, y)$ are the components of the tangential stress of wind friction; $\ell =
+ \ell(x, y)$ is a Coriolis force; $\rho_0$ is the mean value of density; $\mu \ge 0$
+ is a parameter that defines a bottom friction; $n = (n_x, n_y)$ is a vector of an
+ outer normal of the border of the area $\Omega_0$.
+
+In this paper new projective difference schemes for solving the problem (1)-(3) are
+ discussed. In order to illustrate the operation and confirm the efficiency of the
+ suggested difference schemes the results of numerical experiments that were held using
+ analytical solutions of the system of equations (1)-(3) found in [2] are presented.
+
+\begin{thebibliography}{2}
+
+\bibitem{} Marchuk G.I., Sarkisyan A.S. (1988) Matematicheskoe modelirovanie
+ cirkulyacii okeana. – Nauka, Moskva, 302 p.
+
+\bibitem{} Turdushev I.A., Skliar S.N. (2013) Analiticheskie resheniya dlya
+ trehmernoi modeli vetrovyh techenii v vodoeme. {\it {Materialy 2-i mejdunarodnoi
+ konferencii, posvyaschennoj 20-i letiyu obrazovaniy Kyrgyzsko-Rossiiskogo Slavyanskogo
+ Universiteta i 100-letiyu professora Y. V. Bykova}}, Bishkek, Vol. 2, p. 258.
+
+\end{thebibliography}
+\end{document}
