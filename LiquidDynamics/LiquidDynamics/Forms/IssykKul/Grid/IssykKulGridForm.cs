@@ -348,9 +348,9 @@ namespace LiquidDynamics.Forms.IssykKul.Grid
                var r4 = new RectangleF(r1.X + hx, r1.Y + hy, hx, hy);
 
                float d1 = cells[i, j].Depth;
-               float d2 = cells[i + 1, j] == null ? 0 : cells[i + 1, j].Depth;
-               float d3 = cells[i, j + 1] == null ? 0 : cells[i, j + 1].Depth;
-               float d4 = cells[i + 1, j + 1] == null ? 0 : cells[i + 1, j + 1].Depth;
+               float d2 = cells[i + 1, j] == null ? min : cells[i + 1, j].Depth;
+               float d3 = cells[i, j + 1] == null ? min : cells[i, j + 1].Depth;
+               float d4 = cells[i + 1, j + 1] == null ? min : cells[i + 1, j + 1].Depth;
 
                Gl.glBegin(Gl.GL_TRIANGLE_STRIP);
 
