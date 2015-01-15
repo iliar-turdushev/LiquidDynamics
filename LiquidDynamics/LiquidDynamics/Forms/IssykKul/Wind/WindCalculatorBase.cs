@@ -16,7 +16,7 @@ namespace LiquidDynamics.Forms.IssykKul.Wind
       private const double H0 = 3 * 10E+4; // см
       private const double L0 = 10E-4; // 1/с
 
-      private const double K = -Gamma * W0 * W0 / (Rho0 * U0 * H0 * L0);
+      private const double K = Gamma * W0 * W0 / (Rho0 * U0 * H0 * L0);
 
       protected const double Pi = Math.PI;
       protected const double Lx = 175.67;
