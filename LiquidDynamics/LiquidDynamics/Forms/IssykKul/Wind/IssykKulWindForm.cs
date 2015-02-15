@@ -97,12 +97,7 @@ namespace LiquidDynamics.Forms.IssykKul.Wind
 
       private static WindParameters getDefaultWindParameters()
       {
-         return new WindParameters(60, -300, 0, 0,
-                                   0, 0.1, 0, 0,
-                                   1, 1, 0.1, 0.1,
-                                   -1, 0, 0, 0,
-                                   0, 0, 0, 0,
-                                   0, 0, 0, 0);
+         return TypicalWindParameters.WindType6;
       }
       
       private void initializeParameterNameToTextBoxDictionary()

@@ -149,6 +149,7 @@
     </Compile>
     <Compile Include="Forms\IssykKul\Wind\IssykKulWindFormDataProvider.cs" />
     <Compile Include="Forms\IssykKul\Wind\SantashWindCalculator.cs" />
+    <Compile Include="Forms\IssykKul\Wind\TypicalWindParameters.cs" />
     <Compile Include="Forms\IssykKul\Wind\UlanWindCalculator.cs" />
     <Compile Include="Forms\IssykKul\Wind\WindCalculatorBase.cs" />
     <Compile Include="Forms\IssykKul\Wind\WindParameters.cs" />
