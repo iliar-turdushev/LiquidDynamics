@@ -15,6 +15,16 @@ namespace LiquidDynamics.Forms.IssykKul.Wind
       private const string Santash = "Санташ";
       private const string UlanPlusSantash = "Улан + Санташ";
 
+      private const string WindType1 = "Вариант 1";
+      private const string WindType2 = "Вариант 2";
+      private const string WindType3 = "Вариант 3";
+      private const string WindType4 = "Вариант 4";
+      private const string WindType5 = "Вариант 5";
+      private const string WindType6 = "Вариант 6";
+      private const string WindType7 = "Вариант 7";
+      private const string WindType8 = "Вариант 8";
+      private const string WindType9 = "Вариант 9";
+
       private static readonly Pen WindPen = new Pen(Color.Red, 1) {EndCap = LineCap.ArrowAnchor};
       private static readonly IPaletteDrawingTools PaletteDrawingTools = PaletteFactory.CreateBluePalette();
 
@@ -26,13 +36,14 @@ namespace LiquidDynamics.Forms.IssykKul.Wind
       {
          InitializeComponent();
          initializeComboBoxWind();
+         initializeComboBoxWindTypes();
 
          fillWindParametersTextBoxes();
          initializeParameterNameToTextBoxDictionary();
 
          _dataProvider = new IssykKulWindFormDataProvider();
       }
-      
+
       private void buttonBuildWindClick(object sender, EventArgs e)
       {
          try
@@ -52,6 +63,11 @@ namespace LiquidDynamics.Forms.IssykKul.Wind
          }
       }
 
+      private void comboBoxWindTypesSelectedIndexChanged(object sender, EventArgs e)
+      {
+         fillWindParametersTextBoxes();
+      }
+
       private void initializeComboBoxWind()
       {
          _comboBoxWind.Items.Add(Ulan);
@@ -60,9 +76,23 @@ namespace LiquidDynamics.Forms.IssykKul.Wind
          _comboBoxWind.SelectedItem = Ulan;
       }
 
+      private void initializeComboBoxWindTypes()
+      {
+         _comboBoxWindTypes.Items.Add(WindType1);
+         _comboBoxWindTypes.Items.Add(WindType2);
+         _comboBoxWindTypes.Items.Add(WindType3);
+         _comboBoxWindTypes.Items.Add(WindType4);
+         _comboBoxWindTypes.Items.Add(WindType5);
+         _comboBoxWindTypes.Items.Add(WindType6);
+         _comboBoxWindTypes.Items.Add(WindType7);
+         _comboBoxWindTypes.Items.Add(WindType8);
+         _comboBoxWindTypes.Items.Add(WindType9);
+         _comboBoxWindTypes.SelectedItem = WindType1;
+      }
+
       private void fillWindParametersTextBoxes()
       {
-         WindParameters windParameters = getDefaultWindParameters();
+         WindParameters windParameters = getWindParameters();
 
          _textBoxA1.Text = windParameters.A1.ToString();
          _textBoxA2.Text = windParameters.A2.ToString();
@@ -95,9 +125,37 @@ namespace LiquidDynamics.Forms.IssykKul.Wind
          _textBoxB4y.Text = windParameters.B4y.ToString();
       }
 
-      private static WindParameters getDefaultWindParameters()
+      private WindParameters getWindParameters()
       {
-         return TypicalWindParameters.WindType5;
+         switch ((string) _comboBoxWindTypes.SelectedItem)
+         {
+            case WindType1:
+               return TypicalWindParameters.WindType1;
+
+            case WindType2:
+               return TypicalWindParameters.WindType2;
+
+            case WindType3:
+               return TypicalWindParameters.WindType3;
+
+            case WindType4:
+               return TypicalWindParameters.WindType4;
+
+            case WindType5:
+               return TypicalWindParameters.WindType5;
+
+            case WindType6:
+               return TypicalWindParameters.WindType6;
+
+            case WindType7:
+               return TypicalWindParameters.WindType7;
+
+            case WindType8:
+               return TypicalWindParameters.WindType8;
+
+            default:
+               return TypicalWindParameters.WindType9;
+         }
       }
       
       private void initializeParameterNameToTextBoxDictionary()

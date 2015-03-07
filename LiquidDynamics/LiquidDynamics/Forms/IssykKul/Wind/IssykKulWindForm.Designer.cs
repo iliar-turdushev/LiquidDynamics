@@ -64,14 +64,6 @@
          this._labelA1x = new System.Windows.Forms.Label();
          this._groupBoxUlanParameters = new System.Windows.Forms.GroupBox();
          this._groupBoxSantashParameters = new System.Windows.Forms.GroupBox();
-         this._textBoxB4 = new System.Windows.Forms.TextBox();
-         this._textBoxB3 = new System.Windows.Forms.TextBox();
-         this._labelB4 = new System.Windows.Forms.Label();
-         this._labelB3 = new System.Windows.Forms.Label();
-         this._textBoxA4 = new System.Windows.Forms.TextBox();
-         this._textBoxA3 = new System.Windows.Forms.TextBox();
-         this._labelA4 = new System.Windows.Forms.Label();
-         this._labelA3 = new System.Windows.Forms.Label();
          this._textBoxB4y = new System.Windows.Forms.TextBox();
          this._textBoxB3y = new System.Windows.Forms.TextBox();
          this._textBoxB2y = new System.Windows.Forms.TextBox();
@@ -88,6 +80,16 @@
          this._labelB3x = new System.Windows.Forms.Label();
          this._labelB2x = new System.Windows.Forms.Label();
          this._labelB1x = new System.Windows.Forms.Label();
+         this._textBoxB4 = new System.Windows.Forms.TextBox();
+         this._textBoxB3 = new System.Windows.Forms.TextBox();
+         this._labelB4 = new System.Windows.Forms.Label();
+         this._labelB3 = new System.Windows.Forms.Label();
+         this._textBoxA4 = new System.Windows.Forms.TextBox();
+         this._textBoxA3 = new System.Windows.Forms.TextBox();
+         this._labelA4 = new System.Windows.Forms.Label();
+         this._labelA3 = new System.Windows.Forms.Label();
+         this._labelWindTypes = new System.Windows.Forms.ToolStripLabel();
+         this._comboBoxWindTypes = new System.Windows.Forms.ToolStripComboBox();
          this._toolStrip.SuspendLayout();
          this._groupBoxUlanParameters.SuspendLayout();
          this._groupBoxSantashParameters.SuspendLayout();
@@ -102,7 +104,9 @@
             this._labelM,
             this._textBoxM,
             this._labelWind,
-            this._comboBoxWind});
+            this._comboBoxWind,
+            this._labelWindTypes,
+            this._comboBoxWindTypes});
          this._toolStrip.Location = new System.Drawing.Point(0, 0);
          this._toolStrip.Name = "_toolStrip";
          this._toolStrip.Size = new System.Drawing.Size(763, 25);
@@ -437,70 +441,6 @@
          this._groupBoxSantashParameters.TabStop = false;
          this._groupBoxSantashParameters.Text = "Санташ";
          // 
-         // _textBoxB4
-         // 
-         this._textBoxB4.Location = new System.Drawing.Point(306, 19);
-         this._textBoxB4.Name = "_textBoxB4";
-         this._textBoxB4.Size = new System.Drawing.Size(50, 20);
-         this._textBoxB4.TabIndex = 23;
-         // 
-         // _textBoxB3
-         // 
-         this._textBoxB3.Location = new System.Drawing.Point(217, 19);
-         this._textBoxB3.Name = "_textBoxB3";
-         this._textBoxB3.Size = new System.Drawing.Size(50, 20);
-         this._textBoxB3.TabIndex = 22;
-         // 
-         // _labelB4
-         // 
-         this._labelB4.AutoSize = true;
-         this._labelB4.Location = new System.Drawing.Point(277, 22);
-         this._labelB4.Name = "_labelB4";
-         this._labelB4.Size = new System.Drawing.Size(23, 13);
-         this._labelB4.TabIndex = 21;
-         this._labelB4.Text = "B4:";
-         // 
-         // _labelB3
-         // 
-         this._labelB3.AutoSize = true;
-         this._labelB3.Location = new System.Drawing.Point(188, 22);
-         this._labelB3.Name = "_labelB3";
-         this._labelB3.Size = new System.Drawing.Size(23, 13);
-         this._labelB3.TabIndex = 20;
-         this._labelB3.Text = "B3:";
-         // 
-         // _textBoxA4
-         // 
-         this._textBoxA4.Location = new System.Drawing.Point(128, 19);
-         this._textBoxA4.Name = "_textBoxA4";
-         this._textBoxA4.Size = new System.Drawing.Size(50, 20);
-         this._textBoxA4.TabIndex = 19;
-         // 
-         // _textBoxA3
-         // 
-         this._textBoxA3.Location = new System.Drawing.Point(39, 19);
-         this._textBoxA3.Name = "_textBoxA3";
-         this._textBoxA3.Size = new System.Drawing.Size(50, 20);
-         this._textBoxA3.TabIndex = 18;
-         // 
-         // _labelA4
-         // 
-         this._labelA4.AutoSize = true;
-         this._labelA4.Location = new System.Drawing.Point(99, 22);
-         this._labelA4.Name = "_labelA4";
-         this._labelA4.Size = new System.Drawing.Size(23, 13);
-         this._labelA4.TabIndex = 17;
-         this._labelA4.Text = "A4:";
-         // 
-         // _labelA3
-         // 
-         this._labelA3.AutoSize = true;
-         this._labelA3.Location = new System.Drawing.Point(10, 22);
-         this._labelA3.Name = "_labelA3";
-         this._labelA3.Size = new System.Drawing.Size(23, 13);
-         this._labelA3.TabIndex = 16;
-         this._labelA3.Text = "A3:";
-         // 
          // _textBoxB4y
          // 
          this._textBoxB4y.Location = new System.Drawing.Point(306, 71);
@@ -629,6 +569,83 @@
          this._labelB1x.TabIndex = 48;
          this._labelB1x.Text = "b1x:";
          // 
+         // _textBoxB4
+         // 
+         this._textBoxB4.Location = new System.Drawing.Point(306, 19);
+         this._textBoxB4.Name = "_textBoxB4";
+         this._textBoxB4.Size = new System.Drawing.Size(50, 20);
+         this._textBoxB4.TabIndex = 23;
+         // 
+         // _textBoxB3
+         // 
+         this._textBoxB3.Location = new System.Drawing.Point(217, 19);
+         this._textBoxB3.Name = "_textBoxB3";
+         this._textBoxB3.Size = new System.Drawing.Size(50, 20);
+         this._textBoxB3.TabIndex = 22;
+         // 
+         // _labelB4
+         // 
+         this._labelB4.AutoSize = true;
+         this._labelB4.Location = new System.Drawing.Point(277, 22);
+         this._labelB4.Name = "_labelB4";
+         this._labelB4.Size = new System.Drawing.Size(23, 13);
+         this._labelB4.TabIndex = 21;
+         this._labelB4.Text = "B4:";
+         // 
+         // _labelB3
+         // 
+         this._labelB3.AutoSize = true;
+         this._labelB3.Location = new System.Drawing.Point(188, 22);
+         this._labelB3.Name = "_labelB3";
+         this._labelB3.Size = new System.Drawing.Size(23, 13);
+         this._labelB3.TabIndex = 20;
+         this._labelB3.Text = "B3:";
+         // 
+         // _textBoxA4
+         // 
+         this._textBoxA4.Location = new System.Drawing.Point(128, 19);
+         this._textBoxA4.Name = "_textBoxA4";
+         this._textBoxA4.Size = new System.Drawing.Size(50, 20);
+         this._textBoxA4.TabIndex = 19;
+         // 
+         // _textBoxA3
+         // 
+         this._textBoxA3.Location = new System.Drawing.Point(39, 19);
+         this._textBoxA3.Name = "_textBoxA3";
+         this._textBoxA3.Size = new System.Drawing.Size(50, 20);
+         this._textBoxA3.TabIndex = 18;
+         // 
+         // _labelA4
+         // 
+         this._labelA4.AutoSize = true;
+         this._labelA4.Location = new System.Drawing.Point(99, 22);
+         this._labelA4.Name = "_labelA4";
+         this._labelA4.Size = new System.Drawing.Size(23, 13);
+         this._labelA4.TabIndex = 17;
+         this._labelA4.Text = "A4:";
+         // 
+         // _labelA3
+         // 
+         this._labelA3.AutoSize = true;
+         this._labelA3.Location = new System.Drawing.Point(10, 22);
+         this._labelA3.Name = "_labelA3";
+         this._labelA3.Size = new System.Drawing.Size(23, 13);
+         this._labelA3.TabIndex = 16;
+         this._labelA3.Text = "A3:";
+         // 
+         // _labelWindTypes
+         // 
+         this._labelWindTypes.Name = "_labelWindTypes";
+         this._labelWindTypes.Size = new System.Drawing.Size(113, 22);
+         this._labelWindTypes.Text = "Ветровые режимы:";
+         // 
+         // _comboBoxWindTypes
+         // 
+         this._comboBoxWindTypes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+         this._comboBoxWindTypes.Name = "_comboBoxWindTypes";
+         this._comboBoxWindTypes.Size = new System.Drawing.Size(121, 25);
+         this._comboBoxWindTypes.SelectedIndexChanged += new System.EventHandler(this.comboBoxWindTypesSelectedIndexChanged);
+         // 
          // IssykKulWindForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -715,5 +732,7 @@
       private System.Windows.Forms.Label _labelB3x;
       private System.Windows.Forms.Label _labelB2x;
       private System.Windows.Forms.Label _labelB1x;
+      private System.Windows.Forms.ToolStripLabel _labelWindTypes;
+      private System.Windows.Forms.ToolStripComboBox _comboBoxWindTypes;
    }
 }
