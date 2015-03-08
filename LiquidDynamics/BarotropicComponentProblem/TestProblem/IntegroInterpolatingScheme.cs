@@ -8,8 +8,6 @@ namespace BarotropicComponentProblem.TestProblem
 {
    public sealed class IntegroInterpolatingScheme : IDynamicProblem
    {
-      private const double Pi = Math.PI;
-
       private static readonly Func<double, double> Cos = Math.Cos;
       private static readonly Func<double, double> Sin = Math.Sin;
       private static readonly Func<double, double> Exp = Math.Exp;
@@ -19,6 +17,7 @@ namespace BarotropicComponentProblem.TestProblem
       private readonly IssykKulGrid2D _grid;
 
       private readonly double _tau;
+      private readonly IWind _wind;
 
       private double[] _l;
       private double[] _alpha;
@@ -26,7 +25,7 @@ namespace BarotropicComponentProblem.TestProblem
       private double[] _fa;
       private double[] _fb;
 
-      private double[] _tauX;
+      private double[,] _tauX;
       private double[,] _tauY;
       
       private readonly Double[,] _epsilon;
@@ -36,14 +35,20 @@ namespace BarotropicComponentProblem.TestProblem
       private Double[,] _f;
       private Double[,] _g;
 
-      public IntegroInterpolatingScheme(ProblemParameters problemParameters, IssykKulGrid2D grid, double tau)
+      public IntegroInterpolatingScheme(
+         ProblemParameters problemParameters,
+         IssykKulGrid2D grid,
+         IWind wind,
+         double tau
+         )
       {
          Check.NotNull(problemParameters, "problemParameters");
          Check.NotNull(grid, "grid");
+         Check.NotNull(wind, "wind");
 
          _problemParameters = problemParameters;
          _grid = grid;
-         
+         _wind = wind;
          _tau = tau;
 
          initializeCommonFunctions();
@@ -137,24 +142,19 @@ namespace BarotropicComponentProblem.TestProblem
          Grid xGrid = Grid.Create(0.0, _problemParameters.SmallR, _grid.N + 1);
          Grid yGrid = Grid.Create(0.0, _problemParameters.SmallQ, _grid.M + 1);
 
-         double rho0 = _problemParameters.Rho0;
-         double smallR = _problemParameters.SmallR;
-         double smallQ = _problemParameters.SmallQ;
-         double f1 = _problemParameters.F1;
-         double f2 = _problemParameters.F2;
-
-         _tauX = new double[yGrid.Nodes];
+         _tauX = new double[xGrid.Nodes, yGrid.Nodes];
          _tauY = new double[xGrid.Nodes, yGrid.Nodes];
 
-         for (var j = 0; j < yGrid.Nodes; j++)
+         for (var i = 0; i < xGrid.Nodes; i++)
          {
-            var y = yGrid.Get(j);
-            _tauX[j] = -f1 * smallQ * rho0 / Pi * Cos(Pi * y / smallQ);
+            double x = xGrid.Get(i);
 
-            for (var i = 0; i < xGrid.Nodes; i++)
+            for (var j = 0; j < yGrid.Nodes; j++)
             {
-               var x = xGrid.Get(i);
-               _tauY[i, j] = f2 * smallR * rho0 / Pi * Cos(Pi * x / smallR) * Sin(Pi * y / smallQ);
+               double y = yGrid.Get(j);
+
+               _tauX[i, j] = _wind.TauX(x, y);
+               _tauY[i, j] = _wind.TauY(x, y);
             }
          }
       }
@@ -355,7 +355,7 @@ namespace BarotropicComponentProblem.TestProblem
                   double t2 = _fa[row] - mu;
 
                   _f[i, j] = new Double {Value = _tauY[i, j] / (rho0 * h) + t1 * u[i, j] / h + t2 * v[i, j] / h};
-                  _g[i, j] = new Double {Value = _tauX[j] / (rho0 * h) + t2 * u[i, j] / h - t1 * v[i, j] / h};
+                  _g[i, j] = new Double {Value = _tauX[i, j] / (rho0 * h) + t2 * u[i, j] / h - t1 * v[i, j] / h};
                }
 
                if (i == n - 1 || _grid[i + 1, j] == GridCell.Empty)
@@ -365,7 +365,7 @@ namespace BarotropicComponentProblem.TestProblem
                   double t2 = _fa[row] - mu;
 
                   _f[i + 1, j] = new Double {Value = _tauY[i + 1, j] / (rho0 * h) + t1 * u[i + 1, j] / h + t2 * v[i + 1, j] / h};
-                  _g[i + 1, j] = new Double {Value = _tauX[j] / (rho0 * h) + t2 * u[i + 1, j] / h - t1 * v[i + 1, j] / h};
+                  _g[i + 1, j] = new Double {Value = _tauX[i + 1, j] / (rho0 * h) + t2 * u[i + 1, j] / h - t1 * v[i + 1, j] / h};
                }
 
                if (j == m - 1 || _grid[i, j + 1] == GridCell.Empty)
@@ -375,7 +375,7 @@ namespace BarotropicComponentProblem.TestProblem
                   double t2 = _fa[row + 2] - mu;
 
                   _f[i, j + 1] = new Double {Value = _tauY[i, j + 1] / (rho0 * h) + t1 * u[i, j + 1] / h + t2 * v[i, j + 1] / h};
-                  _g[i, j + 1] = new Double {Value = _tauX[j + 1] / (rho0 * h) + t2 * u[i, j + 1] / h - t1 * v[i, j + 1] / h};
+                  _g[i, j + 1] = new Double {Value = _tauX[i, j + 1] / (rho0 * h) + t2 * u[i, j + 1] / h - t1 * v[i, j + 1] / h};
                }
 
                if ((i == n - 1 && j == m - 1) ||
@@ -396,7 +396,7 @@ namespace BarotropicComponentProblem.TestProblem
                   _g[i + 1, j + 1] = new Double
                                         {
                                            Value =
-                                              _tauX[j + 1] / (rho0 * h) + t2 * u[i + 1, j + 1] / h -
+                                              _tauX[i + 1, j + 1] / (rho0 * h) + t2 * u[i + 1, j + 1] / h -
                                               t1 * v[i + 1, j + 1] / h
                                         };
                }

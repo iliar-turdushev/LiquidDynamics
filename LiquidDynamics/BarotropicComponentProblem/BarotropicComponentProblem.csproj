@@ -61,6 +61,7 @@
     <Compile Include="IterationMethod\IterationProcessParameters.cs" />
     <Compile Include="IterationMethod\IterationResult.cs" />
     <Compile Include="IterationMethod\IterationStatus.cs" />
+    <Compile Include="IWind.cs" />
     <Compile Include="Kriging\Gamma2.cs" />
     <Compile Include="Kriging\Gamma3.cs" />
     <Compile Include="Kriging\Gamma4.cs" />

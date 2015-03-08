@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using Common;
 using ControlLibrary.Drawing;
 using ControlLibrary.Types;
+using LiquidDynamics.Forms.IssykKul.Wind;
 using LiquidDynamics.Properties;
 using ModelProblem;
 
@@ -12,6 +13,16 @@ namespace LiquidDynamics.Forms.IssykKul.Equation
 {
    public partial class IssykKulVelocityFieldForm : Form
    {
+      private const string WindType1 = "Вариант 1";
+      private const string WindType2 = "Вариант 2";
+      private const string WindType3 = "Вариант 3";
+      private const string WindType4 = "Вариант 4";
+      private const string WindType5 = "Вариант 5";
+      private const string WindType6 = "Вариант 6";
+      private const string WindType7 = "Вариант 7";
+      private const string WindType8 = "Вариант 8";
+      private const string WindType9 = "Вариант 9";
+
       private readonly Parameters _problemParameters;
       private static readonly IPaletteDrawingTools PaletteDrawingTools = PaletteFactory.CreateBluePalette();
 
@@ -27,6 +38,7 @@ namespace LiquidDynamics.Forms.IssykKul.Equation
          _dataProvider = new IssykKulVelocityFieldFormDataProvider();
 
          InitializeComponent();
+         initializeComboBoxWindType();
       }
 
       private void buttonResetClick(object sender, EventArgs e)
@@ -35,7 +47,7 @@ namespace LiquidDynamics.Forms.IssykKul.Equation
          {
             Solution solution = _dataProvider.Reset(readN(), readM(), readTau(), readTheta(),
                                                     readSigma(), readDelta(), readK(),
-                                                    _problemParameters);
+                                                    _problemParameters, getWindParameters());
             drawVelocityField(solution);
          }
          catch (InvalidFieldValueException error)
@@ -49,6 +61,53 @@ namespace LiquidDynamics.Forms.IssykKul.Equation
       {
          Solution solution = _dataProvider.Step();
          drawVelocityField(solution);
+      }
+
+      private void initializeComboBoxWindType()
+      {
+         _comboBoxWindType.Items.Add(WindType1);
+         _comboBoxWindType.Items.Add(WindType2);
+         _comboBoxWindType.Items.Add(WindType3);
+         _comboBoxWindType.Items.Add(WindType4);
+         _comboBoxWindType.Items.Add(WindType5);
+         _comboBoxWindType.Items.Add(WindType6);
+         _comboBoxWindType.Items.Add(WindType7);
+         _comboBoxWindType.Items.Add(WindType8);
+         _comboBoxWindType.Items.Add(WindType9);
+         _comboBoxWindType.SelectedItem = WindType6;
+      }
+
+      private WindParameters getWindParameters()
+      {
+         switch ((string) _comboBoxWindType.SelectedItem)
+         {
+            case WindType1:
+               return TypicalWindParameters.WindType1;
+
+            case WindType2:
+               return TypicalWindParameters.WindType2;
+
+            case WindType3:
+               return TypicalWindParameters.WindType3;
+
+            case WindType4:
+               return TypicalWindParameters.WindType4;
+
+            case WindType5:
+               return TypicalWindParameters.WindType5;
+
+            case WindType6:
+               return TypicalWindParameters.WindType6;
+
+            case WindType7:
+               return TypicalWindParameters.WindType7;
+
+            case WindType8:
+               return TypicalWindParameters.WindType8;
+
+            default:
+               return TypicalWindParameters.WindType9;
+         }
       }
 
       private void drawVelocityField(Solution solution)

@@ -5,6 +5,7 @@ using BarotropicComponentProblem.IterationMethod;
 using BarotropicComponentProblem.TestProblem;
 using Common;
 using ControlLibrary.Types;
+using LiquidDynamics.Forms.IssykKul.Wind;
 using LiquidDynamics.Properties;
 using Mathematics.Numerical;
 using ModelProblem;
@@ -23,10 +24,7 @@ namespace LiquidDynamics.Forms.IssykKul.Equation
       
       private BarotropicComponentProblemSolver _solver;
 
-      public Solution Reset(
-         int n, int m, double tau, double theta,
-         double sigma, double delta, int k,
-         Parameters parameters)
+      public Solution Reset(int n, int m, double tau, double theta, double sigma, double delta, int k, Parameters parameters, WindParameters windParameters)
       {
          Check.NotNull(parameters, "problemParameters");
 
@@ -43,7 +41,7 @@ namespace LiquidDynamics.Forms.IssykKul.Equation
 
          _problemParameters = getParameters(parameters, xMax, yMax);
 
-         var scheme = new IntegroInterpolatingScheme(_problemParameters, _grid, tau);
+         var scheme = new IntegroInterpolatingScheme(_problemParameters, _grid, getWind(windParameters), tau);
 
          _x = Mathematics.Numerical.Grid.Create(0.0, xMax / StretchCoefficients.L0, n + 1);
          _y = Mathematics.Numerical.Grid.Create(0.0, yMax / StretchCoefficients.L0, m + 1);
@@ -82,6 +80,11 @@ namespace LiquidDynamics.Forms.IssykKul.Equation
                       F1 = parameters.F1,
                       F2 = parameters.F2
                    };
+      }
+
+      private IWind getWind(WindParameters windParameters)
+      {
+         return new IssykKulWind(windParameters);
       }
 
       private int[,] getSurface(IssykKulGrid2D grid)

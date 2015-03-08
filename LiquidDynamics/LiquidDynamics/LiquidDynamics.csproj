@@ -95,6 +95,7 @@
     <Compile Include="Forms\BarotropicComponentNumerical\ErrorContainer.cs" />
     <Compile Include="Forms\BarotropicComponentNumerical\GraphType.cs" />
     <Compile Include="Forms\BarotropicComponentNumerical\GridParameters.cs" />
+    <Compile Include="Forms\BarotropicComponentNumerical\ModelWind.cs" />
     <Compile Include="Forms\BarotropicComponentNumerical\SchemeType.cs" />
     <Compile Include="Forms\BarotropicComponent\BarotropicComponentForm.cs">
       <SubType>Form</SubType>
@@ -121,6 +122,7 @@
       <DependentUpon>IssykKulVelocityFieldForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\IssykKul\Equation\IssykKulVelocityFieldFormDataProvider.cs" />
+    <Compile Include="Forms\IssykKul\Equation\IssykKulWind.cs" />
     <Compile Include="Forms\IssykKul\Equation\Solution.cs" />
     <Compile Include="Forms\IssykKul\InterpolationResult.cs" />
     <Compile Include="Forms\IssykKul\Interpolation\IssykKulInterpolationForm.cs">

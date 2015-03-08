@@ -36,6 +36,7 @@ namespace LiquidDynamics.Forms.IssykKul.Equation
          this._paletteControl = new ControlLibrary.Controls.PaletteControl();
          this._toolStrip = new System.Windows.Forms.ToolStrip();
          this._buttonReset = new System.Windows.Forms.ToolStripButton();
+         this._buttonStep = new System.Windows.Forms.ToolStripButton();
          this._labelN = new System.Windows.Forms.ToolStripLabel();
          this._textBoxN = new System.Windows.Forms.ToolStripTextBox();
          this._labelM = new System.Windows.Forms.ToolStripLabel();
@@ -50,7 +51,8 @@ namespace LiquidDynamics.Forms.IssykKul.Equation
          this._textBoxDelta = new System.Windows.Forms.ToolStripTextBox();
          this._labelK = new System.Windows.Forms.ToolStripLabel();
          this._textBoxK = new System.Windows.Forms.ToolStripTextBox();
-         this._buttonStep = new System.Windows.Forms.ToolStripButton();
+         this._labelWindType = new System.Windows.Forms.ToolStripLabel();
+         this._comboBoxWindType = new System.Windows.Forms.ToolStripComboBox();
          this._toolStrip.SuspendLayout();
          this.SuspendLayout();
          // 
@@ -94,7 +96,9 @@ namespace LiquidDynamics.Forms.IssykKul.Equation
             this._labelDelta,
             this._textBoxDelta,
             this._labelK,
-            this._textBoxK});
+            this._textBoxK,
+            this._labelWindType,
+            this._comboBoxWindType});
          this._toolStrip.Location = new System.Drawing.Point(0, 0);
          this._toolStrip.Name = "_toolStrip";
          this._toolStrip.Size = new System.Drawing.Size(857, 25);
@@ -109,6 +113,15 @@ namespace LiquidDynamics.Forms.IssykKul.Equation
          this._buttonReset.Name = "_buttonReset";
          this._buttonReset.Size = new System.Drawing.Size(23, 22);
          this._buttonReset.Click += new System.EventHandler(this.buttonResetClick);
+         // 
+         // _buttonStep
+         // 
+         this._buttonStep.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+         this._buttonStep.Image = global::LiquidDynamics.Properties.Resources.StepForward;
+         this._buttonStep.ImageTransparentColor = System.Drawing.Color.Magenta;
+         this._buttonStep.Name = "_buttonStep";
+         this._buttonStep.Size = new System.Drawing.Size(23, 22);
+         this._buttonStep.Click += new System.EventHandler(this.buttonStepClick);
          // 
          // _labelN
          // 
@@ -201,14 +214,17 @@ namespace LiquidDynamics.Forms.IssykKul.Equation
          this._textBoxK.Size = new System.Drawing.Size(50, 25);
          this._textBoxK.Text = "1000";
          // 
-         // _buttonStep
+         // _labelWindType
          // 
-         this._buttonStep.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-         this._buttonStep.Image = global::LiquidDynamics.Properties.Resources.StepForward;
-         this._buttonStep.ImageTransparentColor = System.Drawing.Color.Magenta;
-         this._buttonStep.Name = "_buttonStep";
-         this._buttonStep.Size = new System.Drawing.Size(23, 22);
-         this._buttonStep.Click += new System.EventHandler(this.buttonStepClick);
+         this._labelWindType.Name = "_labelWindType";
+         this._labelWindType.Size = new System.Drawing.Size(41, 22);
+         this._labelWindType.Text = "Ветер:";
+         // 
+         // _comboBoxWindType
+         // 
+         this._comboBoxWindType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+         this._comboBoxWindType.Name = "_comboBoxWindType";
+         this._comboBoxWindType.Size = new System.Drawing.Size(121, 25);
          // 
          // IssykKulVelocityFieldForm
          // 
@@ -249,5 +265,7 @@ namespace LiquidDynamics.Forms.IssykKul.Equation
       private System.Windows.Forms.ToolStripLabel _labelK;
       private System.Windows.Forms.ToolStripTextBox _textBoxK;
       private System.Windows.Forms.ToolStripButton _buttonStep;
+      private System.Windows.Forms.ToolStripLabel _labelWindType;
+      private System.Windows.Forms.ToolStripComboBox _comboBoxWindType;
    }
 }
