@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaroclinicProblemSolver.cs" />
     <Compile Include="BarotropicComponent.cs" />
     <Compile Include="BarotropicComponentProblemSolver.cs" />
     <Compile Include="GridParameters.cs" />

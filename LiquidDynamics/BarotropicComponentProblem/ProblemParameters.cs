@@ -1,23 +1,26 @@
-namespace BarotropicComponentProblem
+п»їnamespace BarotropicComponentProblem
 {
    public sealed class ProblemParameters
    {
-      // Плотность.
+      // РџР»РѕС‚РЅРѕСЃС‚СЊ.
       public double Rho0 { get; set; }
 
-      // Размеры бассейна.
+      // Р Р°Р·РјРµСЂС‹ Р±Р°СЃСЃРµР№РЅР°.
       public double SmallR { get; set; }
       public double SmallQ { get; set; }
       public double H { get; set; }
 
-      // Параметр, характеризующий трение о одно бассейна.
+      // РџР°СЂР°РјРµС‚СЂ, С…Р°СЂР°РєС‚РµСЂРёР·СѓСЋС‰РёР№ С‚СЂРµРЅРёРµ Рѕ РѕРґРЅРѕ Р±Р°СЃСЃРµР№РЅР°.
       public double Mu { get; set; }
 
-      // Параметры, задающие силу Кориолиса.
+      // РљРѕСЌС„С„РёС†РёРµРЅС‚ РІРµСЂС‚РёРєР°Р»СЊРЅРѕР№ С‚СѓСЂР±СѓР»РµРЅС‚РЅРѕР№ РІСЏР·РєРѕСЃС‚Рё.
+      public double Nu { get; set; }
+
+      // РџР°СЂР°РјРµС‚СЂС‹, Р·Р°РґР°СЋС‰РёРµ СЃРёР»Сѓ РљРѕСЂРёРѕР»РёСЃР°.
       public double SmallL0 { get; set; }
       public double Beta { get; set; }
 
-      // Параметры, задающие силу ветра.
+      // РџР°СЂР°РјРµС‚СЂС‹, Р·Р°РґР°СЋС‰РёРµ СЃРёР»Сѓ РІРµС‚СЂР°.
       public double F1 { get; set; }
       public double F2 { get; set; }
    }
