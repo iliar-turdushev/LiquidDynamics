@@ -49,6 +49,7 @@
          this._barotropicComponentTestProblemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.issykKulVelocityFieldToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.issykKulWindToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.baroclinicComponentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this._menuStrip.SuspendLayout();
          this.SuspendLayout();
          // 
@@ -59,7 +60,8 @@
             this._graphToolStripMenuItem,
             this._barotropicComponentSolutionToolStripMenuItem,
             this.issykKulVelocityFieldToolStripMenuItem,
-            this.issykKulWindToolStripMenuItem});
+            this.issykKulWindToolStripMenuItem,
+            this.baroclinicComponentToolStripMenuItem});
          this._menuStrip.Location = new System.Drawing.Point(0, 0);
          this._menuStrip.Name = "_menuStrip";
          this._menuStrip.Size = new System.Drawing.Size(917, 24);
@@ -221,6 +223,13 @@
          this.issykKulWindToolStripMenuItem.Text = "Моделирование ветрового режима";
          this.issykKulWindToolStripMenuItem.Click += new System.EventHandler(this.issykKulWindToolStripMenuItemClick);
          // 
+         // baroclinicComponentToolStripMenuItem
+         // 
+         this.baroclinicComponentToolStripMenuItem.Name = "baroclinicComponentToolStripMenuItem";
+         this.baroclinicComponentToolStripMenuItem.Size = new System.Drawing.Size(162, 20);
+         this.baroclinicComponentToolStripMenuItem.Text = "Бароклинная компонента";
+         this.baroclinicComponentToolStripMenuItem.Click += new System.EventHandler(this.baroclinicComponentToolStripMenuItemClick);
+         // 
          // MainForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -263,6 +272,7 @@
       private System.Windows.Forms.ToolStripMenuItem _barotropicComponentToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem issykKulVelocityFieldToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem issykKulWindToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem baroclinicComponentToolStripMenuItem;
    }
 }
 

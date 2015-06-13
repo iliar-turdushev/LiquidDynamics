@@ -117,7 +117,7 @@ namespace BarotropicComponentProblem
          Complex f0 = (b0[0] * _theta0[0] + c0[0] * _theta0[1] + f[0]);
          beta[0] = f0 / b[0];
 
-         for (int k = 2; k < _n - 1; k++)
+         for (int k = 1; k < _n - 1; k++)
          {
             Complex div = (b[k] - alpha[k - 1] * a[k]);
             alpha[k] = c[k] / div;

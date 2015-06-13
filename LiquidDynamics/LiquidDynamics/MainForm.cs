@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Forms;
 using LiquidDynamics.Controls;
+using LiquidDynamics.Forms.BaroclinicComponent;
 using LiquidDynamics.Forms.BarotropicComponent;
 using LiquidDynamics.Forms.BarotropicComponentNumerical;
 using LiquidDynamics.Forms.EkmanSpiral;
@@ -149,6 +150,11 @@ namespace LiquidDynamics
       private void issykKulWindToolStripMenuItemClick(object sender, EventArgs e)
       {
          showForm(new IssykKulWindForm());
+      }
+
+      private void baroclinicComponentToolStripMenuItemClick(object sender, EventArgs e)
+      {
+         showForm(new BaroclinicComponentForm(_problemParameters));
       }
    }
 }
