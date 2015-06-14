@@ -16,6 +16,8 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
       private readonly Parameters _parameters;
       private readonly BaroclinicComponentDataProvider _provider;
 
+      private bool _dynamicsAlive;
+
       public BaroclinicComponentForm(Parameters parameters)
       {
          Check.NotNull(parameters, "parameters");
@@ -51,12 +53,36 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
 
       private void buttonStartStopClick(object sender, System.EventArgs e)
       {
+         _dynamicsAlive = !_dynamicsAlive;
+         _timer.Enabled = _dynamicsAlive;
 
+         if (_dynamicsAlive)
+         {
+            _buttonStartStop.Image = Resources.Pause;
+            setButtonsAccessibility(false);
+         }
+         else
+         {
+            _buttonStartStop.Image = Resources.Start;
+            setButtonsAccessibility(true);
+         }
       }
 
       private void buttonStepClick(object sender, System.EventArgs e)
       {
+         step();
+      }
 
+      private void timerTick(object sender, System.EventArgs e)
+      {
+         step();
+      }
+
+      private void step()
+      {
+         SolveBaroclinicProblemResult result = _provider.Step();
+         drawU(result);
+         drawV(result);
       }
 
       private void addLegend(GraphControl graphControl)
@@ -67,25 +93,31 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
 
       private void drawU(SolveBaroclinicProblemResult result)
       {
-         string caption = string.Format("U: Time = {0}, Error = {1}%", result.Time, result.ErrorU);
+         string caption = string.Format("U: Time = {0:F4}, Error = {1:F4}%", result.Time, result.ErrorU);
          drawSolutions(_graphControlU, result.ExactU, result.CalculatedU, caption);
       }
 
       private void drawV(SolveBaroclinicProblemResult result)
       {
-         string caption = string.Format("V: Time = {0}, Error = {1}%", result.Time, result.ErrorV);
+         string caption = string.Format("V: Time = {0:F4}, Error = {1:F4}%", result.Time, result.ErrorV);
          drawSolutions(_graphControlV, result.ExactV, result.CalculatedV, caption);
       }
 
       private void drawSolutions(GraphControl graphControl, PointF[] exact, PointF[] calculated, string caption)
       {
-         graphControl.AxisBounds = new Bounds(0, (float) _parameters.H, -100, 100);
+         graphControl.AxisBounds = new Bounds(0, (float) _parameters.H, -20, 20);
 
          graphControl.Clear();
          graphControl.Caption = caption;
          graphControl.DrawCurve(exact, ExactSolutionPen);
          graphControl.DrawCurve(calculated, CalculatedSolutionPen);
          graphControl.Invalidate();
+      }
+
+      private void setButtonsAccessibility(bool enabled)
+      {
+         _buttonBegin.Enabled = enabled;
+         _buttonStep.Enabled = enabled;
       }
 
       private double readX()

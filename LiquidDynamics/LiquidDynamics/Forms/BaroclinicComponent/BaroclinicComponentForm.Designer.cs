@@ -28,13 +28,11 @@
       /// </summary>
       private void InitializeComponent()
       {
+         this.components = new System.ComponentModel.Container();
          this._toolStrip = new System.Windows.Forms.ToolStrip();
          this._buttonBegin = new System.Windows.Forms.ToolStripButton();
          this._buttonStartStop = new System.Windows.Forms.ToolStripButton();
          this._buttonStep = new System.Windows.Forms.ToolStripButton();
-         this._splitContainer = new System.Windows.Forms.SplitContainer();
-         this._graphControlU = new ControlLibrary.Controls.GraphControl();
-         this._graphControlV = new ControlLibrary.Controls.GraphControl();
          this._labelX = new System.Windows.Forms.ToolStripLabel();
          this._textBoxX = new System.Windows.Forms.ToolStripTextBox();
          this._labelY = new System.Windows.Forms.ToolStripLabel();
@@ -43,6 +41,10 @@
          this._textBoxN = new System.Windows.Forms.ToolStripTextBox();
          this._labelTau = new System.Windows.Forms.ToolStripLabel();
          this._textBoxTau = new System.Windows.Forms.ToolStripTextBox();
+         this._splitContainer = new System.Windows.Forms.SplitContainer();
+         this._graphControlU = new ControlLibrary.Controls.GraphControl();
+         this._graphControlV = new ControlLibrary.Controls.GraphControl();
+         this._timer = new System.Windows.Forms.Timer(this.components);
          this._toolStrip.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this._splitContainer)).BeginInit();
          this._splitContainer.Panel1.SuspendLayout();
@@ -96,42 +98,6 @@
          this._buttonStep.Size = new System.Drawing.Size(23, 22);
          this._buttonStep.Click += new System.EventHandler(this.buttonStepClick);
          // 
-         // _splitContainer
-         // 
-         this._splitContainer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-         this._splitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-         this._splitContainer.Location = new System.Drawing.Point(0, 25);
-         this._splitContainer.Name = "_splitContainer";
-         // 
-         // _splitContainer.Panel1
-         // 
-         this._splitContainer.Panel1.Controls.Add(this._graphControlU);
-         // 
-         // _splitContainer.Panel2
-         // 
-         this._splitContainer.Panel2.Controls.Add(this._graphControlV);
-         this._splitContainer.Size = new System.Drawing.Size(959, 454);
-         this._splitContainer.SplitterDistance = 485;
-         this._splitContainer.TabIndex = 1;
-         // 
-         // _graphControlU
-         // 
-         this._graphControlU.Caption = "U";
-         this._graphControlU.Dock = System.Windows.Forms.DockStyle.Fill;
-         this._graphControlU.Location = new System.Drawing.Point(0, 0);
-         this._graphControlU.Name = "_graphControlU";
-         this._graphControlU.Size = new System.Drawing.Size(483, 452);
-         this._graphControlU.TabIndex = 0;
-         // 
-         // _graphControlV
-         // 
-         this._graphControlV.Caption = "V";
-         this._graphControlV.Dock = System.Windows.Forms.DockStyle.Fill;
-         this._graphControlV.Location = new System.Drawing.Point(0, 0);
-         this._graphControlV.Name = "_graphControlV";
-         this._graphControlV.Size = new System.Drawing.Size(468, 452);
-         this._graphControlV.TabIndex = 0;
-         // 
          // _labelX
          // 
          this._labelX.Name = "_labelX";
@@ -178,6 +144,46 @@
          this._textBoxTau.Size = new System.Drawing.Size(50, 25);
          this._textBoxTau.Text = "0.01";
          // 
+         // _splitContainer
+         // 
+         this._splitContainer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+         this._splitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+         this._splitContainer.Location = new System.Drawing.Point(0, 25);
+         this._splitContainer.Name = "_splitContainer";
+         // 
+         // _splitContainer.Panel1
+         // 
+         this._splitContainer.Panel1.Controls.Add(this._graphControlU);
+         // 
+         // _splitContainer.Panel2
+         // 
+         this._splitContainer.Panel2.Controls.Add(this._graphControlV);
+         this._splitContainer.Size = new System.Drawing.Size(959, 454);
+         this._splitContainer.SplitterDistance = 485;
+         this._splitContainer.TabIndex = 1;
+         // 
+         // _graphControlU
+         // 
+         this._graphControlU.Caption = "U";
+         this._graphControlU.Dock = System.Windows.Forms.DockStyle.Fill;
+         this._graphControlU.Location = new System.Drawing.Point(0, 0);
+         this._graphControlU.Name = "_graphControlU";
+         this._graphControlU.Size = new System.Drawing.Size(483, 452);
+         this._graphControlU.TabIndex = 0;
+         // 
+         // _graphControlV
+         // 
+         this._graphControlV.Caption = "V";
+         this._graphControlV.Dock = System.Windows.Forms.DockStyle.Fill;
+         this._graphControlV.Location = new System.Drawing.Point(0, 0);
+         this._graphControlV.Name = "_graphControlV";
+         this._graphControlV.Size = new System.Drawing.Size(468, 452);
+         this._graphControlV.TabIndex = 0;
+         // 
+         // _timer
+         // 
+         this._timer.Tick += new System.EventHandler(this.timerTick);
+         // 
          // BaroclinicComponentForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -216,6 +222,7 @@
       private System.Windows.Forms.ToolStripTextBox _textBoxN;
       private System.Windows.Forms.ToolStripLabel _labelTau;
       private System.Windows.Forms.ToolStripTextBox _textBoxTau;
+      private System.Windows.Forms.Timer _timer;
 
    }
 }
