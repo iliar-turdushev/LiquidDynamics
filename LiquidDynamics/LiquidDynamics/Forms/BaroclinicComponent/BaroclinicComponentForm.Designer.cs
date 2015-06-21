@@ -45,6 +45,8 @@
          this._graphControlU = new ControlLibrary.Controls.GraphControl();
          this._graphControlV = new ControlLibrary.Controls.GraphControl();
          this._timer = new System.Windows.Forms.Timer(this.components);
+         this._buttonPlus = new System.Windows.Forms.ToolStripButton();
+         this._buttonMinus = new System.Windows.Forms.ToolStripButton();
          this._toolStrip.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this._splitContainer)).BeginInit();
          this._splitContainer.Panel1.SuspendLayout();
@@ -65,7 +67,9 @@
             this._labelN,
             this._textBoxN,
             this._labelTau,
-            this._textBoxTau});
+            this._textBoxTau,
+            this._buttonPlus,
+            this._buttonMinus});
          this._toolStrip.Location = new System.Drawing.Point(0, 0);
          this._toolStrip.Name = "_toolStrip";
          this._toolStrip.Size = new System.Drawing.Size(959, 25);
@@ -184,6 +188,24 @@
          // 
          this._timer.Tick += new System.EventHandler(this.timerTick);
          // 
+         // _buttonPlus
+         // 
+         this._buttonPlus.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+         this._buttonPlus.Image = global::LiquidDynamics.Properties.Resources.Plus;
+         this._buttonPlus.ImageTransparentColor = System.Drawing.Color.Magenta;
+         this._buttonPlus.Name = "_buttonPlus";
+         this._buttonPlus.Size = new System.Drawing.Size(23, 22);
+         this._buttonPlus.Click += new System.EventHandler(this.buttonPlusClick);
+         // 
+         // _buttonMinus
+         // 
+         this._buttonMinus.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+         this._buttonMinus.Image = global::LiquidDynamics.Properties.Resources.Minus;
+         this._buttonMinus.ImageTransparentColor = System.Drawing.Color.Magenta;
+         this._buttonMinus.Name = "_buttonMinus";
+         this._buttonMinus.Size = new System.Drawing.Size(23, 22);
+         this._buttonMinus.Click += new System.EventHandler(this.buttonMinusClick);
+         // 
          // BaroclinicComponentForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -223,6 +245,8 @@
       private System.Windows.Forms.ToolStripLabel _labelTau;
       private System.Windows.Forms.ToolStripTextBox _textBoxTau;
       private System.Windows.Forms.Timer _timer;
+      private System.Windows.Forms.ToolStripButton _buttonPlus;
+      private System.Windows.Forms.ToolStripButton _buttonMinus;
 
    }
 }

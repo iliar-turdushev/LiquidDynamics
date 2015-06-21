@@ -10,6 +10,9 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
 {
    public partial class BaroclinicComponentForm : Form
    {
+      private const int YBoundStep = 10;
+      private const int YBoundInitialValue = 20;
+
       private static readonly Pen ExactSolutionPen = new Pen(Color.Green, 1);
       private static readonly Pen CalculatedSolutionPen = new Pen(Color.Red, 1);
 
@@ -17,6 +20,8 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
       private readonly BaroclinicComponentDataProvider _provider;
 
       private bool _dynamicsAlive;
+
+      private int _yBound;
 
       public BaroclinicComponentForm(Parameters parameters)
       {
@@ -32,6 +37,8 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
 
          _textBoxX.Text = string.Format("{0}", _parameters.SmallR / 2.0);
          _textBoxY.Text = string.Format("{0}", _parameters.SmallQ / 2.0);
+
+         _yBound = YBoundInitialValue;
       }
 
       private void buttonBeginClick(object sender, System.EventArgs e)
@@ -78,6 +85,21 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
          step();
       }
 
+      private void buttonPlusClick(object sender, System.EventArgs e)
+      {
+         _yBound += YBoundStep;
+         changeAxisBounds();
+      }
+
+      private void buttonMinusClick(object sender, System.EventArgs e)
+      {
+         if (_yBound > YBoundInitialValue)
+         {
+            _yBound -= YBoundStep;
+            changeAxisBounds();
+         }
+      }
+
       private void step()
       {
          SolveBaroclinicProblemResult result = _provider.Step();
@@ -105,7 +127,7 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
 
       private void drawSolutions(GraphControl graphControl, PointF[] exact, PointF[] calculated, string caption)
       {
-         graphControl.AxisBounds = new Bounds(0, (float) _parameters.H, -20, 20);
+         graphControl.AxisBounds = new Bounds(0, (float) _parameters.H, -_yBound, _yBound);
 
          graphControl.Clear();
          graphControl.Caption = caption;
@@ -118,6 +140,15 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
       {
          _buttonBegin.Enabled = enabled;
          _buttonStep.Enabled = enabled;
+      }
+
+      private void changeAxisBounds()
+      {
+         _graphControlU.AxisBounds = new Bounds(0, (float) _parameters.H, -_yBound, _yBound);
+         _graphControlV.AxisBounds = new Bounds(0, (float) _parameters.H, -_yBound, _yBound);
+
+         _graphControlU.Invalidate();
+         _graphControlV.Invalidate();
       }
 
       private double readX()
