@@ -13,6 +13,7 @@ using LiquidDynamics.Forms.IssykKul.Wind;
 using LiquidDynamics.Forms.Kriging;
 using LiquidDynamics.Forms.ParametersForms;
 using LiquidDynamics.Forms.StommelModel;
+using LiquidDynamics.Forms.TestProblem;
 using LiquidDynamics.Forms.Upwelling;
 using LiquidDynamics.Forms.VelocityField;
 using LiquidDynamics.Properties;
@@ -155,6 +156,11 @@ namespace LiquidDynamics
       private void baroclinicComponentToolStripMenuItemClick(object sender, EventArgs e)
       {
          showForm(new BaroclinicComponentForm(_problemParameters));
+      }
+
+      private void testProblemToolStripMenuItemClick(object sender, EventArgs e)
+      {
+         showForm(new TestProblemForm(_problemParameters));
       }
    }
 }

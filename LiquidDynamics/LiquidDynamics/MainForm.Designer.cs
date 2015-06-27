@@ -50,6 +50,7 @@
          this.issykKulVelocityFieldToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.issykKulWindToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.baroclinicComponentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.testProblemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this._menuStrip.SuspendLayout();
          this.SuspendLayout();
          // 
@@ -61,10 +62,11 @@
             this._barotropicComponentSolutionToolStripMenuItem,
             this.issykKulVelocityFieldToolStripMenuItem,
             this.issykKulWindToolStripMenuItem,
-            this.baroclinicComponentToolStripMenuItem});
+            this.baroclinicComponentToolStripMenuItem,
+            this.testProblemToolStripMenuItem});
          this._menuStrip.Location = new System.Drawing.Point(0, 0);
          this._menuStrip.Name = "_menuStrip";
-         this._menuStrip.Size = new System.Drawing.Size(917, 24);
+         this._menuStrip.Size = new System.Drawing.Size(1038, 24);
          this._menuStrip.TabIndex = 0;
          this._menuStrip.Text = "MenuStrip";
          // 
@@ -79,7 +81,7 @@
          // _problemParametersToolStripMenuItem
          // 
          this._problemParametersToolStripMenuItem.Name = "_problemParametersToolStripMenuItem";
-         this._problemParametersToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+         this._problemParametersToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
          this._problemParametersToolStripMenuItem.Text = "Параметры";
          this._problemParametersToolStripMenuItem.Click += new System.EventHandler(this.problemParametersToolStripMenuItemClick);
          // 
@@ -230,12 +232,19 @@
          this.baroclinicComponentToolStripMenuItem.Text = "Бароклинная компонента";
          this.baroclinicComponentToolStripMenuItem.Click += new System.EventHandler(this.baroclinicComponentToolStripMenuItemClick);
          // 
+         // testProblemToolStripMenuItem
+         // 
+         this.testProblemToolStripMenuItem.Name = "testProblemToolStripMenuItem";
+         this.testProblemToolStripMenuItem.Size = new System.Drawing.Size(107, 20);
+         this.testProblemToolStripMenuItem.Text = "Тестовая задача";
+         this.testProblemToolStripMenuItem.Click += new System.EventHandler(this.testProblemToolStripMenuItemClick);
+         // 
          // MainForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.BackColor = System.Drawing.SystemColors.Control;
-         this.ClientSize = new System.Drawing.Size(917, 453);
+         this.ClientSize = new System.Drawing.Size(1038, 453);
          this.Controls.Add(this._menuStrip);
          this.IsMdiContainer = true;
          this.MainMenuStrip = this._menuStrip;
@@ -273,6 +282,7 @@
       private System.Windows.Forms.ToolStripMenuItem issykKulVelocityFieldToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem issykKulWindToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem baroclinicComponentToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem testProblemToolStripMenuItem;
    }
 }
 

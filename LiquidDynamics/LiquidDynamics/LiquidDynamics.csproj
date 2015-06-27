@@ -189,6 +189,12 @@
     </Compile>
     <Compile Include="Forms\StommelModel\StommelModelParameters.cs" />
     <Compile Include="Forms\StommelModel\StommelModelSolution.cs" />
+    <Compile Include="Forms\TestProblem\TestProblemForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TestProblem\TestProblemForm.Designer.cs">
+      <DependentUpon>TestProblemForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Upwelling\UpwellingDataProvider.cs" />
     <Compile Include="Forms\Upwelling\UpwellingForm.cs">
       <SubType>Form</SubType>
@@ -306,6 +312,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\StommelModel\StommelModelForm.resx">
       <DependentUpon>StommelModelForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TestProblem\TestProblemForm.resx">
+      <DependentUpon>TestProblemForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Upwelling\UpwellingForm.resx">
       <DependentUpon>UpwellingForm.cs</DependentUpon>
