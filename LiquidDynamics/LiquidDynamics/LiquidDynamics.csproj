@@ -195,6 +195,8 @@
     <Compile Include="Forms\TestProblem\TestProblemForm.Designer.cs">
       <DependentUpon>TestProblemForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\TestProblem\TestProblemSolution.cs" />
+    <Compile Include="Forms\TestProblem\TestProblemSolver.cs" />
     <Compile Include="Forms\Upwelling\UpwellingDataProvider.cs" />
     <Compile Include="Forms\Upwelling\UpwellingForm.cs">
       <SubType>Form</SubType>

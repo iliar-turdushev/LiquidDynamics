@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Windows.Forms;
 using BarotropicComponentProblem;
 using BarotropicComponentProblem.IssykKulGrid;
-using BarotropicComponentProblem.IterationMethod;
-using BarotropicComponentProblem.TestProblem;
 using Common;
 using LiquidDynamics.Forms.BarotropicComponentNumerical;
 using Mathematics.MathTypes;
@@ -12,7 +9,6 @@ using Mathematics.Numerical;
 using ModelProblem;
 using ModelProblem.Baroclinic;
 using ModelProblem.Barotropic;
-using GridParameters = BarotropicComponentProblem.GridParameters;
 
 namespace LiquidDynamics.Forms.TestProblem
 {
@@ -46,37 +42,29 @@ namespace LiquidDynamics.Forms.TestProblem
 
       private void button1_Click(object sender, EventArgs e)
       {
-         InitialCondition initialCondition = createInitialCondition();
-
-         var solver =
-            new BarotropicComponentProblemSolver(
-               createDynamicProblem(),
-               createGridParameters(),
-               initialCondition,
-               new IterationProcessParameters(_sigma, _delta, _k, initialCondition.U),
-               new IterationProcessParameters(_sigma, _delta, _k, initialCondition.V),
-               getDesk(_n, _m)
-               );
-
-         IterationMethodResult result = solver.Begin();
-         SquareGridFunction u = result.IterationResultU.Approximation;
-         SquareGridFunction v = result.IterationResultV.Approximation;
-
          Grid xGrid = Grid.Create(0, _problemParameters.SmallR, _n);
          Grid yGrid = Grid.Create(0, _problemParameters.SmallQ, _m);
          Grid zGrid = Grid.Create(0, _problemParameters.H, _l);
 
-         Complex[,][] B = new Complex[_n,_m][]; 
+         var solver = new TestProblemSolver(
+            createProblemParameters(),
+            createIssykKulGrid3D(_l),
+            createWind(),
+            _tau,
+            xGrid,
+            yGrid,
+            createInitialCondition(),
+            createInitialTheta(xGrid, yGrid, zGrid),
+            _sigma,
+            _delta,
+            _k,
+            getDesk(_n, _m)
+            );
+         TestProblemSolution solution = solver.Begin();
 
-         for (int i = 0; i < _n; i++)
-         {
-            for (int j = 0; j < _m; j++)
-            {
-               BaroclinicProblemSolver solver2 =
-                  createBaroclinicProblemSolver(xGrid.Get(i), yGrid.Get(j), u[i, j], v[i, j]);
-               B[i, j] = calculateBaroclinic(solver2.Solve());
-            }
-         }
+         var u = solution.Barotropic.IterationResultU.Approximation;
+         var v = solution.Barotropic.IterationResultV.Approximation;
+         var B = solution.Baroclinic;
 
          double maxU = 0;
          double maxV = 0;
@@ -88,7 +76,6 @@ namespace LiquidDynamics.Forms.TestProblem
 
          for (int i = 0; i < _n; i++)
          {
-
             for (int j = 0; j < _m; j++)
             {
                double u1 = t1.U(_t + _tau, xGrid.Get(i), yGrid.Get(j));
@@ -104,41 +91,55 @@ namespace LiquidDynamics.Forms.TestProblem
                   diffU = Math.Max(diffU, Math.Abs(u1 + th2.Re - u[i, j] - B[i, j][k].Re));
                   diffV = Math.Max(diffV, Math.Abs(v1 + th2.Im - v[i, j] - B[i, j][k].Im));
                }
-               
             }
          }
 
-         Text = string.Format("{0}; {1}", diffU / maxU * 100, diffV / maxV * 100);
+         textBox1.Text = string.Format("{0}; {1}", diffU / maxU * 100, diffV / maxV * 100);
       }
 
-      private Complex[] calculateBaroclinic(Complex[] theta)
+      private Complex[,][] createInitialTheta(Grid xGrid, Grid yGrid, Grid zGrid)
       {
-         Complex barotropic = calculateBarotropic(theta);
-         var baroclinic = new Complex[theta.Length];
+         IBaroclinicComponent baroclinic = _solution.GetBaroclinicComponent();
+         var result = new Complex[xGrid.Nodes, yGrid.Nodes][];
 
-         for (int i = 0; i < baroclinic.Length; i++)
-            baroclinic[i] = theta[i] - barotropic;
+         for (int i = 0; i < xGrid.Nodes; i++)
+         {
+            for (int j = 0; j < yGrid.Nodes; j++)
+            {
+               result[i, j] = new Complex[zGrid.Nodes];
 
-         return baroclinic.ToArray();
+               for (int k = 0; k < zGrid.Nodes; k++)
+               {
+                  result[i, j][k] = baroclinic.Theta(_t, xGrid.Get(i), yGrid.Get(j), zGrid.Get(k));
+               }
+            }
+         }
+
+         return result;
       }
 
-      private Complex calculateBarotropic(Complex[] theta)
+      private IssykKulGrid3D createIssykKulGrid3D(int nodes)
       {
-         Grid zGrid = Grid.Create(0, _problemParameters.H, _l);
-         Complex barotropic = 0;
+         IssykKulGrid2D grid2D = createGrid();
+         var depthGrid = new Rectangle3D[grid2D.N, grid2D.M][];
+         double dz = _problemParameters.H / (nodes - 1);
 
-         for (int i = 0; i < theta.Length - 1; i++)
-            barotropic += theta[i + 1] + theta[i];
+         for (int i = 0; i < grid2D.N; i++)
+         {
+            for (int j = 0; j < grid2D.M; j++)
+            {
+               depthGrid[i, j] = new Rectangle3D[nodes - 1];
+               
+               for (int k = 0; k < nodes - 1; k++)
+               {
+                  Point3D point3D = grid2D[i, j].P(0, 0);
+                  point3D.Z = dz * k;
+                  depthGrid[i, j][k] = new Rectangle3D(point3D, grid2D.Hx, grid2D.Hy, dz);
+               }
+            }
+         }
 
-         return barotropic * zGrid.Step / (2.0 * _problemParameters.H);
-      }
-
-      private IDynamicProblem createDynamicProblem()
-      {
-         return new IntegroInterpolatingScheme(createProblemParameters(),
-                                               createGrid(),
-                                               createWind(),
-                                               _tau);
+         return new IssykKulGrid3D(grid2D, depthGrid);
       }
 
       private ProblemParameters createProblemParameters()
@@ -196,13 +197,6 @@ namespace LiquidDynamics.Forms.TestProblem
                               _problemParameters.Rho0);
       }
 
-      private GridParameters createGridParameters()
-      {
-         Grid xGrid = Grid.Create(0, _problemParameters.SmallR, _n);
-         Grid yGrid = Grid.Create(0, _problemParameters.SmallQ, _m);
-         return new GridParameters(_tau, xGrid, yGrid);
-      }
-
       private InitialCondition createInitialCondition()
       {
          IBarotropicComponent barotropicComponent = _solution.GetBarotropicComponent();
@@ -244,62 +238,6 @@ namespace LiquidDynamics.Forms.TestProblem
          }
 
          return desk;
-      }
-
-      private BaroclinicProblemSolver createBaroclinicProblemSolver(
-         double x, double y, double u, double v
-         )
-      {
-         return new BaroclinicProblemSolver(
-            createProblemParameters(),
-            createTheta0(x, y),
-            _tau, _problemParameters.H / (_l - 1), _l,
-            x, y, getTauX(x, y), getTauY(x, y),
-            getTauXb(u), getTauYb(v)
-            );
-      }
-
-      private Complex[] createTheta0(double x, double y)
-      {
-         IBaroclinicComponent baroclinic = _solution.GetBaroclinicComponent();
-         IBarotropicComponent barotropic = _solution.GetBarotropicComponent();
-         Grid z = Grid.Create(0, _problemParameters.H, _l);
-
-         double u = barotropic.U(_t, x, y);
-         double v = barotropic.V(_t, x, y);
-
-         var result = new Complex[z.Nodes];
-
-         for (int i = 0; i < _l; i++)
-         {
-            Complex theta = baroclinic.Theta(_t, x, y, z.Get(i));
-            result[i] = new Complex(u + theta.Re, v + theta.Im);
-         }
-
-         return result;
-      }
-
-      private double getTauX(double x, double y)
-      {
-         return -_problemParameters.F1 * _problemParameters.SmallQ * _problemParameters.Rho0 /
-                Math.PI * Math.Cos(Math.PI * y / _problemParameters.SmallQ);
-      }
-
-      private double getTauY(double x, double y)
-      {
-         return _problemParameters.F2 * _problemParameters.SmallR * _problemParameters.Rho0 /
-                Math.PI * Math.Cos(Math.PI * x / _problemParameters.SmallR) *
-                Math.Sin(Math.PI * y / _problemParameters.SmallQ);
-      }
-
-      private double getTauXb(double u)
-      {
-         return _problemParameters.Mu * _problemParameters.Rho0 * u;
-      }
-
-      private double getTauYb(double v)
-      {
-         return _problemParameters.Mu * _problemParameters.Rho0 * v;
       }
    }
 }
