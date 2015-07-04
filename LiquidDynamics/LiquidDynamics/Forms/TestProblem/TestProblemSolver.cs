@@ -18,13 +18,14 @@ namespace LiquidDynamics.Forms.TestProblem
       private readonly Grid _x;
       private readonly Grid _y;
       private readonly InitialCondition _initialCondition;
-      private readonly Complex[,][] _initialTheta;
       private readonly double _sigma;
       private readonly double _delta;
       private readonly int _k;
       private readonly int[,] _surface;
 
       private readonly BarotropicComponentProblemSolver _barotropicSolver;
+
+      private Complex[,][] _baroclinic;
 
       public TestProblemSolver(
          ProblemParameters parameters,
@@ -47,7 +48,7 @@ namespace LiquidDynamics.Forms.TestProblem
          Check.NotNull(x, "x");
          Check.NotNull(y, "y");
          Check.NotNull(initialCondition, "initialCondition");
-         Check.NotNull(initialCondition, "initialTheta");
+         Check.NotNull(initialTheta, "initialTheta");
          Check.NotNull(surface, "surface");
 
          _parameters = parameters;
@@ -57,29 +58,38 @@ namespace LiquidDynamics.Forms.TestProblem
          _x = x;
          _y = y;
          _initialCondition = initialCondition;
-         _initialTheta = initialTheta;
          _sigma = sigma;
          _delta = delta;
          _k = k;
          _surface = surface;
 
          _barotropicSolver = createBarotropicSolver();
+         _baroclinic = initialTheta;
       }
 
       public TestProblemSolution Begin()
       {
-         IterationMethodResult barotropicResult = _barotropicSolver.Begin();
+         return step(_barotropicSolver.Begin());
+      }
+
+      public TestProblemSolution Step()
+      {
+         return step(_barotropicSolver.Step());
+      }
+
+      private TestProblemSolution step(IterationMethodResult barotropicResult)
+      {
          SquareGridFunction u = barotropicResult.IterationResultU.Approximation;
          SquareGridFunction v = barotropicResult.IterationResultV.Approximation;
 
-         var baroclinicResult = new Complex[_x.Nodes, _y.Nodes][];
-         
+         var baroclinicResult = new Complex[_x.Nodes,_y.Nodes][];
+
          for (int i = 0; i < _x.Nodes; i++)
          {
             for (int j = 0; j < _y.Nodes; j++)
             {
                BaroclinicProblemSolver solver =
-                  createBaroclinicProblemSolver(i, j, u[i, j], v[i, j], _initialTheta[i, j]);
+                  createBaroclinicProblemSolver(i, j, u[i, j], v[i, j], _baroclinic[i, j]);
 
                Rectangle3D[] grid = _issykKulGrid3D.GetDepthGrid(i == _x.Nodes - 1 ? i - 1 : i,
                                                                  j == _y.Nodes - 1 ? j - 1 : j);
@@ -88,6 +98,8 @@ namespace LiquidDynamics.Forms.TestProblem
                baroclinicResult[i, j] = calculateBaroclinic(solver.Solve(), dz, grid.Length * dz);
             }
          }
+
+         _baroclinic = baroclinicResult;
 
          return new TestProblemSolution(barotropicResult, baroclinicResult);
       }
@@ -105,13 +117,6 @@ namespace LiquidDynamics.Forms.TestProblem
                );
       }
 
-      private IterationProcessParameters createInterationProcessParameters(
-         SquareGridFunction initialApproximation
-         )
-      {
-         return new IterationProcessParameters(_sigma, _delta, _k, initialApproximation);
-      }
-
       private IDynamicProblem createDynamicProblem()
       {
          return new IntegroInterpolatingScheme(_parameters, _issykKulGrid3D.Grid2D, _wind, _tau);
@@ -120,6 +125,13 @@ namespace LiquidDynamics.Forms.TestProblem
       private GridParameters createGridParameters()
       {
          return new GridParameters(_tau, _x, _y);
+      }
+
+      private IterationProcessParameters createInterationProcessParameters(
+         SquareGridFunction initialApproximation
+         )
+      {
+         return new IterationProcessParameters(_sigma, _delta, _k, initialApproximation);
       }
 
       private BaroclinicProblemSolver createBaroclinicProblemSolver(
