@@ -168,13 +168,13 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
       private double getTauXb(double t)
       {
          var barotropic = _solution.GetBarotropicComponent();
-         return _parameters.Mu * _parameters.Rho0 * barotropic.U(t, _x, _y);
+         return _parameters.Mu * _parameters.Rho0 * barotropic.U(t, _x, _y) * _parameters.H;
       }
 
       private double getTauYb(double t)
       {
          var barotropic = _solution.GetBarotropicComponent();
-         return _parameters.Mu * _parameters.Rho0 * barotropic.V(t, _x, _y);
+         return _parameters.Mu * _parameters.Rho0 * barotropic.V(t, _x, _y) * _parameters.H;
       }
 
       private Complex[] calculateBaroclinic(Complex[] theta)

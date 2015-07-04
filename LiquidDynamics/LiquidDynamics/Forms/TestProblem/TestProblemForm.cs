@@ -278,6 +278,8 @@ namespace LiquidDynamics.Forms.TestProblem
          IBarotropicComponent exactBarotropic = _solution.GetBarotropicComponent();
          IBaroclinicComponent exactBaroclinic = _solution.GetBaroclinicComponent();
 
+         double h = _problemParameters.H;
+
          double maxU = 0;
          double maxV = 0;
          double diffU = 0;
@@ -303,8 +305,8 @@ namespace LiquidDynamics.Forms.TestProblem
                   maxU = Math.Max(maxU, Math.Abs(u + theta.Re));
                   maxV = Math.Max(maxV, Math.Abs(v + theta.Im));
 
-                  diffU = Math.Max(diffU, Math.Abs(u + theta.Re - uBarotropic[i, j] - baroclinic[i, j][k].Re));
-                  diffV = Math.Max(diffV, Math.Abs(v + theta.Im - vBarotropic[i, j] - baroclinic[i, j][k].Im));
+                  diffU = Math.Max(diffU, Math.Abs(u + theta.Re - uBarotropic[i, j] / h - baroclinic[i, j][k].Re));
+                  diffV = Math.Max(diffV, Math.Abs(v + theta.Im - vBarotropic[i, j] / h - baroclinic[i, j][k].Im));
                }
             }
          }
@@ -340,6 +342,8 @@ namespace LiquidDynamics.Forms.TestProblem
          Mathematics.MathTypes.Vector[,] barotropicVectors =
             solution.Barotropic.BarotropicComponent.Vectors;
 
+         double h = _problemParameters.H;
+
          var vectors = new Vector[_xGrid.Nodes, _yGrid.Nodes];
 
          for (int i = 0; i < _xGrid.Nodes; i++)
@@ -353,8 +357,8 @@ namespace LiquidDynamics.Forms.TestProblem
                Complex theta = solution.Baroclinic[i, j][_zSlice];
                Point barotropic = barotropicVectors[i, j].End;
 
-               var endPoint = new PointF((float) (barotropic.X + theta.Re),
-                                         (float) (barotropic.Y + theta.Im));
+               var endPoint = new PointF((float) (barotropic.X / h + theta.Re),
+                                         (float) (barotropic.Y / h + theta.Im));
                vectors[i, j] = new Vector(new PointF(x, y), endPoint);
             }
          }

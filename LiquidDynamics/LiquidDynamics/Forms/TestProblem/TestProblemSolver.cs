@@ -162,9 +162,12 @@ namespace LiquidDynamics.Forms.TestProblem
       
       private Complex[] createTheta0(double u, double v, Complex[] theta)
       {
+         double h = _parameters.H;
          var result = new Complex[theta.Length];
+
          for (int i = 0; i < result.Length; i++)
-            result[i] = new Complex(u + theta[i].Re, v + theta[i].Im);
+            result[i] = new Complex(u / h + theta[i].Re, v / h + theta[i].Im);
+
          return result;
       }
 
