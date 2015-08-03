@@ -9,6 +9,7 @@ using LiquidDynamics.Forms.EkmanSpiral;
 using LiquidDynamics.Forms.IssykKul.Equation;
 using LiquidDynamics.Forms.IssykKul.Grid;
 using LiquidDynamics.Forms.IssykKul.Interpolation;
+using LiquidDynamics.Forms.IssykKul.TestProblem;
 using LiquidDynamics.Forms.IssykKul.Wind;
 using LiquidDynamics.Forms.Kriging;
 using LiquidDynamics.Forms.ParametersForms;
@@ -161,6 +162,11 @@ namespace LiquidDynamics
       private void testProblemToolStripMenuItemClick(object sender, EventArgs e)
       {
          showForm(new TestProblemForm(_problemParameters));
+      }
+
+      private void issykKulToolStripMenuItemClick(object sender, EventArgs e)
+      {
+         showForm(new IssykKulTestProblemForm(_problemParameters));
       }
    }
 }

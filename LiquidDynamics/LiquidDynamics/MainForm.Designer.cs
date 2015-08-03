@@ -51,6 +51,7 @@
          this.issykKulWindToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.baroclinicComponentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.testProblemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.issykKulToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this._menuStrip.SuspendLayout();
          this.SuspendLayout();
          // 
@@ -63,10 +64,11 @@
             this.issykKulVelocityFieldToolStripMenuItem,
             this.issykKulWindToolStripMenuItem,
             this.baroclinicComponentToolStripMenuItem,
-            this.testProblemToolStripMenuItem});
+            this.testProblemToolStripMenuItem,
+            this.issykKulToolStripMenuItem});
          this._menuStrip.Location = new System.Drawing.Point(0, 0);
          this._menuStrip.Name = "_menuStrip";
-         this._menuStrip.Size = new System.Drawing.Size(1038, 24);
+         this._menuStrip.Size = new System.Drawing.Size(1242, 24);
          this._menuStrip.TabIndex = 0;
          this._menuStrip.Text = "MenuStrip";
          // 
@@ -239,12 +241,19 @@
          this.testProblemToolStripMenuItem.Text = "Тестовая задача";
          this.testProblemToolStripMenuItem.Click += new System.EventHandler(this.testProblemToolStripMenuItemClick);
          // 
+         // issykKulToolStripMenuItem
+         // 
+         this.issykKulToolStripMenuItem.Name = "issykKulToolStripMenuItem";
+         this.issykKulToolStripMenuItem.Size = new System.Drawing.Size(86, 20);
+         this.issykKulToolStripMenuItem.Text = "Иссык-Куль";
+         this.issykKulToolStripMenuItem.Click += new System.EventHandler(this.issykKulToolStripMenuItemClick);
+         // 
          // MainForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.BackColor = System.Drawing.SystemColors.Control;
-         this.ClientSize = new System.Drawing.Size(1038, 453);
+         this.ClientSize = new System.Drawing.Size(1242, 453);
          this.Controls.Add(this._menuStrip);
          this.IsMdiContainer = true;
          this.MainMenuStrip = this._menuStrip;
@@ -283,6 +292,7 @@
       private System.Windows.Forms.ToolStripMenuItem issykKulWindToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem baroclinicComponentToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem testProblemToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem issykKulToolStripMenuItem;
    }
 }
 

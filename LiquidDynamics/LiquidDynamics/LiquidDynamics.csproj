@@ -149,6 +149,15 @@
     </Compile>
     <Compile Include="Forms\IssykKul\IssykKulFormDataProvider.cs" />
     <Compile Include="Forms\IssykKul\IssykKulGraphData.cs" />
+    <Compile Include="Forms\IssykKul\TestProblem\IssykKulTestProblemForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\IssykKul\TestProblem\IssykKulTestProblemForm.Designer.cs">
+      <DependentUpon>IssykKulTestProblemForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\IssykKul\TestProblem\IssykKulVelocityFieldFormDataProvider.cs" />
+    <Compile Include="Forms\IssykKul\TestProblem\IssykKulWind.cs" />
+    <Compile Include="Forms\IssykKul\TestProblem\Solution.cs" />
     <Compile Include="Forms\IssykKul\Wind\BuildWindResult.cs" />
     <Compile Include="Forms\IssykKul\Wind\IssykKulWindCalculator.cs" />
     <Compile Include="Forms\IssykKul\Wind\IssykKulWindForm.cs">
@@ -303,6 +312,9 @@
     <EmbeddedResource Include="Forms\IssykKul\Grid\IssykKulGridForm.resx">
       <DependentUpon>IssykKulGridForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\IssykKul\TestProblem\IssykKulTestProblemForm.resx">
+      <DependentUpon>IssykKulTestProblemForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\IssykKul\Wind\IssykKulWindForm.resx">
       <DependentUpon>IssykKulWindForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -363,6 +375,7 @@
   <ItemGroup>
     <Resource Include="Resources\Settings.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -26,5 +26,30 @@ namespace BarotropicComponentProblem.IssykKulGrid
       {
          return _depthGrid[i, j];
       }
+
+      public void Stretch(double sx, double sy, double sz)
+      {
+         _grid2D.Stretch(sx, sy, sz);
+
+         for (int i = 0; i < _grid2D.N; i++)
+         {
+            for (int j = 0; j < _grid2D.M; j++)
+            {
+               if (_grid2D[i, j] == GridCell.Empty)
+                  continue;
+               
+               foreach (Rectangle3D cell in _depthGrid[i, j])
+               {
+                  cell.Hx /= sx;
+                  cell.Hy /= sy;
+                  cell.Hz /= sz;
+
+                  cell.Origin.X /= sx;
+                  cell.Origin.Y /= sy;
+                  cell.Origin.Z /= sz;
+               }
+            }
+         }
+      }
    }
 }

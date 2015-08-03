@@ -15,8 +15,8 @@ namespace Mathematics.MathTypes
       }
 
       public Point3D Origin { get; private set; }
-      public double Hx { get; private set; }
-      public double Hy { get; private set; }
-      public double Hz { get; private set; }
+      public double Hx { get; set; }
+      public double Hy { get; set; }
+      public double Hz { get; set; }
    }
 }
