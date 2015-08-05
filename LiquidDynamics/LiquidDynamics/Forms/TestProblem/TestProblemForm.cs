@@ -72,9 +72,9 @@ namespace LiquidDynamics.Forms.TestProblem
 
          _t = 0;
 
-         _xGrid = Grid.Create(0, _problemParameters.SmallR, nx);
-         _yGrid = Grid.Create(0, _problemParameters.SmallQ, ny);
-         _zGrid = Grid.Create(0, _problemParameters.H, nz);
+         _xGrid = Grid.Create(0, _problemParameters.SmallR, nx + 1);
+         _yGrid = Grid.Create(0, _problemParameters.SmallQ, ny + 1);
+         _zGrid = Grid.Create(0, _problemParameters.H, nz + 1);
 
          _solver = new TestProblemSolver(
             createProblemParameters(),
@@ -232,15 +232,15 @@ namespace LiquidDynamics.Forms.TestProblem
       private Complex[,][] createInitialTheta()
       {
          IBaroclinicComponent baroclinic = _solution.GetBaroclinicComponent();
-         var result = new Complex[_xGrid.Nodes, _yGrid.Nodes][];
+         var result = new Complex[_xGrid.Nodes - 1, _yGrid.Nodes - 1][];
 
-         for (int i = 0; i < _xGrid.Nodes; i++)
+         for (int i = 0; i < _xGrid.Nodes - 1; i++)
          {
-            double x = _xGrid.Get(i);
+            double x = _xGrid.Get(i) + 0.5 * _xGrid.Step;
 
-            for (int j = 0; j < _yGrid.Nodes; j++)
+            for (int j = 0; j < _yGrid.Nodes - 1; j++)
             {
-               double y = _yGrid.Get(j);
+               double y = _yGrid.Get(j) + 0.5 * _yGrid.Step;
                result[i, j] = new Complex[_zGrid.Nodes];
 
                for (int k = 0; k < _zGrid.Nodes; k++)
@@ -271,9 +271,12 @@ namespace LiquidDynamics.Forms.TestProblem
 
       private void getError(TestProblemSolution solution, out double errorU, out double errorV)
       {
-         SquareGridFunction uBarotropic = solution.Barotropic.IterationResultU.Approximation;
-         SquareGridFunction vBarotropic = solution.Barotropic.IterationResultV.Approximation;
+         SquareGridFunction uBarotropic = solution.BarotropicU;
+         SquareGridFunction vBarotropic = solution.BarotropicV;
          Complex[,][] baroclinic = solution.Baroclinic;
+
+         int n = uBarotropic.N;
+         int m = uBarotropic.M;
 
          IBarotropicComponent exactBarotropic = _solution.GetBarotropicComponent();
          IBaroclinicComponent exactBaroclinic = _solution.GetBaroclinicComponent();
@@ -285,13 +288,13 @@ namespace LiquidDynamics.Forms.TestProblem
          double diffU = 0;
          double diffV = 0;
 
-         for (int i = 0; i < _xGrid.Nodes; i++)
+         for (int i = 0; i < n; i++)
          {
-            double x = _xGrid.Get(i);
-
-            for (int j = 0; j < _yGrid.Nodes; j++)
+            for (int j = 0; j < m; j++)
             {
-               double y = _yGrid.Get(j);
+               Point point = uBarotropic.Grid(i, j);
+               double x = point.X;
+               double y = point.Y;
 
                double u = exactBarotropic.U(_t, x, y);
                double v = exactBarotropic.V(_t, x, y);
@@ -320,10 +323,8 @@ namespace LiquidDynamics.Forms.TestProblem
          _graphControl.Caption = string.Format("Time = {0:F4}, Error U = {1:F4}%, Error V = {2:F4}%",
                                                _t, errorU, errorV);
 
-         var hx = (float) _xGrid.Step / 2;
-         var hy = (float) _yGrid.Step / 2;
-         _graphControl.AxisBounds = new Bounds(-hx, (float) (_problemParameters.SmallR + hx),
-                                               -hy, (float) (_problemParameters.SmallQ + hy));
+         _graphControl.AxisBounds = new Bounds(0, (float) _problemParameters.SmallR,
+                                               0, (float) _problemParameters.SmallQ);
 
          _graphControl.Clear();
 
@@ -339,27 +340,28 @@ namespace LiquidDynamics.Forms.TestProblem
 
       private SquareVelocityField getSquareVelocityField(TestProblemSolution solution)
       {
-         Mathematics.MathTypes.Vector[,] barotropicVectors =
-            solution.Barotropic.BarotropicComponent.Vectors;
+         Mathematics.MathTypes.Vector[,] barotropicVectors = solution._Barotropic;
+
+         int n = barotropicVectors.GetLength(0);
+         int m = barotropicVectors.GetLength(1);
 
          double h = _problemParameters.H;
 
-         var vectors = new Vector[_xGrid.Nodes, _yGrid.Nodes];
+         var vectors = new Vector[n, m];
 
-         for (int i = 0; i < _xGrid.Nodes; i++)
+         for (int i = 0; i < n; i++)
          {
-            var x = (float) _xGrid.Get(i);
-
-            for (int j = 0; j < _yGrid.Nodes; j++)
+            for (int j = 0; j < m; j++)
             {
-               var y = (float) _yGrid.Get(j);
+               var startPoint = new PointF((float) barotropicVectors[i, j].Start.X,
+                                           (float) barotropicVectors[i, j].Start.Y);
 
                Complex theta = solution.Baroclinic[i, j][_zSlice];
                Point barotropic = barotropicVectors[i, j].End;
 
                var endPoint = new PointF((float) (barotropic.X / h + theta.Re),
                                          (float) (barotropic.Y / h + theta.Im));
-               vectors[i, j] = new Vector(new PointF(x, y), endPoint);
+               vectors[i, j] = new Vector(startPoint, endPoint);
             }
          }
 

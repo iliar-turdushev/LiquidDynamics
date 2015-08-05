@@ -37,7 +37,8 @@ namespace BarotropicComponentProblem
       public BaroclinicProblemSolver(
          ProblemParameters problemParameters,
          Complex[] theta0,
-         double tau, double dz, int n,
+         double tau,
+         double dz, int n,
          double x, double y,
          double tauX, double tauY,
          double tauXb, double tauYb
