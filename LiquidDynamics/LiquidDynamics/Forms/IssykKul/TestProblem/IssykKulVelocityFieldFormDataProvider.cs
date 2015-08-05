@@ -29,13 +29,16 @@ namespace LiquidDynamics.Forms.IssykKul.TestProblem
       private TestProblemSolver _solver;
 
       private double _tau;
+      private int _slice;
 
       public double Time { get; private set; }
       
-      public Solution Reset(int n, int m, double dz, double tau, double theta, double sigma, double delta, int k, Parameters parameters, WindParameters windParameters)
+      public Solution Reset(int n, int m, double dz, double tau, double theta, double sigma, double delta, int k, Parameters parameters, WindParameters windParameters, int slice)
       {
          Check.NotNull(parameters, "parameters");
          Check.NotNull(windParameters, "windParameters");
+
+         _slice = slice;
 
          Time = tau;
          _tau = tau;
@@ -173,11 +176,14 @@ namespace LiquidDynamics.Forms.IssykKul.TestProblem
                if (grid[i, j] == GridCell.Empty)
                   continue;
 
+               if (baroclinic[i, j].Length < _slice + 1)
+                  continue;
+
                var vector =
                   new Mathematics.MathTypes.Vector(
                      barotropic[i, j].Start,
-                     new Point(barotropic[i, j].End.X + baroclinic[i, j][0].Re,
-                               barotropic[i, j].End.Y + baroclinic[i, j][0].Im)
+                     new Point(barotropic[i, j].End.X + baroclinic[i, j][_slice].Re,
+                               barotropic[i, j].End.Y + baroclinic[i, j][_slice].Im)
                      );
 
                velocityField[i, j] = getVector(vector);

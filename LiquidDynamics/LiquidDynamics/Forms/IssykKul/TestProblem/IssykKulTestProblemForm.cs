@@ -52,7 +52,8 @@ namespace LiquidDynamics.Forms.IssykKul.TestProblem
          {
             Solution solution = _dataProvider.Reset(readN(), readM(), readDz(), readTau(), readTheta(),
                                                     readSigma(), readDelta(), readK(),
-                                                    _problemParameters, getWindParameters());
+                                                    _problemParameters, getWindParameters(),
+                                                    getSlice());
             drawVelocityField(solution);
          }
          catch (InvalidFieldValueException error)
@@ -238,6 +239,11 @@ namespace LiquidDynamics.Forms.IssykKul.TestProblem
       {
          _buttonReset.Enabled = enabled;
          _buttonStep.Enabled = enabled;
+      }
+
+      private int getSlice()
+      {
+         return readIntValue(_textBoxSlice.Text, "Срез");
       }
    }
 }

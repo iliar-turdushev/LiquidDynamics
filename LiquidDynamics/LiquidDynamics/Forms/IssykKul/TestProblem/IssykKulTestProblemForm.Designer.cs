@@ -54,6 +54,8 @@
          this._labelWindType = new System.Windows.Forms.ToolStripLabel();
          this._comboBoxWindType = new System.Windows.Forms.ToolStripComboBox();
          this._timer = new System.Windows.Forms.Timer(this.components);
+         this._labelSlice = new System.Windows.Forms.ToolStripLabel();
+         this._textBoxSlice = new System.Windows.Forms.ToolStripTextBox();
          this._toolStrip.SuspendLayout();
          this.SuspendLayout();
          // 
@@ -65,14 +67,14 @@
          this._graphControl.Caption = "Иссык-Куль";
          this._graphControl.Location = new System.Drawing.Point(12, 28);
          this._graphControl.Name = "_graphControl";
-         this._graphControl.Size = new System.Drawing.Size(822, 499);
+         this._graphControl.Size = new System.Drawing.Size(890, 499);
          this._graphControl.TabIndex = 0;
          // 
          // _paletteControl
          // 
          this._paletteControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-         this._paletteControl.Location = new System.Drawing.Point(840, 28);
+         this._paletteControl.Location = new System.Drawing.Point(908, 28);
          this._paletteControl.MaxValue = 1F;
          this._paletteControl.MinValue = 0F;
          this._paletteControl.Name = "_paletteControl";
@@ -102,10 +104,12 @@
             this._labelK,
             this._textBoxK,
             this._labelWindType,
-            this._comboBoxWindType});
+            this._comboBoxWindType,
+            this._labelSlice,
+            this._textBoxSlice});
          this._toolStrip.Location = new System.Drawing.Point(0, 0);
          this._toolStrip.Name = "_toolStrip";
-         this._toolStrip.Size = new System.Drawing.Size(965, 25);
+         this._toolStrip.Size = new System.Drawing.Size(1033, 25);
          this._toolStrip.TabIndex = 2;
          this._toolStrip.Text = "toolStrip1";
          // 
@@ -257,12 +261,24 @@
          // 
          this._timer.Tick += new System.EventHandler(this.timerTick);
          // 
+         // _labelSlice
+         // 
+         this._labelSlice.Name = "_labelSlice";
+         this._labelSlice.Size = new System.Drawing.Size(36, 22);
+         this._labelSlice.Text = "Срез:";
+         // 
+         // _textBoxSlice
+         // 
+         this._textBoxSlice.Name = "_textBoxSlice";
+         this._textBoxSlice.Size = new System.Drawing.Size(50, 25);
+         this._textBoxSlice.Text = "0";
+         // 
          // IssykKulTestProblemForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.BackColor = System.Drawing.SystemColors.Window;
-         this.ClientSize = new System.Drawing.Size(965, 539);
+         this.ClientSize = new System.Drawing.Size(1033, 539);
          this.Controls.Add(this._toolStrip);
          this.Controls.Add(this._paletteControl);
          this.Controls.Add(this._graphControl);
@@ -302,5 +318,7 @@
       private System.Windows.Forms.ToolStripTextBox _textBoxDz;
       private System.Windows.Forms.Timer _timer;
       private System.Windows.Forms.ToolStripButton _buttonStartStop;
+      private System.Windows.Forms.ToolStripLabel _labelSlice;
+      private System.Windows.Forms.ToolStripTextBox _textBoxSlice;
    }
 }
