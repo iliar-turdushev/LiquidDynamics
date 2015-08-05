@@ -340,7 +340,7 @@ namespace LiquidDynamics.Forms.TestProblem
 
       private SquareVelocityField getSquareVelocityField(TestProblemSolution solution)
       {
-         Mathematics.MathTypes.Vector[,] barotropicVectors = solution._Barotropic;
+         Mathematics.MathTypes.Vector[,] barotropicVectors = solution.Barotropic;
 
          int n = barotropicVectors.GetLength(0);
          int m = barotropicVectors.GetLength(1);

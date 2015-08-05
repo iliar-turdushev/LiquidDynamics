@@ -10,6 +10,7 @@ using LiquidDynamics.Properties;
 using Mathematics.MathTypes;
 using Mathematics.Numerical;
 using ModelProblem;
+using Point = Mathematics.MathTypes.Point;
 using Point3D = Mathematics.MathTypes.Point3D;
 using Rectangle3D = Mathematics.MathTypes.Rectangle3D;
 using Vector = ControlLibrary.Types.Vector;
@@ -50,15 +51,15 @@ namespace LiquidDynamics.Forms.IssykKul.TestProblem
          _y = Mathematics.Numerical.Grid.Create(0.0, yMax / StretchCoefficients.L0, m + 1);
          
          _solver = createProblemSolver(windParameters, tau, sigma, delta, k);
-         IterationMethodResult result = _solver.Begin().Barotropic;
+         TestProblemSolution solution = _solver.Begin();
 
-         return new Solution(getVelocityField(result, _grid.Grid2D, _x, _y), _bounds);
+         return new Solution(getVelocityField(solution, _grid.Grid2D, _x, _y), _bounds);
       }
 
       public Solution Step()
       {
-         IterationMethodResult result = _solver.Step().Barotropic;
-         return new Solution(getVelocityField(result, _grid.Grid2D, _x, _y), _bounds);
+         TestProblemSolution solution = _solver.Step();
+         return new Solution(getVelocityField(solution, _grid.Grid2D, _x, _y), _bounds);
       }
 
       private static ProblemParameters getParameters(Parameters parameters, double xMax, double yMax)
@@ -108,35 +109,27 @@ namespace LiquidDynamics.Forms.IssykKul.TestProblem
 
       private Complex[,][] getInitialTheta()
       {
-         var theta = new Complex[_grid.Grid2D.N + 1, _grid.Grid2D.M + 1][];
+         int n = _grid.Grid2D.N;
+         int m = _grid.Grid2D.M;
 
-         for (int i = 0; i < _grid.Grid2D.N; i++)
+         var theta = new Complex[n, m][];
+
+         for (int i = 0; i < n; i++)
          {
-            for (int j = 0; j < _grid.Grid2D.M; j++)
+            for (int j = 0; j < m; j++)
             {
                if (_grid.Grid2D[i, j] == GridCell.Empty)
                   continue;
 
                Rectangle3D[] depthGrid = _grid.GetDepthGrid(i, j);
-               setTheta(theta, i, j, depthGrid.Length);
-               setTheta(theta, i, j + 1, depthGrid.Length);
-               setTheta(theta, i + 1, j, depthGrid.Length);
-               setTheta(theta, i + 1, j + 1, depthGrid.Length);
+               theta[i, j] = new Complex[depthGrid.Length + 1];
+
+               for (int k = 0; k < depthGrid.Length + 1; k++)
+                  theta[i, j][k] = new Complex();
             }
          }
 
          return theta;
-      }
-
-      private void setTheta(Complex[,][] theta, int i, int j, int n)
-      {
-         if (theta[i, j] != null)
-            return;
-
-         theta[i, j] = new Complex[n + 1];
-
-         for (int k = 0; k < theta[i, j].Length; k++)
-            theta[i, j][k] = new Complex();
       }
 
       private int[,] getSurface(IssykKulGrid2D grid)
@@ -155,14 +148,16 @@ namespace LiquidDynamics.Forms.IssykKul.TestProblem
       }
 
       private SquareVelocityField getVelocityField(
-         IterationMethodResult result, IssykKulGrid2D grid,
-         Mathematics.Numerical.Grid x, Mathematics.Numerical.Grid y)
+         TestProblemSolution solution, IssykKulGrid2D grid,
+         Mathematics.Numerical.Grid x, Mathematics.Numerical.Grid y
+         )
       {
          int n = grid.N;
          int m = grid.M;
 
-         var vectors = result.BarotropicComponent.Vectors;
-         var velocityField = new Vector[n + 1, m + 1];
+         Mathematics.MathTypes.Vector[,] barotropic = solution.Barotropic;
+         Complex[,][] baroclinic = solution.Baroclinic;
+         var velocityField = new Vector[n, m];
 
          for (int i = 0; i < n; i++)
          {
@@ -171,25 +166,14 @@ namespace LiquidDynamics.Forms.IssykKul.TestProblem
                if (grid[i, j] == GridCell.Empty)
                   continue;
 
-               velocityField[i, j] = getVector(vectors[i, j]);
+               var vector =
+                  new Mathematics.MathTypes.Vector(
+                     barotropic[i, j].Start,
+                     new Point(barotropic[i, j].End.X + baroclinic[i, j][0].Re,
+                               barotropic[i, j].End.Y + baroclinic[i, j][0].Im)
+                     );
 
-               if (i == n - 1 || grid[i + 1, j] == GridCell.Empty)
-               {
-                  velocityField[i + 1, j] = getVector(vectors[i + 1, j]);
-               }
-
-               if (j == m - 1 || grid[i, j + 1] == GridCell.Empty)
-               {
-                  velocityField[i, j + 1] = getVector(vectors[i, j + 1]);
-               }
-
-               if ((i == n - 1 && j == m - 1) ||
-                   (i == n - 1 && j < m - 1 && grid[i, j + 1] == GridCell.Empty) ||
-                   (j == m - 1 && i < n - 1 && grid[i + 1, j] == GridCell.Empty) ||
-                   (i < n - 1 && j < m - 1 && grid[i + 1, j + 1] == GridCell.Empty))
-               {
-                  velocityField[i + 1, j + 1] = getVector(vectors[i + 1, j + 1]);
-               }
+               velocityField[i, j] = getVector(vector);
             }
          }
 

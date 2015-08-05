@@ -126,7 +126,6 @@ namespace LiquidDynamics.Forms.TestProblem
 
          return
             new TestProblemSolution(
-               barotropicResult,
                getBarotropic(uBarotropic, vBarotropic),
                uBarotropic,
                vBarotropic, 

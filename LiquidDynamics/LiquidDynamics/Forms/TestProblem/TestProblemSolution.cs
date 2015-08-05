@@ -8,8 +8,7 @@ namespace LiquidDynamics.Forms.TestProblem
    internal class TestProblemSolution
    {
       public TestProblemSolution(
-         IterationMethodResult barotropic,
-         Vector[,] _barotropic,
+         Vector[,] barotropic,
          SquareGridFunction barotropicU,
          SquareGridFunction barotropicV,
          Complex[,][] baroclinic
@@ -21,17 +20,14 @@ namespace LiquidDynamics.Forms.TestProblem
          Check.NotNull(baroclinic, "baroclinic");
 
          Barotropic = barotropic;
-         _Barotropic = _barotropic;
          BarotropicU = barotropicU;
          BarotropicV = barotropicV;
          Baroclinic = baroclinic;
       }
 
-      public IterationMethodResult Barotropic { get; private set; }
-
+      public Vector[,] Barotropic { get; private set; }
       public SquareGridFunction BarotropicU { get; private set; }
       public SquareGridFunction BarotropicV { get; private set; }
-      public Vector[,] _Barotropic { get; private set; }
 
       public Complex[,][] Baroclinic { get; private set; }
    }
