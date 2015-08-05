@@ -30,6 +30,8 @@ namespace LiquidDynamics.Forms.IssykKul.TestProblem
 
       private readonly IssykKulVelocityFieldFormDataProvider _dataProvider;
 
+      private bool _dynamicsAlive;
+
       public IssykKulTestProblemForm(Parameters problemParameters)
       {
          Check.NotNull(problemParameters, "problemParameters");
@@ -43,9 +45,12 @@ namespace LiquidDynamics.Forms.IssykKul.TestProblem
 
       private void buttonResetClick(object sender, EventArgs e)
       {
+         _buttonStartStop.Enabled = true;
+         _buttonStep.Enabled = true;
+
          try
          {
-            Solution solution = _dataProvider.Reset(readN(), readM(), readTau(), readTheta(),
+            Solution solution = _dataProvider.Reset(readN(), readM(), readDz(), readTau(), readTheta(),
                                                     readSigma(), readDelta(), readK(),
                                                     _problemParameters, getWindParameters());
             drawVelocityField(solution);
@@ -57,7 +62,34 @@ namespace LiquidDynamics.Forms.IssykKul.TestProblem
          }
       }
 
+      private void buttonStartStopClick(object sender, EventArgs e)
+      {
+         _dynamicsAlive = !_dynamicsAlive;
+         _timer.Enabled = _dynamicsAlive;
+
+         if (_dynamicsAlive)
+         {
+            _buttonStartStop.Image = Resources.Pause;
+            setButtonsAccessibility(false);
+         }
+         else
+         {
+            _buttonStartStop.Image = Resources.Start;
+            setButtonsAccessibility(true);
+         }
+      }
+
       private void buttonStepClick(object sender, EventArgs e)
+      {
+         step();
+      }
+
+      private void timerTick(object sender, EventArgs e)
+      {
+         step();
+      }
+
+      private void step()
       {
          Solution solution = _dataProvider.Step();
          drawVelocityField(solution);
@@ -115,11 +147,14 @@ namespace LiquidDynamics.Forms.IssykKul.TestProblem
          Bounds bounds = solution.Bounds;
          SizeF cellSize = solution.VelocityField.CellSize;
 
+         _graphControl.Caption = string.Format("Time = {0:F4}", _dataProvider.Time);
+
          _graphControl.AxisBounds = new Bounds(bounds.XMin - cellSize.Width / 2F,
                                                bounds.XMax + cellSize.Width / 2F,
                                                bounds.YMin - cellSize.Height / 2F,
                                                bounds.YMax + cellSize.Height / 2F);
 
+         _graphControl.Clear();
          _graphControl.DrawVelocityField(solution.VelocityField, PaletteDrawingTools, SolutionPen,
                                          VectorScalingMode.ScaleEachVector);
          _graphControl.Invalidate();
@@ -169,6 +204,11 @@ namespace LiquidDynamics.Forms.IssykKul.TestProblem
          return readIntValue(_textBoxM.Text, "M");
       }
 
+      private double readDz()
+      {
+         return readDoubleValue(_textBoxDz.Text, "Dz");
+      }
+
       private double readTau()
       {
          return readDoubleValue(_textBoxTau.Text, "Tau");
@@ -192,6 +232,12 @@ namespace LiquidDynamics.Forms.IssykKul.TestProblem
       private int readK()
       {
          return readIntValue(_textBoxK.Text, "K");
+      }
+
+      private void setButtonsAccessibility(bool enabled)
+      {
+         _buttonReset.Enabled = enabled;
+         _buttonStep.Enabled = enabled;
       }
    }
 }

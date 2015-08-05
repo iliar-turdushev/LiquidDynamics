@@ -28,15 +28,19 @@
       /// </summary>
       private void InitializeComponent()
       {
+         this.components = new System.ComponentModel.Container();
          this._graphControl = new ControlLibrary.Controls.GraphControl();
          this._paletteControl = new ControlLibrary.Controls.PaletteControl();
          this._toolStrip = new System.Windows.Forms.ToolStrip();
          this._buttonReset = new System.Windows.Forms.ToolStripButton();
+         this._buttonStartStop = new System.Windows.Forms.ToolStripButton();
          this._buttonStep = new System.Windows.Forms.ToolStripButton();
          this._labelN = new System.Windows.Forms.ToolStripLabel();
          this._textBoxN = new System.Windows.Forms.ToolStripTextBox();
          this._labelM = new System.Windows.Forms.ToolStripLabel();
          this._textBoxM = new System.Windows.Forms.ToolStripTextBox();
+         this.labelDz = new System.Windows.Forms.ToolStripLabel();
+         this._textBoxDz = new System.Windows.Forms.ToolStripTextBox();
          this._labelTau = new System.Windows.Forms.ToolStripLabel();
          this._textBoxTau = new System.Windows.Forms.ToolStripTextBox();
          this._labelTheta = new System.Windows.Forms.ToolStripLabel();
@@ -49,6 +53,7 @@
          this._textBoxK = new System.Windows.Forms.ToolStripTextBox();
          this._labelWindType = new System.Windows.Forms.ToolStripLabel();
          this._comboBoxWindType = new System.Windows.Forms.ToolStripComboBox();
+         this._timer = new System.Windows.Forms.Timer(this.components);
          this._toolStrip.SuspendLayout();
          this.SuspendLayout();
          // 
@@ -60,29 +65,32 @@
          this._graphControl.Caption = "Иссык-Куль";
          this._graphControl.Location = new System.Drawing.Point(12, 28);
          this._graphControl.Name = "_graphControl";
-         this._graphControl.Size = new System.Drawing.Size(714, 450);
+         this._graphControl.Size = new System.Drawing.Size(822, 499);
          this._graphControl.TabIndex = 0;
          // 
          // _paletteControl
          // 
          this._paletteControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-         this._paletteControl.Location = new System.Drawing.Point(732, 28);
+         this._paletteControl.Location = new System.Drawing.Point(840, 28);
          this._paletteControl.MaxValue = 1F;
          this._paletteControl.MinValue = 0F;
          this._paletteControl.Name = "_paletteControl";
-         this._paletteControl.Size = new System.Drawing.Size(113, 450);
+         this._paletteControl.Size = new System.Drawing.Size(113, 499);
          this._paletteControl.TabIndex = 1;
          // 
          // _toolStrip
          // 
          this._toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._buttonReset,
+            this._buttonStartStop,
             this._buttonStep,
             this._labelN,
             this._textBoxN,
             this._labelM,
             this._textBoxM,
+            this.labelDz,
+            this._textBoxDz,
             this._labelTau,
             this._textBoxTau,
             this._labelTheta,
@@ -97,7 +105,7 @@
             this._comboBoxWindType});
          this._toolStrip.Location = new System.Drawing.Point(0, 0);
          this._toolStrip.Name = "_toolStrip";
-         this._toolStrip.Size = new System.Drawing.Size(857, 25);
+         this._toolStrip.Size = new System.Drawing.Size(965, 25);
          this._toolStrip.TabIndex = 2;
          this._toolStrip.Text = "toolStrip1";
          // 
@@ -110,9 +118,20 @@
          this._buttonReset.Size = new System.Drawing.Size(23, 22);
          this._buttonReset.Click += new System.EventHandler(this.buttonResetClick);
          // 
+         // _buttonStartStop
+         // 
+         this._buttonStartStop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+         this._buttonStartStop.Enabled = false;
+         this._buttonStartStop.Image = global::LiquidDynamics.Properties.Resources.Start;
+         this._buttonStartStop.ImageTransparentColor = System.Drawing.Color.Magenta;
+         this._buttonStartStop.Name = "_buttonStartStop";
+         this._buttonStartStop.Size = new System.Drawing.Size(23, 22);
+         this._buttonStartStop.Click += new System.EventHandler(this.buttonStartStopClick);
+         // 
          // _buttonStep
          // 
          this._buttonStep.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+         this._buttonStep.Enabled = false;
          this._buttonStep.Image = global::LiquidDynamics.Properties.Resources.StepForward;
          this._buttonStep.ImageTransparentColor = System.Drawing.Color.Magenta;
          this._buttonStep.Name = "_buttonStep";
@@ -144,6 +163,18 @@
          this._textBoxM.Name = "_textBoxM";
          this._textBoxM.Size = new System.Drawing.Size(50, 25);
          this._textBoxM.Text = "50";
+         // 
+         // labelDz
+         // 
+         this.labelDz.Name = "labelDz";
+         this.labelDz.Size = new System.Drawing.Size(23, 22);
+         this.labelDz.Text = "Dz:";
+         // 
+         // _textBoxDz
+         // 
+         this._textBoxDz.Name = "_textBoxDz";
+         this._textBoxDz.Size = new System.Drawing.Size(50, 25);
+         this._textBoxDz.Text = "0.01";
          // 
          // _labelTau
          // 
@@ -222,12 +253,16 @@
          this._comboBoxWindType.Name = "_comboBoxWindType";
          this._comboBoxWindType.Size = new System.Drawing.Size(121, 25);
          // 
-         // IssykKulVelocityFieldForm
+         // _timer
+         // 
+         this._timer.Tick += new System.EventHandler(this.timerTick);
+         // 
+         // IssykKulTestProblemForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.BackColor = System.Drawing.SystemColors.Window;
-         this.ClientSize = new System.Drawing.Size(857, 490);
+         this.ClientSize = new System.Drawing.Size(965, 539);
          this.Controls.Add(this._toolStrip);
          this.Controls.Add(this._paletteControl);
          this.Controls.Add(this._graphControl);
@@ -263,5 +298,9 @@
       private System.Windows.Forms.ToolStripButton _buttonStep;
       private System.Windows.Forms.ToolStripLabel _labelWindType;
       private System.Windows.Forms.ToolStripComboBox _comboBoxWindType;
+      private System.Windows.Forms.ToolStripLabel labelDz;
+      private System.Windows.Forms.ToolStripTextBox _textBoxDz;
+      private System.Windows.Forms.Timer _timer;
+      private System.Windows.Forms.ToolStripButton _buttonStartStop;
    }
 }

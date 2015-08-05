@@ -19,8 +19,6 @@ namespace LiquidDynamics.Forms.IssykKul.TestProblem
 {
    internal sealed class IssykKulVelocityFieldFormDataProvider
    {
-      private const double Dz = 0.01;
-
       private ProblemParameters _problemParameters;
 
       private Mathematics.Numerical.Grid _x;
@@ -30,10 +28,17 @@ namespace LiquidDynamics.Forms.IssykKul.TestProblem
       
       private TestProblemSolver _solver;
 
-      public Solution Reset(int n, int m, double tau, double theta, double sigma, double delta, int k, Parameters parameters, WindParameters windParameters)
+      private double _tau;
+
+      public double Time { get; private set; }
+      
+      public Solution Reset(int n, int m, double dz, double tau, double theta, double sigma, double delta, int k, Parameters parameters, WindParameters windParameters)
       {
          Check.NotNull(parameters, "parameters");
          Check.NotNull(windParameters, "windParameters");
+
+         Time = tau;
+         _tau = tau;
 
          Point3D[] data = IssykKulDataReader.ReadData(Resources.IssykKulData);
 
@@ -41,7 +46,7 @@ namespace LiquidDynamics.Forms.IssykKul.TestProblem
          BoundsCalculator.Calculate(data, out xMin, out xMax, out yMin, out yMax);
          
          var gridBuilder = new IssykKulGridBuilder(data, xMin, xMax, yMin, yMax);
-         _grid = gridBuilder.BuildGrid3D(n, m, Dz, theta);
+         _grid = gridBuilder.BuildGrid3D(n, m, dz, theta);
          _grid.Stretch(StretchCoefficients.L0, StretchCoefficients.L0, StretchCoefficients.SmallH0);
 
          _bounds = new Bounds((float) xMin, (float) xMax, (float) yMin, (float) yMax);
@@ -58,6 +63,8 @@ namespace LiquidDynamics.Forms.IssykKul.TestProblem
 
       public Solution Step()
       {
+         Time += _tau;
+
          TestProblemSolution solution = _solver.Step();
          return new Solution(getVelocityField(solution, _grid.Grid2D, _x, _y), _bounds);
       }
