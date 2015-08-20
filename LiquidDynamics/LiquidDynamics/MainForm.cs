@@ -17,6 +17,7 @@ using LiquidDynamics.Forms.StommelModel;
 using LiquidDynamics.Forms.TestProblem;
 using LiquidDynamics.Forms.Upwelling;
 using LiquidDynamics.Forms.VelocityField;
+using LiquidDynamics.Forms.VerticalComponentNumerical;
 using LiquidDynamics.Properties;
 using ModelProblem;
 
@@ -167,6 +168,11 @@ namespace LiquidDynamics
       private void issykKulToolStripMenuItemClick(object sender, EventArgs e)
       {
          showForm(new IssykKulTestProblemForm(_problemParameters));
+      }
+
+      private void verticalComponentToolStripMenuItemClick(object sender, EventArgs e)
+      {
+         showForm(new VerticalComponentForm(_problemParameters));
       }
    }
 }

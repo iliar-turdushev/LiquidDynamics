@@ -224,6 +224,12 @@
     </Compile>
     <Compile Include="Forms\VelocityField\UWSquareVelocityField.cs" />
     <Compile Include="Forms\VelocityField\VWSquareVelocityField.cs" />
+    <Compile Include="Forms\VerticalComponentNumerical\VerticalComponentForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\VerticalComponentNumerical\VerticalComponentForm.Designer.cs">
+      <DependentUpon>VerticalComponentForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -335,6 +341,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\VelocityField\SquareVelocityFieldForm.resx">
       <DependentUpon>SquareVelocityFieldForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\VerticalComponentNumerical\VerticalComponentForm.resx">
+      <DependentUpon>VerticalComponentForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

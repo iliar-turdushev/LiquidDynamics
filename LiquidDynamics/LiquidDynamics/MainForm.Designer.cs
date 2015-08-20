@@ -52,6 +52,7 @@
          this.baroclinicComponentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.testProblemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.issykKulToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.verticalComponentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this._menuStrip.SuspendLayout();
          this.SuspendLayout();
          // 
@@ -65,10 +66,11 @@
             this.issykKulWindToolStripMenuItem,
             this.baroclinicComponentToolStripMenuItem,
             this.testProblemToolStripMenuItem,
-            this.issykKulToolStripMenuItem});
+            this.issykKulToolStripMenuItem,
+            this.verticalComponentToolStripMenuItem});
          this._menuStrip.Location = new System.Drawing.Point(0, 0);
          this._menuStrip.Name = "_menuStrip";
-         this._menuStrip.Size = new System.Drawing.Size(1242, 24);
+         this._menuStrip.Size = new System.Drawing.Size(1370, 24);
          this._menuStrip.TabIndex = 0;
          this._menuStrip.Text = "MenuStrip";
          // 
@@ -83,7 +85,7 @@
          // _problemParametersToolStripMenuItem
          // 
          this._problemParametersToolStripMenuItem.Name = "_problemParametersToolStripMenuItem";
-         this._problemParametersToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+         this._problemParametersToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
          this._problemParametersToolStripMenuItem.Text = "Параметры";
          this._problemParametersToolStripMenuItem.Click += new System.EventHandler(this.problemParametersToolStripMenuItemClick);
          // 
@@ -248,12 +250,19 @@
          this.issykKulToolStripMenuItem.Text = "Иссык-Куль";
          this.issykKulToolStripMenuItem.Click += new System.EventHandler(this.issykKulToolStripMenuItemClick);
          // 
+         // verticalComponentToolStripMenuItem
+         // 
+         this.verticalComponentToolStripMenuItem.Name = "verticalComponentToolStripMenuItem";
+         this.verticalComponentToolStripMenuItem.Size = new System.Drawing.Size(165, 20);
+         this.verticalComponentToolStripMenuItem.Text = "Вертикальная компонента";
+         this.verticalComponentToolStripMenuItem.Click += new System.EventHandler(this.verticalComponentToolStripMenuItemClick);
+         // 
          // MainForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.BackColor = System.Drawing.SystemColors.Control;
-         this.ClientSize = new System.Drawing.Size(1242, 453);
+         this.ClientSize = new System.Drawing.Size(1370, 453);
          this.Controls.Add(this._menuStrip);
          this.IsMdiContainer = true;
          this.MainMenuStrip = this._menuStrip;
@@ -293,6 +302,7 @@
       private System.Windows.Forms.ToolStripMenuItem baroclinicComponentToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem testProblemToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem issykKulToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem verticalComponentToolStripMenuItem;
    }
 }
 
