@@ -56,12 +56,10 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
 
       private void button1_Click(object sender, EventArgs e)
       {
-         Complex[] psi00 = calculatePsi(_t, _x0, _y0);
-         Complex[] psi10 = calculatePsi(_t, _x1, _y0);
-         Complex[] psi01 = calculatePsi(_t, _x0, _y1);
-
-         Complex[] dxPsi = calculateDerivative(_dx, psi00, psi10);
-         Complex[] dyPsi = calculateDerivative(_dy, psi00, psi01);
+         double[] dxPsi = calculateDx(calculatePsi(_t, _x0 - _dx, _y0),
+                                      calculatePsi(_t, _x0 + _dx, _y0));
+         double[] dyPsi = calculateDy(calculatePsi(_t, _x0, _y0 - _dy),
+                                      calculatePsi(_t, _x0, _y0 + _dy));
 
          double[] w = calculateW(dxPsi, dyPsi);
          double[] exactW = calculateExactW();
@@ -207,27 +205,29 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
          return -(mu * rho0 * u + I * mu * rho0 * v) / rho0;
       }
 
-      private Complex[] calculateDerivative(double d, Complex[] psi0, Complex[] psi1)
+      private double[] calculateDx(Complex[] psi0, Complex[] psi1)
       {
          int n = _zGrid.Nodes;
-         var result = new Complex[n];
+         var result = new double[n];
 
-         result[0] = new Complex((psi1[0].Re - psi0[0].Re) / d,
-                                 (psi1[0].Im - psi0[0].Im) / d);
-
-         for (int i = 1; i < n - 1; i++)
-         {
-            result[i] = new Complex((psi1[i + 1].Re - psi0[i + 1].Re) / d,
-                                    (psi1[i + 1].Im - psi0[i + 1].Im) / d);
-         }
-
-         result[n - 1] = new Complex((psi1[n - 1].Re - psi0[n - 1].Re) / d,
-                                     (psi1[n - 1].Im - psi0[n - 1].Im) / d);
+         for (int i = 0; i < n; i++)
+            result[i] = (psi1[i].Re - psi0[i].Re) / (2 * _dx);
 
          return result;
       }
 
-      private double[] calculateW(Complex[] dxPsi, Complex[] dyPsi)
+      private double[] calculateDy(Complex[] psi0, Complex[] psi1)
+      {
+         int n = _zGrid.Nodes;
+         var result = new double[n];
+
+         for (int i = 0; i < n; i++)
+            result[i] = (psi1[i].Im - psi0[i].Im) / (2 * _dy);
+
+         return result;
+      }
+
+      private double[] calculateW(double[] dxPsi, double[] dyPsi)
       {
          int n = _zGrid.Nodes;
          double dz = _zGrid.Step;
@@ -247,7 +247,7 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
             a[k] = 1 / (dz * dz);
             b[k] = 2 / (dz * dz);
             c[k] = 1 / (dz * dz);
-            f[k] = 2 / nu * (dxPsi[k].Re + dyPsi[k].Im);
+            f[k] = 1 / nu * (dxPsi[k] + dyPsi[k]);
          }
 
          a[n - 1] = 0;
