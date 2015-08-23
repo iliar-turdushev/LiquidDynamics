@@ -29,27 +29,42 @@
       private void InitializeComponent()
       {
          this._toolStrip = new System.Windows.Forms.ToolStrip();
-         this._graphControl = new ControlLibrary.Controls.GraphControl();
          this._buttonReset = new System.Windows.Forms.ToolStripButton();
+         this._buttonStep = new System.Windows.Forms.ToolStripButton();
+         this._labelNx = new System.Windows.Forms.ToolStripLabel();
+         this._graphControl = new ControlLibrary.Controls.GraphControl();
+         this._textBoxNx = new System.Windows.Forms.ToolStripTextBox();
+         this._labelNy = new System.Windows.Forms.ToolStripLabel();
+         this._textBoxNy = new System.Windows.Forms.ToolStripTextBox();
+         this._labelNz = new System.Windows.Forms.ToolStripLabel();
+         this._textBoxNz = new System.Windows.Forms.ToolStripTextBox();
+         this._labelTau = new System.Windows.Forms.ToolStripLabel();
+         this._textBoxTau = new System.Windows.Forms.ToolStripTextBox();
+         this._textBoxSlice = new System.Windows.Forms.ToolStripTextBox();
+         this._labelSlice = new System.Windows.Forms.ToolStripLabel();
+         this._paletteControl = new ControlLibrary.Controls.PaletteControl();
          this._toolStrip.SuspendLayout();
          this.SuspendLayout();
          // 
          // _toolStrip
          // 
          this._toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this._buttonReset});
+            this._buttonReset,
+            this._buttonStep,
+            this._labelNx,
+            this._textBoxNx,
+            this._labelNy,
+            this._textBoxNy,
+            this._labelNz,
+            this._textBoxNz,
+            this._labelTau,
+            this._textBoxTau,
+            this._labelSlice,
+            this._textBoxSlice});
          this._toolStrip.Location = new System.Drawing.Point(0, 0);
          this._toolStrip.Name = "_toolStrip";
-         this._toolStrip.Size = new System.Drawing.Size(665, 25);
+         this._toolStrip.Size = new System.Drawing.Size(780, 25);
          this._toolStrip.TabIndex = 0;
-         // 
-         // _graphControl
-         // 
-         this._graphControl.Caption = "Вертикальная компонента";
-         this._graphControl.Location = new System.Drawing.Point(12, 28);
-         this._graphControl.Name = "_graphControl";
-         this._graphControl.Size = new System.Drawing.Size(641, 423);
-         this._graphControl.TabIndex = 1;
          // 
          // _buttonReset
          // 
@@ -60,12 +75,104 @@
          this._buttonReset.Size = new System.Drawing.Size(23, 22);
          this._buttonReset.Click += new System.EventHandler(this.buttonResetClick);
          // 
+         // _buttonStep
+         // 
+         this._buttonStep.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+         this._buttonStep.Image = global::LiquidDynamics.Properties.Resources.StepForward;
+         this._buttonStep.ImageTransparentColor = System.Drawing.Color.Magenta;
+         this._buttonStep.Name = "_buttonStep";
+         this._buttonStep.Size = new System.Drawing.Size(23, 22);
+         this._buttonStep.Click += new System.EventHandler(this.buttonStepClick);
+         // 
+         // _labelNx
+         // 
+         this._labelNx.Name = "_labelNx";
+         this._labelNx.Size = new System.Drawing.Size(24, 22);
+         this._labelNx.Text = "Nx:";
+         // 
+         // _graphControl
+         // 
+         this._graphControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+         this._graphControl.Caption = "Вертикальная компонента";
+         this._graphControl.Location = new System.Drawing.Point(12, 28);
+         this._graphControl.Name = "_graphControl";
+         this._graphControl.Size = new System.Drawing.Size(639, 423);
+         this._graphControl.TabIndex = 1;
+         // 
+         // _textBoxNx
+         // 
+         this._textBoxNx.Name = "_textBoxNx";
+         this._textBoxNx.Size = new System.Drawing.Size(50, 25);
+         this._textBoxNx.Text = "50";
+         // 
+         // _labelNy
+         // 
+         this._labelNy.Name = "_labelNy";
+         this._labelNy.Size = new System.Drawing.Size(25, 22);
+         this._labelNy.Text = "Ny:";
+         // 
+         // _textBoxNy
+         // 
+         this._textBoxNy.Name = "_textBoxNy";
+         this._textBoxNy.Size = new System.Drawing.Size(50, 25);
+         this._textBoxNy.Text = "50";
+         // 
+         // _labelNz
+         // 
+         this._labelNz.Name = "_labelNz";
+         this._labelNz.Size = new System.Drawing.Size(24, 22);
+         this._labelNz.Text = "Nz:";
+         // 
+         // _textBoxNz
+         // 
+         this._textBoxNz.Name = "_textBoxNz";
+         this._textBoxNz.Size = new System.Drawing.Size(50, 25);
+         this._textBoxNz.Text = "50";
+         // 
+         // _labelTau
+         // 
+         this._labelTau.Name = "_labelTau";
+         this._labelTau.Size = new System.Drawing.Size(30, 22);
+         this._labelTau.Text = "Tau:";
+         // 
+         // _textBoxTau
+         // 
+         this._textBoxTau.Name = "_textBoxTau";
+         this._textBoxTau.Size = new System.Drawing.Size(50, 25);
+         this._textBoxTau.Text = "0.1";
+         // 
+         // _textBoxSlice
+         // 
+         this._textBoxSlice.Name = "_textBoxSlice";
+         this._textBoxSlice.Size = new System.Drawing.Size(50, 25);
+         this._textBoxSlice.Text = "25";
+         // 
+         // _labelSlice
+         // 
+         this._labelSlice.Name = "_labelSlice";
+         this._labelSlice.Size = new System.Drawing.Size(36, 22);
+         this._labelSlice.Text = "Срез:";
+         // 
+         // _paletteControl
+         // 
+         this._paletteControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+         this._paletteControl.Location = new System.Drawing.Point(657, 28);
+         this._paletteControl.MaxValue = 1F;
+         this._paletteControl.MinValue = 0F;
+         this._paletteControl.Name = "_paletteControl";
+         this._paletteControl.Size = new System.Drawing.Size(111, 423);
+         this._paletteControl.TabIndex = 2;
+         // 
          // VerticalComponentForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.BackColor = System.Drawing.SystemColors.Window;
-         this.ClientSize = new System.Drawing.Size(665, 463);
+         this.ClientSize = new System.Drawing.Size(780, 463);
+         this.Controls.Add(this._paletteControl);
          this.Controls.Add(this._graphControl);
          this.Controls.Add(this._toolStrip);
          this.Name = "VerticalComponentForm";
@@ -82,6 +189,18 @@
       private System.Windows.Forms.ToolStrip _toolStrip;
       private System.Windows.Forms.ToolStripButton _buttonReset;
       private ControlLibrary.Controls.GraphControl _graphControl;
+      private System.Windows.Forms.ToolStripButton _buttonStep;
+      private System.Windows.Forms.ToolStripLabel _labelNx;
+      private System.Windows.Forms.ToolStripTextBox _textBoxNx;
+      private System.Windows.Forms.ToolStripLabel _labelNy;
+      private System.Windows.Forms.ToolStripTextBox _textBoxNy;
+      private System.Windows.Forms.ToolStripLabel _labelNz;
+      private System.Windows.Forms.ToolStripTextBox _textBoxNz;
+      private System.Windows.Forms.ToolStripLabel _labelTau;
+      private System.Windows.Forms.ToolStripTextBox _textBoxTau;
+      private System.Windows.Forms.ToolStripLabel _labelSlice;
+      private System.Windows.Forms.ToolStripTextBox _textBoxSlice;
+      private ControlLibrary.Controls.PaletteControl _paletteControl;
 
    }
 }

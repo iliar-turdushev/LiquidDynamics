@@ -231,6 +231,7 @@
       <DependentUpon>VerticalComponentForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\VerticalComponentNumerical\VerticalComponentProblemSolver.cs" />
+    <Compile Include="Forms\VerticalComponentNumerical\VerticalComponentResult.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

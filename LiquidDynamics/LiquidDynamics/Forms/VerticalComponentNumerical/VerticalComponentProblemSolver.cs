@@ -31,7 +31,7 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
       private double[,][] _w;
       private double[,][] _exactW;
 
-      public UpwellingData Begin(int nx, int ny, int nz, double tau, Parameters parameters)
+      public VerticalComponentResult Begin(int nx, int ny, int nz, double tau, Parameters parameters)
       {
          _xGrid = createGrid(nx, parameters.SmallR);
          _yGrid = createGrid(ny, parameters.SmallQ);
@@ -53,7 +53,7 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
          _w = calculateW();
          _exactW = calculateExactW();
 
-         return buildUpwellingData();
+         return new VerticalComponentResult(buildUpwellingData(), calculateError(), _t);
       }
 
       private Grid createGrid(int cells, double length)
@@ -308,27 +308,34 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
          return maxDiff / max * 100.0;
       }
 
-      private UpwellingData buildUpwellingData()
+      private UpwellingData[] buildUpwellingData()
+      {
+         int nz = _zGrid.Nodes;
+         var result = new UpwellingData[nz];
+
+         for (int k = 0; k < nz; k++)
+            result[k] = buildUpwellingData(k);
+
+         return result;
+      }
+
+      private UpwellingData buildUpwellingData(int slice)
       {
          int nx = _xGrid.Nodes;
          int ny = _yGrid.Nodes;
-
-         int slice = _zGrid.Nodes / 2;
-         double z = _zGrid.Get(slice);
 
          var gridPoints = new PointF[nx, ny];
          var intensities = new float[nx, ny];
 
          for (var i = 0; i < nx; i++)
          {
-            var x = _xGrid.Get(i);
+            double x = _xGrid.Get(i);
 
             for (var j = 0; j < ny; j++)
             {
-               var y = _yGrid.Get(j);
-               var value = _w[i, j][slice];
+               double y = _yGrid.Get(j);
                gridPoints[i, j] = new PointF((float) x, (float) y);
-               intensities[i, j] = (float) (z - value);
+               intensities[i, j] = (float) _w[i, j][slice];
             }
          }
 
