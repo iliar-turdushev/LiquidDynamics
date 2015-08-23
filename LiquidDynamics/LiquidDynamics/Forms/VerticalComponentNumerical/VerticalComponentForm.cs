@@ -46,7 +46,8 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
 
       private void buttonStepClick(object sender, EventArgs e)
       {
-
+         _result = _solver.Step();
+         drawUpwelling(_result.UpwellingData[readSlice()]);
       }
 
       private void drawUpwelling(UpwellingData upwellingData)

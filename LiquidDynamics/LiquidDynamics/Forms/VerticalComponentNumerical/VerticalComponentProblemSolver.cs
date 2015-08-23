@@ -1,10 +1,13 @@
 using System;
 using System.Drawing;
+using BarotropicComponentProblem;
 using ControlLibrary.Types;
+using LiquidDynamics.Forms.BarotropicComponentNumerical;
 using Mathematics.MathTypes;
 using Mathematics.Numerical;
 using ModelProblem;
 using ModelProblem.Baroclinic;
+using ModelProblem.Barotropic;
 using ModelProblem.Vertical;
 
 namespace LiquidDynamics.Forms.VerticalComponentNumerical
@@ -20,6 +23,7 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
 
       private Parameters _parameters;
 
+      private IWind _wind;
       private Solution _solution;
 
       private Complex[,][] _psi0;
@@ -42,6 +46,9 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
 
          _parameters = parameters;
 
+         _wind = new ModelWind(_parameters.F1, _parameters.F2,
+                               _parameters.SmallQ, _parameters.SmallR,
+                               _parameters.Rho0);
          _solution = SolutionCreator.Create(_parameters);
 
          _psi0 = calculateInitialPsi();
@@ -51,6 +58,23 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
          _dyPsi = calculateDyImPsi();
 
          _w = calculateW();
+         _exactW = calculateExactW();
+
+         return new VerticalComponentResult(buildUpwellingData(), calculateError(), _t);
+      }
+      
+      public VerticalComponentResult Step()
+      {
+         _t += _tau;
+
+         _psi = calculatePsi();
+         _psi0 = _psi;
+
+         _dxPsi = calculateDxRePsi();
+         _dyPsi = calculateDyImPsi();
+
+         _w = calculateW();
+
          _exactW = calculateExactW();
 
          return new VerticalComponentResult(buildUpwellingData(), calculateError(), _t);
@@ -341,6 +365,117 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
 
          var cellSize = new SizeF((float) _xGrid.Step, (float) _yGrid.Step);
          return new UpwellingData(gridPoints, intensities, cellSize);
+      }
+
+      private Complex[,][] calculatePsi()
+      {
+         int nx = _xGrid.Nodes;
+         int ny = _yGrid.Nodes;
+
+         var psi = new Complex[nx, ny][];
+
+         for (int i = 0; i < nx; i++)
+         {
+            double x = _xGrid.Get(i);
+
+            for (int j = 0; j < ny; j++)
+            {
+               double y = _yGrid.Get(j);
+               psi[i, j] = calculatePsi(x, y, _psi0[i, j]);
+            }
+         }
+
+         return psi;
+      }
+
+      private Complex[] calculatePsi(double x, double y, Complex[] psi0)
+      {
+         int nz = _zGrid.Nodes;
+         double dz = _zGrid.Step;
+         double nu = _parameters.Nu;
+
+         Complex sigma = calculateSigma(y);
+
+         Complex[] theta0 = calculateTheta(_t - _tau, x, y);
+         Complex[] theta1 = calculateTheta(_t, x, y);
+
+         var psi = new Complex[nz];
+         psi[0] = calculatePsi1(x, y);
+
+         for (int k = 1; k < nz - 1; k++)
+         {
+            psi[k] = nu * (theta1[k + 1] - theta1[k]) / (2.0 * dz) +
+                     nu * (theta1[k] - theta1[k - 1]) / (2.0 * dz) +
+                     (1.0 / sigma - 1.0) * (nu * (theta0[k + 1] - theta0[k]) / (2.0 * dz) +
+                                            nu * (theta0[k] - theta0[k - 1]) / (2.0 * dz) -
+                                            psi0[k]);
+         }
+
+         psi[nz - 1] = calculatePsiN(x, y);
+
+         return psi;
+      }
+
+      private Complex calculateSigma(double y)
+      {
+         double mu = _parameters.Mu;
+         double l = calculateL(y);
+
+         double exp = Math.Exp(-mu * _tau);
+         double alpha = 1.0 - Math.Cos(l * _tau) * exp;
+         double beta = Math.Sin(l * _tau) * exp;
+
+         double sqr = alpha * alpha + beta * beta;
+         double a = (mu * alpha + l * beta) / sqr;
+         double b = (l * alpha - mu * beta) / sqr;
+
+         return (a + Complex.I * b - 1.0 / _tau) / (mu + Complex.I * l);
+      }
+
+      private double calculateL(double y)
+      {
+         double l0 = _parameters.SmallL0;
+         double beta = _parameters.Beta;
+         return l0 + beta * y;
+      }
+
+      private Complex[] calculateTheta(double t, double x, double y)
+      {
+         int nz = _zGrid.Nodes;
+
+         IBarotropicComponent barotropic = _solution.GetBarotropicComponent();
+         double u = barotropic.U(t, x, y);
+         double v = barotropic.V(t, x, y);
+
+         IBaroclinicComponent baroclinic = _solution.GetBaroclinicComponent();
+         var theta = new Complex[nz];
+
+         for (int k = 0; k < nz; k++)
+         {
+            double z = _zGrid.Get(k);
+            Complex c = baroclinic.Theta(t, x, y, z);
+            theta[k] = new Complex(u + c.Re, v + c.Im);
+         }
+
+         return theta;
+      }
+
+      private Complex calculatePsi1(double x, double y)
+      {
+         double rho0 = _parameters.Rho0;
+         return -(_wind.TauX(x, y) + Complex.I * _wind.TauY(x, y)) / rho0;
+      }
+
+      private Complex calculatePsiN(double x, double y)
+      {
+         double mu = _parameters.Mu;
+         double rho0 = _parameters.Rho0;
+
+         IBarotropicComponent barotropic = _solution.GetBarotropicComponent();
+         double u = barotropic.U(_t, x, y);
+         double v = barotropic.V(_t, x, y);
+
+         return -(mu * rho0 * u + Complex.I * mu * rho0 * v) / rho0;
       }
    }
 }
