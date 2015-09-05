@@ -1,4 +1,3 @@
-using BarotropicComponentProblem;
 using Common;
 using Mathematics.MathTypes;
 using Mathematics.Numerical;
@@ -30,5 +29,7 @@ namespace LiquidDynamics.Forms.TestProblem
       public SquareGridFunction BarotropicV { get; private set; }
 
       public Complex[,][] Baroclinic { get; private set; }
+
+      public double[,][] W { get; set; }
    }
 }

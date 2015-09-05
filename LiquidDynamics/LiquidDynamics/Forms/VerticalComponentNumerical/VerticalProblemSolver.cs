@@ -13,7 +13,7 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
       private readonly Grid _zGrid;
 
       private readonly IWind _wind;
-      private readonly Parameters _parameters;
+      private readonly ProblemParameters _parameters;
       private Complex[,][] _theta0;
       private Complex[,][] _theta1;
 
@@ -35,7 +35,7 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
          Grid zGrid,
          double tau,
          IWind wind,
-         Parameters parameters,
+         ProblemParameters parameters,
          Complex[,][] theta0
          )
       {

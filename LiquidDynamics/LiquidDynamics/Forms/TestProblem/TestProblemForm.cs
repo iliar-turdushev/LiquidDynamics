@@ -14,6 +14,7 @@ using Mathematics.Numerical;
 using ModelProblem;
 using ModelProblem.Baroclinic;
 using ModelProblem.Barotropic;
+using ModelProblem.Vertical;
 using Point = Mathematics.MathTypes.Point;
 using Point3D = Mathematics.MathTypes.Point3D;
 using Rectangle3D = Mathematics.MathTypes.Rectangle3D;
@@ -97,7 +98,9 @@ namespace LiquidDynamics.Forms.TestProblem
          double errorU, errorV;
          getError(solution, out errorU, out errorV);
 
-         printSolution(solution, errorU, errorV);
+         double errorW = calculateError(solution.W);
+
+         printSolution(solution, errorU, errorV, errorW);
       }
 
       private void buttonStepClick(object sender, EventArgs e)
@@ -318,23 +321,29 @@ namespace LiquidDynamics.Forms.TestProblem
          errorV = diffV / maxV * 100;
       }
 
-      private void printSolution(TestProblemSolution solution, double errorU, double errorV)
+      private void printSolution(TestProblemSolution solution, double errorU, double errorV, double errorW)
       {
-         _graphControl.Caption = string.Format("Time = {0:F4}, Error U = {1:F4}%, Error V = {2:F4}%",
-                                               _t, errorU, errorV);
+         _graphControl.Caption = string.Format("Time = {0:F4}, Error U = {1:F4}%, Error V = {2:F4}%, Error W = {3:F4}%",
+                                               _t, errorU, errorV, errorW);
 
          _graphControl.AxisBounds = new Bounds(0, (float) _problemParameters.SmallR,
                                                0, (float) _problemParameters.SmallQ);
 
          _graphControl.Clear();
 
-         SquareVelocityField squareVelocityField = getSquareVelocityField(solution);
-         _graphControl.DrawVelocityField(squareVelocityField, PaletteDrawingTools, SolutionPen);
+//         SquareVelocityField squareVelocityField = getSquareVelocityField(solution);
+//         _graphControl.DrawVelocityField(squareVelocityField, PaletteDrawingTools, SolutionPen);
+         UpwellingData upwelling = buildUpwellingData(solution.W)[_zSlice];
+         _graphControl.DrawUpwelling(upwelling, PaletteFactory.CreateBlueRedPalette());
 
          _graphControl.Invalidate();
 
-         _paletteControl.MinValue = squareVelocityField.GetMinVector().Length;
-         _paletteControl.MaxValue = squareVelocityField.GetMaxVector().Length;
+//         _paletteControl.MinValue = squareVelocityField.GetMinVector().Length;
+//         _paletteControl.MaxValue = squareVelocityField.GetMaxVector().Length;
+         float value = Math.Max(Math.Abs(upwelling.GetMinIntensity()),
+                                Math.Abs(upwelling.GetMaxIntensity()));
+         _paletteControl.MinValue = -value;
+         _paletteControl.MaxValue = value;
          _paletteControl.Invalidate();
       }
 
@@ -377,13 +386,102 @@ namespace LiquidDynamics.Forms.TestProblem
          double errorU, errorV;
          getError(solution, out errorU, out errorV);
 
-         printSolution(solution, errorU, errorV);
+         double errorW = calculateError(solution.W);
+
+         printSolution(solution, errorU, errorV, errorW);
       }
 
       private void setButtonsAccessibility(bool enabled)
       {
          _buttonReset.Enabled = enabled;
          _buttonStep.Enabled = enabled;
+      }
+
+      private double[,][] calculateExactW()
+      {
+         int nx = _xGrid.Nodes - 1;
+         int ny = _yGrid.Nodes - 1;
+         int nz = _zGrid.Nodes;
+
+         IVerticalComponent vertical = _solution.GetVerticalComponent();
+
+         var w = new double[nx, ny][];
+
+         for (int i = 0; i < nx; i++)
+         {
+            double x = 0.5 * (_xGrid.Get(i) + _xGrid.Get(i + 1));
+
+            for (int j = 0; j < ny; j++)
+            {
+               double y = 0.5 * (_yGrid.Get(j) + _yGrid.Get(j + 1));
+               w[i, j] = new double[nz];
+
+               for (int k = 0; k < nz; k++)
+               {
+                  double z = _zGrid.Get(k);
+                  w[i, j][k] = vertical.W(_t, x, y, z);
+               }
+            }
+         }
+
+         return w;
+      }
+
+      private double calculateError(double[,][] w)
+      {
+         double[,][] exactW = calculateExactW();
+
+         int nx = _xGrid.Nodes - 1;
+         int ny = _yGrid.Nodes - 1;
+         int nz = _zGrid.Nodes;
+
+         double max = 0.0;
+         double maxDiff = 0.0;
+
+         for (int i = 0; i < nx; i++)
+            for (int j = 0; j < ny; j++)
+               for (int k = 0; k < nz; k++)
+               {
+                  max = Math.Max(max, Math.Abs(exactW[i, j][k]));
+                  maxDiff = Math.Max(maxDiff, Math.Abs(exactW[i, j][k] - w[i, j][k]));
+               }
+
+         return maxDiff / max * 100.0;
+      }
+
+      private UpwellingData[] buildUpwellingData(double[,][] w)
+      {
+         int nz = _zGrid.Nodes;
+         var result = new UpwellingData[nz];
+
+         for (int k = 0; k < nz; k++)
+            result[k] = buildUpwellingData(k, w);
+
+         return result;
+      }
+
+      private UpwellingData buildUpwellingData(int slice, double[,][] w)
+      {
+         int nx = _xGrid.Nodes;
+         int ny = _yGrid.Nodes;
+
+         var gridPoints = new PointF[nx - 1, ny - 1];
+         var intensities = new float[nx - 1, ny - 1];
+
+         for (var i = 0; i < nx - 1; i++)
+         {
+            double x = 0.5 * (_xGrid.Get(i) + _xGrid.Get(i + 1));
+
+            for (var j = 0; j < ny - 1; j++)
+            {
+               double y = 0.5 * (_yGrid.Get(j) + _yGrid.Get(j + 1));
+               gridPoints[i, j] = new PointF((float) x, (float) y);
+               intensities[i, j] = (float) (_zGrid.Get(slice) - w[i, j][slice]);
+            }
+         }
+
+         var cellSize = new SizeF((float) _xGrid.Step, (float) _yGrid.Step);
+         return new UpwellingData(gridPoints, intensities, cellSize);
       }
    }
 }

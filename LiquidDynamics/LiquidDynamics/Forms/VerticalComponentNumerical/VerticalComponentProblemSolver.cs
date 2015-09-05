@@ -37,7 +37,7 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
          _yGrid = createGrid(ny, parameters.SmallQ);
          _zGrid = createZGrid(nz, parameters.H);
 
-         _t = 0.0;
+         _t = tau;
          _tau = tau;
 
          _parameters = parameters;
@@ -47,7 +47,7 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
                                _parameters.Rho0);
          _solution = SolutionCreator.Create(_parameters);
 
-         _solver = new VerticalProblemSolver(_xGrid, _yGrid, _zGrid, _tau, _wind, _parameters, calculateTheta(_t));
+         _solver = new VerticalProblemSolver(_xGrid, _yGrid, _zGrid, _tau, _wind, createProblemParameters(), calculateTheta(_t));
 
          _w = _solver.Begin();
          _exactW = calculateExactW();
@@ -63,6 +63,23 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
          _exactW = calculateExactW();
 
          return new VerticalComponentResult(buildUpwellingData(), calculateError(), _t);
+      }
+
+      private ProblemParameters createProblemParameters()
+      {
+         return new ProblemParameters
+                   {
+                      Beta = _parameters.Beta,
+                      F1 = _parameters.F1,
+                      F2 = _parameters.F2,
+                      H = _parameters.H,
+                      Mu = _parameters.Mu,
+                      Nu = _parameters.Nu,
+                      Rho0 = _parameters.Rho0,
+                      SmallL0 = _parameters.SmallL0,
+                      SmallQ = _parameters.SmallQ,
+                      SmallR = _parameters.SmallR
+                   };
       }
 
       private double[,] u(double t)

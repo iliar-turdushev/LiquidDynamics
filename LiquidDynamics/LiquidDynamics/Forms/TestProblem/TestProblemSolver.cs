@@ -4,6 +4,7 @@ using BarotropicComponentProblem.IssykKulGrid;
 using BarotropicComponentProblem.IterationMethod;
 using BarotropicComponentProblem.TestProblem;
 using Common;
+using LiquidDynamics.Forms.VerticalComponentNumerical;
 using Mathematics.MathTypes;
 using Mathematics.Numerical;
 
@@ -29,6 +30,8 @@ namespace LiquidDynamics.Forms.TestProblem
 
       private Grid _xResult;
       private Grid _yResult;
+      private Grid _zResult;
+      private VerticalProblemSolver _verticalProblemSolver;
 
       public TestProblemSolver(
          ProblemParameters parameters,
@@ -71,16 +74,92 @@ namespace LiquidDynamics.Forms.TestProblem
 
          _xResult = getMiddleNodesGrid(_x);
          _yResult = getMiddleNodesGrid(_y);
+         _zResult = Grid.Create(0, _parameters.H, _issykKulGrid3D.GetDepthGrid(0, 0).Length + 1);
       }
 
       public TestProblemSolution Begin()
       {
-         return step(_barotropicSolver.Begin());
+         TestProblemSolution solution = step(_barotropicSolver.Begin());
+
+         _verticalProblemSolver = new VerticalProblemSolver(_xResult, _yResult, _zResult, _tau, _wind, _parameters, calcTheta(solution));
+         solution.W = _verticalProblemSolver.Begin();
+
+         return solution;
       }
 
       public TestProblemSolution Step()
       {
-         return step(_barotropicSolver.Step());
+         TestProblemSolution solution = step(_barotropicSolver.Step());
+         solution.W = _verticalProblemSolver.Step(calcTheta(solution), getU(solution), getV(solution));
+         return solution;
+      }
+
+      private double[,] getU(TestProblemSolution solution)
+      {
+         int n = _xResult.Nodes;
+         int m = _yResult.Nodes;
+
+         var u = new double[n,m];
+
+         for (int i = 0; i < n; i++)
+         {
+            for (int j = 0; j < m; j++)
+            {
+               u[i, j] = solution.BarotropicU[i, j]/*/_parameters.H*/;
+            }
+         }
+
+         return u;
+      }
+
+      private double[,] getV(TestProblemSolution solution)
+      {
+         int n = _xResult.Nodes;
+         int m = _yResult.Nodes;
+
+         var v = new double[n, m];
+
+         for (int i = 0; i < n; i++)
+         {
+            for (int j = 0; j < m; j++)
+            {
+               v[i, j] = solution.BarotropicV[i, j]/*/_parameters.H*/;
+            }
+         }
+
+         return v;
+      }
+
+      private Complex[,][] calcTheta(TestProblemSolution solution)
+      {
+         int n = _xResult.Nodes;
+         int m = _yResult.Nodes;
+         int l = _zResult.Nodes;
+
+         SquareGridFunction u = solution.BarotropicU;
+         SquareGridFunction v = solution.BarotropicV;
+         Complex[,][] baroclinic = solution.Baroclinic;
+
+         var theta = new Complex[n, m][];
+
+         for (int i = 0; i < n; i++)
+         {
+            for (int j = 0; j < m; j++)
+            {
+               double u0 = u[i, j];
+               double v0 = v[i, j];
+
+               theta[i, j] = new Complex[l];
+
+               for (int k = 0; k < l; k++)
+               {
+                  Complex c = baroclinic[i, j][k];
+                  theta[i, j][k] = new Complex(c.Re + u0 /*/ _parameters.H*/, c.Im + v0 /*/ _parameters.H*/);
+               }
+            }
+         }
+
+         return theta;
       }
 
       private TestProblemSolution step(IterationMethodResult barotropicResult)
