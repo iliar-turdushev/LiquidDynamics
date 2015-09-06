@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using BarotropicComponentProblem;
+using BarotropicComponentProblem.IssykKulGrid;
 using ControlLibrary.Types;
 using LiquidDynamics.Forms.BarotropicComponentNumerical;
 using Mathematics.MathTypes;
@@ -9,6 +10,8 @@ using ModelProblem;
 using ModelProblem.Baroclinic;
 using ModelProblem.Barotropic;
 using ModelProblem.Vertical;
+using Point3D = Mathematics.MathTypes.Point3D;
+using Rectangle3D = Mathematics.MathTypes.Rectangle3D;
 
 namespace LiquidDynamics.Forms.VerticalComponentNumerical
 {
@@ -48,12 +51,61 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
          _solution = SolutionCreator.Create(_parameters);
 
          _solver = new VerticalProblemSolver(_xGrid, _yGrid, _tau, _wind, createProblemParameters(),
-                                             calculateTheta(_t), null);
+                                             calculateTheta(_t), createGrid3D());
 
          _w = _solver.Begin();
          _exactW = calculateExactW();
 
          return new VerticalComponentResult(buildUpwellingData(), calculateError(), _t);
+      }
+
+      private IssykKulGrid3D createGrid3D()
+      {
+         IssykKulGrid2D grid2D = createGrid();
+         var depthGrid = new Rectangle3D[grid2D.N, grid2D.M][];
+
+         for (int i = 0; i < grid2D.N; i++)
+         {
+            for (int j = 0; j < grid2D.M; j++)
+            {
+               depthGrid[i, j] = new Rectangle3D[_zGrid.Nodes - 1];
+
+               for (int k = 0; k < _zGrid.Nodes - 1; k++)
+               {
+                  Point3D point3D = grid2D[i, j].P(0, 0);
+                  point3D.Z = _zGrid.Get(k);
+                  depthGrid[i, j][k] = new Rectangle3D(point3D, grid2D.Hx, grid2D.Hy, _zGrid.Step);
+               }
+            }
+         }
+
+         return new IssykKulGrid3D(grid2D, depthGrid);
+      }
+
+      private IssykKulGrid2D createGrid()
+      {
+         int n = _xGrid.Nodes;
+         int m = _yGrid.Nodes;
+
+         double hx = _xGrid.Step;
+         double hy = _yGrid.Step;
+
+         double z = _parameters.H;
+
+         var cells = new GridCell[n, m];
+
+         for (int i = 0; i < n; i++)
+         {
+            double x = _xGrid.Get(i) - hx / 2;
+
+            for (int j = 0; j < m; j++)
+            {
+               double y = _yGrid.Get(j) - hy / 2;
+               cells[i, j] = new GridCell(x, y, hx, hy, z);
+            }
+         }
+
+         return new IssykKulGrid2D(cells, hx, hy);
       }
 
       public VerticalComponentResult Step()
