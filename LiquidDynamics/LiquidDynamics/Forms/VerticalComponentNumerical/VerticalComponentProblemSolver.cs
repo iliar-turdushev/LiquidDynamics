@@ -47,7 +47,8 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
                                _parameters.Rho0);
          _solution = SolutionCreator.Create(_parameters);
 
-         _solver = new VerticalProblemSolver(_xGrid, _yGrid, _zGrid, _tau, _wind, createProblemParameters(), calculateTheta(_t));
+         _solver = new VerticalProblemSolver(_xGrid, _yGrid, _tau, _wind, createProblemParameters(),
+                                             calculateTheta(_t), null);
 
          _w = _solver.Begin();
          _exactW = calculateExactW();

@@ -74,14 +74,13 @@ namespace LiquidDynamics.Forms.TestProblem
 
          _xResult = getMiddleNodesGrid(_x);
          _yResult = getMiddleNodesGrid(_y);
-         _zResult = Grid.Create(0, _parameters.H, _issykKulGrid3D.GetDepthGrid(0, 0).Length + 1);
       }
 
       public TestProblemSolution Begin()
       {
          TestProblemSolution solution = step(_barotropicSolver.Begin());
 
-         _verticalProblemSolver = new VerticalProblemSolver(_xResult, _yResult, _zResult, _tau, _wind, _parameters, calcTheta(solution));
+         _verticalProblemSolver = new VerticalProblemSolver(_xResult, _yResult, _tau, _wind, _parameters, calcTheta(solution), _issykKulGrid3D);
          solution.W = _verticalProblemSolver.Begin();
 
          return solution;
@@ -105,7 +104,7 @@ namespace LiquidDynamics.Forms.TestProblem
          {
             for (int j = 0; j < m; j++)
             {
-               u[i, j] = solution.BarotropicU[i, j]/*/_parameters.H*/;
+               u[i, j] = solution.BarotropicU[i, j]/_parameters.H;
             }
          }
 
@@ -123,7 +122,7 @@ namespace LiquidDynamics.Forms.TestProblem
          {
             for (int j = 0; j < m; j++)
             {
-               v[i, j] = solution.BarotropicV[i, j]/*/_parameters.H*/;
+               v[i, j] = solution.BarotropicV[i, j]/_parameters.H;
             }
          }
 
@@ -132,9 +131,8 @@ namespace LiquidDynamics.Forms.TestProblem
 
       private Complex[,][] calcTheta(TestProblemSolution solution)
       {
-         int n = _xResult.Nodes;
-         int m = _yResult.Nodes;
-         int l = _zResult.Nodes;
+         int n = _issykKulGrid3D.Grid2D.N;
+         int m = _issykKulGrid3D.Grid2D.M;
 
          SquareGridFunction u = solution.BarotropicU;
          SquareGridFunction v = solution.BarotropicV;
@@ -146,15 +144,21 @@ namespace LiquidDynamics.Forms.TestProblem
          {
             for (int j = 0; j < m; j++)
             {
-               double u0 = u[i, j];
-               double v0 = v[i, j];
+               if (_issykKulGrid3D.Grid2D[i, j] == GridCell.Empty)
+                  continue;
 
-               theta[i, j] = new Complex[l];
+               Rectangle3D[] depthGrid = _issykKulGrid3D.GetDepthGrid(i, j);
+               double h = depthGrid[0].Hz * depthGrid.Length;
 
-               for (int k = 0; k < l; k++)
+               double u0 = u[i, j] / h;
+               double v0 = v[i, j] / h;
+
+               theta[i, j] = new Complex[depthGrid.Length + 1];
+
+               for (int k = 0; k < depthGrid.Length + 1; k++)
                {
                   Complex c = baroclinic[i, j][k];
-                  theta[i, j][k] = new Complex(c.Re + u0 /*/ _parameters.H*/, c.Im + v0 /*/ _parameters.H*/);
+                  theta[i, j][k] = new Complex(c.Re + u0, c.Im + v0);
                }
             }
          }
@@ -302,7 +306,7 @@ namespace LiquidDynamics.Forms.TestProblem
          for (int i = 0; i < baroclinic.Length; i++)
             baroclinic[i] = theta[i] - barotropic;
 
-         return baroclinic.ToArray();
+         return baroclinic;
       }
 
       private Complex calculateBarotropic(Complex[] theta, double dz, double h)

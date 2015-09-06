@@ -1,8 +1,9 @@
 using System;
+using System.Diagnostics;
 using BarotropicComponentProblem;
+using BarotropicComponentProblem.IssykKulGrid;
 using Mathematics.MathTypes;
 using Mathematics.Numerical;
-using ModelProblem;
 
 namespace LiquidDynamics.Forms.VerticalComponentNumerical
 {
@@ -15,6 +16,7 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
       private readonly IWind _wind;
       private readonly ProblemParameters _parameters;
       private Complex[,][] _theta0;
+      private readonly IssykKulGrid3D _issykKulGrid3D;
       private Complex[,][] _theta1;
 
       private Complex[,][] _psi0;
@@ -29,23 +31,16 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
       private double _t;
       private readonly double _tau;
 
-      public VerticalProblemSolver(
-         Grid xGrid,
-         Grid yGrid,
-         Grid zGrid,
-         double tau,
-         IWind wind,
-         ProblemParameters parameters,
-         Complex[,][] theta0
-         )
+      public VerticalProblemSolver(Grid xGrid, Grid yGrid, double tau, IWind wind, ProblemParameters parameters, Complex[,][] theta0, IssykKulGrid3D issykKulGrid3D)
       {
          _xGrid = xGrid;
          _yGrid = yGrid;
-         _zGrid = zGrid;
          _tau = tau;
          _wind = wind;
          _parameters = parameters;
          _theta0 = theta0;
+         _theta1 = theta0;
+         _issykKulGrid3D = issykKulGrid3D;
       }
 
       public double[,][] Begin()
@@ -83,8 +78,8 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
 
       private Complex[,][] calculateInitialPsi()
       {
-         int nx = _xGrid.Nodes;
-         int ny = _yGrid.Nodes;
+         int nx = _issykKulGrid3D.Grid2D.N;
+         int ny = _issykKulGrid3D.Grid2D.M;
 
          var psi = new Complex[nx, ny][];
 
@@ -92,6 +87,9 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
          {
             for (int j = 0; j < ny; j++)
             {
+               if (_issykKulGrid3D.Grid2D[i, j] == GridCell.Empty)
+                  continue;
+
                psi[i, j] = calculateInitialPsi(i, j);
             }
          }
@@ -99,13 +97,26 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
          return psi;
       }
 
+      private int getNz(int i, int j)
+      {
+         Rectangle3D[] depthGrid = _issykKulGrid3D.GetDepthGrid(i, j);
+         return depthGrid.Length + 1;
+      }
+
+      private double getDz(int i, int j)
+      {
+         Rectangle3D[] depthGrid = _issykKulGrid3D.GetDepthGrid(i, j);
+         return depthGrid[0].Hz;
+      }
+
       private Complex[] calculateInitialPsi(int i, int j)
       {
-         int nz = _zGrid.Nodes;
-         double dz = _zGrid.Step;
+         int nz = getNz(i, j);
+         double dz = getDz(i, j);
          double nu = _parameters.Nu;
 
          Complex[] theta = _theta0[i, j];
+         Debug.Assert(nz == _theta0[i, j].Length, "1");
 
          var re = new double[nz];
          var im = new double[nz];
@@ -135,88 +146,163 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
 
       private double[,][] calculateDxRePsi()
       {
-         int nx = _xGrid.Nodes;
-         int ny = _yGrid.Nodes;
+         IssykKulGrid2D grid = _issykKulGrid3D.Grid2D;
 
-         double dx = _xGrid.Step;
+         int nx = grid.N;
+         int ny = grid.M;
+
+         double dx = grid.Hx;
 
          var dxRePsi = new double[nx, ny][];
 
-         for (int j = 0; j < ny; j++)
-            dxRePsi[0, j] = calculateDxRePsi(dx, _psi[0, j], _psi[1, j]);
-
-         for (int i = 1; i < nx - 1; i++)
+         for (int i = 0; i < nx; i++)
+         {
             for (int j = 0; j < ny; j++)
-               dxRePsi[i, j] = calculateDxRePsi(2.0 * dx, _psi[i - 1, j], _psi[i + 1, j]);
+            {
+               if (grid[i, j] == GridCell.Empty)
+                  continue;
 
-         for (int j = 0; j < ny; j++)
-            dxRePsi[nx - 1, j] = calculateDxRePsi(dx, _psi[nx - 2, j], _psi[nx - 1, j]);
+               int nz = getNz(i, j);
+
+               if (i != 0 &&
+                   i != nx - 1 &&
+                   grid[i - 1, j] != GridCell.Empty &&
+                   grid[i + 1, j] != GridCell.Empty)
+               {
+                  dxRePsi[i, j] = calculateDxRePsi(2.0 * dx, nz, _psi[i - 1, j], _psi[i + 1, j]);
+               }
+               else if (i != 0 &&
+                        i != nx - 1 &&
+                        grid[i - 1, j] == GridCell.Empty &&
+                        grid[i + 1, j] == GridCell.Empty)
+               {
+                  dxRePsi[i, j] = new double[nz];
+               }
+               else if (i == 0 || grid[i - 1, j] == GridCell.Empty)
+               {
+                  Debug.Assert(grid[i + 1, j] != GridCell.Empty, "2");
+                  dxRePsi[i, j] = calculateDxRePsi(dx, nz, _psi[i, j], _psi[i + 1, j]);
+               }
+               else if (i == nx - 1 || grid[i + 1, j] == GridCell.Empty)
+               {
+                  Debug.Assert(grid[i - 1, j] != GridCell.Empty, "3");
+                  dxRePsi[i, j] = calculateDxRePsi(dx, nz, _psi[i - 1, j], _psi[i, j]);
+               }
+               else
+                  Debug.Fail("dx");
+            }
+         }
 
          return dxRePsi;
       }
 
-      private double[] calculateDxRePsi(double dx, Complex[] psi0, Complex[] psi1)
+      private double[] calculateDxRePsi(double dx, int nz, Complex[] psi0, Complex[] psi1)
       {
-         int nz = _zGrid.Nodes;
          var dxRe = new double[nz];
 
          for (int k = 0; k < nz; k++)
-            dxRe[k] = (psi1[k].Re - psi0[k].Re) / dx;
+         {
+            double re0 = psi0.Length > k ? psi0[k].Re : 0;
+            double re1 = psi1.Length > k ? psi1[k].Re : 0;
+            
+            dxRe[k] = (re1 - re0) / dx;
+         }
 
          return dxRe;
       }
 
       private double[,][] calculateDyImPsi()
       {
-         int nx = _xGrid.Nodes;
-         int ny = _yGrid.Nodes;
+         IssykKulGrid2D grid = _issykKulGrid3D.Grid2D;
 
-         double dy = _yGrid.Step;
+         int nx = grid.N;
+         int ny = grid.M;
+
+         double dy = grid.Hy;
 
          var dyRePsi = new double[nx, ny][];
 
          for (int i = 0; i < nx; i++)
-            dyRePsi[i, 0] = calculateDyImPsi(dy, _psi[i, 0], _psi[i, 1]);
+         {
+            for (int j = 0; j < ny; j++)
+            {
+               if (grid[i, j] == GridCell.Empty)
+                  continue;
 
-         for (int j = 1; j < ny - 1; j++)
-            for (int i = 0; i < nx; i++)
-               dyRePsi[i, j] = calculateDyImPsi(2.0 * dy, _psi[i, j - 1], _psi[i, j + 1]);
+               int nz = getNz(i, j);
 
-         for (int i = 0; i < nx; i++)
-            dyRePsi[i, ny - 1] = calculateDyImPsi(dy, _psi[i, ny - 2], _psi[i, ny - 1]);
+               if (j != 0 &&
+                   j != ny - 1 &&
+                   grid[i, j - 1] != GridCell.Empty &&
+                   grid[i, j + 1] != GridCell.Empty)
+               {
+                  dyRePsi[i, j] = calculateDyImPsi(2.0 * dy, nz, _psi[i, j - 1], _psi[i, j + 1]);
+               }
+               else if (j != 0 &&
+                        j != ny - 1 &&
+                        grid[i, j - 1] == GridCell.Empty &&
+                        grid[i, j + 1] == GridCell.Empty)
+               {
+                  dyRePsi[i, j] = new double[nz];
+               }
+               else if (j == 0 || grid[i, j - 1] == GridCell.Empty)
+               {
+                  Debug.Assert(grid[i, j + 1] != GridCell.Empty, "4");
+                  dyRePsi[i, j] = calculateDyImPsi(dy, nz, _psi[i, j], _psi[i, j + 1]);
+               }
+               else if (j == ny - 1 || grid[i, j + 1] == GridCell.Empty)
+               {
+                  Debug.Assert(grid[i, j - 1] != GridCell.Empty, "5");
+                  dyRePsi[i, j] = calculateDyImPsi(dy, nz, _psi[i, j - 1], _psi[i, j]);
+               }
+               else
+                  Debug.Fail("dy");
+            }
+         }
 
          return dyRePsi;
       }
 
-      private double[] calculateDyImPsi(double dy, Complex[] psi0, Complex[] psi1)
+      private double[] calculateDyImPsi(double dy, int nz, Complex[] psi0, Complex[] psi1)
       {
-         int nz = _zGrid.Nodes;
          var dyIm = new double[nz];
 
          for (int k = 0; k < nz; k++)
-            dyIm[k] = (psi1[k].Im - psi0[k].Im) / dy;
+         {
+            double im0 = psi0.Length > k ? psi0[k].Im : 0;
+            double im1 = psi1.Length > k ? psi1[k].Im : 0;
+
+            dyIm[k] = (im1 - im0) / dy;
+         }
 
          return dyIm;
       }
 
       private double[,][] calculateW()
       {
-         int nx = _xGrid.Nodes;
-         int ny = _yGrid.Nodes;
+         IssykKulGrid2D grid = _issykKulGrid3D.Grid2D;
+         int nx = grid.N;
+         int ny = grid.M;
 
          var w = new double[nx, ny][];
 
          for (int i = 0; i < nx; i++)
             for (int j = 0; j < ny; j++)
-               w[i, j] = calculateW(_dxPsi[i, j], _dyPsi[i, j]);
+            {
+               if (grid[i, j] == GridCell.Empty)
+                  continue;
+
+               w[i, j] = calculateW(i, j, _dxPsi[i, j], _dyPsi[i, j]);
+            }
 
          return w;
       }
 
-      private double[] calculateW(double[] dxPsi, double[] dyPsi)
+      private double[] calculateW(int i, int j, double[] dxPsi, double[] dyPsi)
       {
-         int nz = _zGrid.Nodes;
-         double dz = _zGrid.Step;
+         int nz = getNz(i, j);
+         double dz = getDz(i, j);
+
          double nu = _parameters.Nu;
 
          var a = new double[nz];
@@ -238,7 +324,7 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
 
          a[nz - 1] = 0.0;
          b[nz - 1] = 1.0;
-         f[nz - 1] = 0.0;
+         f[nz - 1] = getFn(i, j);
 
          var w = new double[nz];
 
@@ -262,6 +348,87 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
             w[k] = alpha[k] * w[k + 1] + beta[k];
 
          return w;
+      }
+
+      private double getFn(int i, int j)
+      {
+         IssykKulGrid2D grid = _issykKulGrid3D.Grid2D;
+
+         int nx = grid.N;
+         int ny = grid.M;
+         int nz = getNz(i, j);
+
+         double dx = grid.Hx;
+         double dy = grid.Hy;
+         double dz = getDz(i, j);
+
+         double dxDh = 0;
+         double dyDh = 0;
+
+         if (i != 0 &&
+             i != nx - 1 &&
+             grid[i - 1, j] != GridCell.Empty &&
+             grid[i + 1, j] != GridCell.Empty)
+         {
+            double h0 = getNz(i - 1, j) * dz;
+            double h1 = getNz(i + 1, j) * dz;
+            dxDh = (h1 - h0) / (2 * dx);
+         }
+         else if (i != 0 &&
+                  i != nx - 1 &&
+                  grid[i - 1, j] == GridCell.Empty &&
+                  grid[i + 1, j] == GridCell.Empty)
+         {
+            dxDh = 0;
+         }
+         else if (i == 0 || grid[i - 1, j] == GridCell.Empty)
+         {
+            double h0 = getNz(i, j) * dz;
+            double h1 = getNz(i + 1, j) * dz;
+            dxDh = (h1 - h0) / dx;
+         }
+         else if (i == nx - 1 || grid[i + 1, j] == GridCell.Empty)
+         {
+            double h0 = getNz(i - 1, j) * dz;
+            double h1 = getNz(i, j) * dz;
+            dxDh = (h1 - h0) / dx;
+         }
+         else
+            Debug.Fail("dxDh");
+
+         if (j != 0 &&
+             j != ny - 1 &&
+             grid[i, j - 1] != GridCell.Empty &&
+             grid[i, j + 1] != GridCell.Empty)
+         {
+            double h0 = getNz(i, j - 1) * dz;
+            double h1 = getNz(i, j + 1) * dz;
+            dyDh = (h1 - h0) / (2 * dy);
+         }
+         else if (j != 0 &&
+                  j != ny - 1 &&
+                  grid[i, j - 1] == GridCell.Empty &&
+                  grid[i, j + 1] == GridCell.Empty)
+         {
+            dyDh = 0;
+         }
+         else if (j == 0 || grid[i, j - 1] == GridCell.Empty)
+         {
+            double h0 = getNz(i, j) * dz;
+            double h1 = getNz(i, j + 1) * dz;
+            dyDh = (h1 - h0) / dy;
+         }
+         else if (j == ny - 1 || grid[i, j + 1] == GridCell.Empty)
+         {
+            double h0 = getNz(i, j - 1) * dz;
+            double h1 = getNz(i, j) * dz;
+            dyDh = (h1 - h0) / dy;
+         }
+         else
+            Debug.Fail("dyDh");
+
+         Complex c = _theta1[i, j][nz - 1];
+         return dxDh * c.Re + dyDh * c.Im;
       }
 
       private Complex[,][] calculatePsi()

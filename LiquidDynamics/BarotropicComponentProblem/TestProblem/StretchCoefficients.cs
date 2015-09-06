@@ -9,5 +9,6 @@
       public const double Rho0 = 1;
       public const double A = 1E+6;
       public const double Nu = 1E+2;
+      public const double W0 = 1.5 * 1E-2;
    }
 }

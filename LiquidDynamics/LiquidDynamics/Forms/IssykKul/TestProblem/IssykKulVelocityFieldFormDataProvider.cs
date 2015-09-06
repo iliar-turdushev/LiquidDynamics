@@ -61,7 +61,7 @@ namespace LiquidDynamics.Forms.IssykKul.TestProblem
          _solver = createProblemSolver(windParameters, tau, sigma, delta, k);
          TestProblemSolution solution = _solver.Begin();
 
-         return new Solution(getVelocityField(solution, _grid.Grid2D, _x, _y), _bounds);
+         return new Solution(getVelocityField(solution, _grid.Grid2D, _x, _y), getUpwelling(solution, _grid.Grid2D), _bounds);
       }
 
       public Solution Step()
@@ -69,7 +69,7 @@ namespace LiquidDynamics.Forms.IssykKul.TestProblem
          Time += _tau;
 
          TestProblemSolution solution = _solver.Step();
-         return new Solution(getVelocityField(solution, _grid.Grid2D, _x, _y), _bounds);
+         return new Solution(getVelocityField(solution, _grid.Grid2D, _x, _y), getUpwelling(solution, _grid.Grid2D), _bounds);
       }
 
       private static ProblemParameters getParameters(Parameters parameters, double xMax, double yMax)
@@ -205,6 +205,41 @@ namespace LiquidDynamics.Forms.IssykKul.TestProblem
             new PointF((float) vector.Start.X * l0, (float) vector.Start.Y * l0),
             new PointF((float) vector.End.X * u0, (float) vector.End.Y * u0)
             );
+      }
+
+      private UpwellingData getUpwelling(TestProblemSolution solution, IssykKulGrid2D grid)
+      {
+         int nx = grid.N;
+         int ny = grid.M;
+
+         double[,][] w = solution.W;
+
+         double xStep = _x.Step * StretchCoefficients.L0;
+         double yStep = _y.Step * StretchCoefficients.L0;
+
+         var gridPoints = new PointF[nx, ny];
+         var intensities = new float[nx, ny];
+
+         for (var i = 0; i < nx; i++)
+         {
+            for (var j = 0; j < ny; j++)
+            {
+               if (grid[i, j] == GridCell.Empty)
+                  continue;
+
+               if (w[i, j].Length < _slice + 1)
+                  continue;
+
+               double x = (grid[i, j].P(0, 0).X * StretchCoefficients.L0 + xStep / 2);
+               double y = (grid[i, j].P(0, 0).Y * StretchCoefficients.L0 + yStep / 2);
+
+               gridPoints[i, j] = new PointF((float) x, (float) y);
+               intensities[i, j] = (float) (w[i, j][_slice] * StretchCoefficients.W0);
+            }
+         }
+
+         var cellSize = new SizeF((float) xStep, (float) yStep);
+         return new UpwellingData(gridPoints, intensities, cellSize);
       }
    }
 }

@@ -156,12 +156,16 @@ namespace LiquidDynamics.Forms.IssykKul.TestProblem
                                                bounds.YMax + cellSize.Height / 2F);
 
          _graphControl.Clear();
-         _graphControl.DrawVelocityField(solution.VelocityField, PaletteDrawingTools, SolutionPen,
-                                         VectorScalingMode.ScaleEachVector);
+//         _graphControl.DrawVelocityField(solution.VelocityField, PaletteDrawingTools, SolutionPen,
+//                                         VectorScalingMode.ScaleEachVector);
+         _graphControl.DrawUpwelling(solution.UpwellingData, PaletteFactory.CreateBlueRedPalette());
          _graphControl.Invalidate();
 
-         _paletteControl.MinValue = solution.VelocityField.GetMinVector().Length;
-         _paletteControl.MaxValue = solution.VelocityField.GetMaxVector().Length;
+         float value = Math.Max(Math.Abs(solution.UpwellingData.GetMinIntensity()),
+                                Math.Abs(solution.UpwellingData.GetMaxIntensity()));
+         _paletteControl.PaletteDrawingTools = PaletteFactory.CreateBlueRedPalette();
+         _paletteControl.MinValue = -value;// solution.VelocityField.GetMinVector().Length;
+         _paletteControl.MaxValue = value;// solution.VelocityField.GetMaxVector().Length;
          _paletteControl.Invalidate();
       }
 
