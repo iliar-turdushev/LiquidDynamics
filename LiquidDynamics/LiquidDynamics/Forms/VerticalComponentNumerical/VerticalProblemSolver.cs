@@ -433,8 +433,9 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
 
       private Complex[,][] calculatePsi()
       {
-         int nx = _xGrid.Nodes;
-         int ny = _yGrid.Nodes;
+         IssykKulGrid2D grid = _issykKulGrid3D.Grid2D;
+         int nx = grid.N;
+         int ny = grid.M;
 
          var psi = new Complex[nx, ny][];
 
@@ -442,6 +443,9 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
          {
             for (int j = 0; j < ny; j++)
             {
+               if (grid[i, j] == GridCell.Empty)
+                  continue;
+
                psi[i, j] = calculatePsi(i, j, _psi0[i, j]);
             }
          }
@@ -451,8 +455,8 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
 
       private Complex[] calculatePsi(int i, int j, Complex[] psi0)
       {
-         int nz = _zGrid.Nodes;
-         double dz = _zGrid.Step;
+         int nz = getNz(i, j);
+         double dz = getDz(i, j);
          double nu = _parameters.Nu;
 
          Complex sigma = calculateSigma(j);

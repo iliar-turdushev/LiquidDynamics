@@ -104,7 +104,13 @@ namespace LiquidDynamics.Forms.TestProblem
          {
             for (int j = 0; j < m; j++)
             {
-               u[i, j] = solution.BarotropicU[i, j]/_parameters.H;
+               if (_issykKulGrid3D.Grid2D[i, j] == GridCell.Empty)
+                  continue;
+
+               Rectangle3D[] depthGrid = _issykKulGrid3D.GetDepthGrid(i, j);
+               double h = depthGrid[0].Hz * depthGrid.Length;
+
+               u[i, j] = solution.BarotropicU[i, j] / h;
             }
          }
 
@@ -122,7 +128,13 @@ namespace LiquidDynamics.Forms.TestProblem
          {
             for (int j = 0; j < m; j++)
             {
-               v[i, j] = solution.BarotropicV[i, j]/_parameters.H;
+               if (_issykKulGrid3D.Grid2D[i, j] == GridCell.Empty)
+                  continue;
+
+               Rectangle3D[] depthGrid = _issykKulGrid3D.GetDepthGrid(i, j);
+               double h = depthGrid[0].Hz * depthGrid.Length;
+
+               v[i, j] = solution.BarotropicV[i, j] / h;
             }
          }
 
