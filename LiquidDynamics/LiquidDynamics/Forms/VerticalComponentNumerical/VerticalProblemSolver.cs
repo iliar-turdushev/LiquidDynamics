@@ -78,8 +78,8 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
 
       private Complex[,][] calculateInitialPsi()
       {
-         int nx = _issykKulGrid3D.Grid2D.N;
-         int ny = _issykKulGrid3D.Grid2D.M;
+         int nx = _xGrid.Nodes;
+         int ny = _yGrid.Nodes;
 
          var psi = new Complex[nx, ny][];
 
@@ -87,8 +87,8 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
          {
             for (int j = 0; j < ny; j++)
             {
-               if (_issykKulGrid3D.Grid2D[i, j] == GridCell.Empty)
-                  continue;
+//               if (_issykKulGrid3D.Grid2D[i, j] == GridCell.Empty)
+//                  continue;
 
                psi[i, j] = calculateInitialPsi(i, j);
             }
@@ -99,12 +99,16 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
 
       private int getNz(int i, int j)
       {
+         i = i == _xGrid.Nodes - 1 ? _xGrid.Nodes - 2 : i;
+         j = j == _yGrid.Nodes - 1 ? _yGrid.Nodes - 2 : j;
          Rectangle3D[] depthGrid = _issykKulGrid3D.GetDepthGrid(i, j);
          return depthGrid.Length + 1;
       }
 
       private double getDz(int i, int j)
       {
+         i = i == _xGrid.Nodes - 1 ? _xGrid.Nodes - 2 : i;
+         j = j == _yGrid.Nodes - 1 ? _yGrid.Nodes - 2 : j;
          Rectangle3D[] depthGrid = _issykKulGrid3D.GetDepthGrid(i, j);
          return depthGrid[0].Hz;
       }
@@ -159,37 +163,47 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
          {
             for (int j = 0; j < ny; j++)
             {
-               if (grid[i, j] == GridCell.Empty)
-                  continue;
-
                int nz = getNz(i, j);
+               var dxRe = new double[nz];
 
-               if (i != 0 &&
-                   i != nx - 1 &&
-                   grid[i - 1, j] != GridCell.Empty &&
-                   grid[i + 1, j] != GridCell.Empty)
+               for (int k = 0; k < nz; k++)
                {
-                  dxRePsi[i, j] = calculateDxRePsi(2.0 * dx, nz, _psi[i - 1, j], _psi[i + 1, j]);
+                  dxRe[k] = (_psi[i + 1, j + 1][k].Re - _psi[i, j + 1][k].Re +
+                             _psi[i + 1, j][k].Re - _psi[i, j][k].Re) / (2 * dx);
                }
-               else if (i != 0 &&
-                        i != nx - 1 &&
-                        grid[i - 1, j] == GridCell.Empty &&
-                        grid[i + 1, j] == GridCell.Empty)
-               {
-                  dxRePsi[i, j] = new double[nz];
-               }
-               else if (i == 0 || grid[i - 1, j] == GridCell.Empty)
-               {
-                  Debug.Assert(grid[i + 1, j] != GridCell.Empty, "2");
-                  dxRePsi[i, j] = calculateDxRePsi(dx, nz, _psi[i, j], _psi[i + 1, j]);
-               }
-               else if (i == nx - 1 || grid[i + 1, j] == GridCell.Empty)
-               {
-                  Debug.Assert(grid[i - 1, j] != GridCell.Empty, "3");
-                  dxRePsi[i, j] = calculateDxRePsi(dx, nz, _psi[i - 1, j], _psi[i, j]);
-               }
-               else
-                  Debug.Fail("dx");
+
+               dxRePsi[i, j] = dxRe;
+//               if (grid[i, j] == GridCell.Empty)
+//                  continue;
+
+//               int nz = getNz(i, j);
+//
+//               if (i != 0 &&
+//                   i != nx - 1 &&
+//                   grid[i - 1, j] != GridCell.Empty &&
+//                   grid[i + 1, j] != GridCell.Empty)
+//               {
+//                  dxRePsi[i, j] = calculateDxRePsi(2.0 * dx, nz, _psi[i - 1, j], _psi[i + 1, j]);
+//               }
+//               else if (i != 0 &&
+//                        i != nx - 1 &&
+//                        grid[i - 1, j] == GridCell.Empty &&
+//                        grid[i + 1, j] == GridCell.Empty)
+//               {
+//                  dxRePsi[i, j] = new double[nz];
+//               }
+//               else if (i == 0 || grid[i - 1, j] == GridCell.Empty)
+//               {
+//                  Debug.Assert(grid[i + 1, j] != GridCell.Empty, "2");
+//                  dxRePsi[i, j] = calculateDxRePsi(dx, nz, _psi[i, j], _psi[i + 1, j]);
+//               }
+//               else if (i == nx - 1 || grid[i + 1, j] == GridCell.Empty)
+//               {
+//                  Debug.Assert(grid[i - 1, j] != GridCell.Empty, "3");
+//                  dxRePsi[i, j] = calculateDxRePsi(dx, nz, _psi[i - 1, j], _psi[i, j]);
+//               }
+//               else
+//                  Debug.Fail("dx");
             }
          }
 
@@ -226,37 +240,45 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
          {
             for (int j = 0; j < ny; j++)
             {
-               if (grid[i, j] == GridCell.Empty)
-                  continue;
+//               if (grid[i, j] == GridCell.Empty)
+//                  continue;
 
                int nz = getNz(i, j);
+               var dyIm = new double[nz];
 
-               if (j != 0 &&
-                   j != ny - 1 &&
-                   grid[i, j - 1] != GridCell.Empty &&
-                   grid[i, j + 1] != GridCell.Empty)
+               for (int k = 0; k < nz; k++)
                {
-                  dyRePsi[i, j] = calculateDyImPsi(2.0 * dy, nz, _psi[i, j - 1], _psi[i, j + 1]);
+                  dyIm[k] = (_psi[i + 1, j + 1][k].Im - _psi[i + 1, j][k].Im +
+                             _psi[i, j + 1][k].Im - _psi[i, j][k].Im) / (2 * dy);
                }
-               else if (j != 0 &&
-                        j != ny - 1 &&
-                        grid[i, j - 1] == GridCell.Empty &&
-                        grid[i, j + 1] == GridCell.Empty)
-               {
-                  dyRePsi[i, j] = new double[nz];
-               }
-               else if (j == 0 || grid[i, j - 1] == GridCell.Empty)
-               {
-                  Debug.Assert(grid[i, j + 1] != GridCell.Empty, "4");
-                  dyRePsi[i, j] = calculateDyImPsi(dy, nz, _psi[i, j], _psi[i, j + 1]);
-               }
-               else if (j == ny - 1 || grid[i, j + 1] == GridCell.Empty)
-               {
-                  Debug.Assert(grid[i, j - 1] != GridCell.Empty, "5");
-                  dyRePsi[i, j] = calculateDyImPsi(dy, nz, _psi[i, j - 1], _psi[i, j]);
-               }
-               else
-                  Debug.Fail("dy");
+
+               dyRePsi[i, j] = dyIm;
+//               if (j != 0 &&
+//                   j != ny - 1 &&
+//                   grid[i, j - 1] != GridCell.Empty &&
+//                   grid[i, j + 1] != GridCell.Empty)
+//               {
+//                  dyRePsi[i, j] = calculateDyImPsi(2.0 * dy, nz, _psi[i, j - 1], _psi[i, j + 1]);
+//               }
+//               else if (j != 0 &&
+//                        j != ny - 1 &&
+//                        grid[i, j - 1] == GridCell.Empty &&
+//                        grid[i, j + 1] == GridCell.Empty)
+//               {
+//                  dyRePsi[i, j] = new double[nz];
+//               }
+//               else if (j == 0 || grid[i, j - 1] == GridCell.Empty)
+//               {
+//                  Debug.Assert(grid[i, j + 1] != GridCell.Empty, "4");
+//                  dyRePsi[i, j] = calculateDyImPsi(dy, nz, _psi[i, j], _psi[i, j + 1]);
+//               }
+//               else if (j == ny - 1 || grid[i, j + 1] == GridCell.Empty)
+//               {
+//                  Debug.Assert(grid[i, j - 1] != GridCell.Empty, "5");
+//                  dyRePsi[i, j] = calculateDyImPsi(dy, nz, _psi[i, j - 1], _psi[i, j]);
+//               }
+//               else
+//                  Debug.Fail("dy");
             }
          }
 
@@ -352,6 +374,7 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
 
       private double getFn(int i, int j)
       {
+         return 0;
          IssykKulGrid2D grid = _issykKulGrid3D.Grid2D;
 
          int nx = grid.N;
@@ -434,8 +457,8 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
       private Complex[,][] calculatePsi()
       {
          IssykKulGrid2D grid = _issykKulGrid3D.Grid2D;
-         int nx = grid.N;
-         int ny = grid.M;
+         int nx = _xGrid.Nodes;
+         int ny = _yGrid.Nodes;
 
          var psi = new Complex[nx, ny][];
 
@@ -443,8 +466,8 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
          {
             for (int j = 0; j < ny; j++)
             {
-               if (grid[i, j] == GridCell.Empty)
-                  continue;
+//               if (grid[i, j] == GridCell.Empty)
+//                  continue;
 
                psi[i, j] = calculatePsi(i, j, _psi0[i, j]);
             }

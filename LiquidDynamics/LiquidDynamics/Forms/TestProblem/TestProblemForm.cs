@@ -235,15 +235,15 @@ namespace LiquidDynamics.Forms.TestProblem
       private Complex[,][] createInitialTheta()
       {
          IBaroclinicComponent baroclinic = _solution.GetBaroclinicComponent();
-         var result = new Complex[_xGrid.Nodes - 1, _yGrid.Nodes - 1][];
+         var result = new Complex[_xGrid.Nodes, _yGrid.Nodes][];
 
-         for (int i = 0; i < _xGrid.Nodes - 1; i++)
+         for (int i = 0; i < _xGrid.Nodes; i++)
          {
-            double x = _xGrid.Get(i) + 0.5 * _xGrid.Step;
+            double x = _xGrid.Get(i);
 
-            for (int j = 0; j < _yGrid.Nodes - 1; j++)
+            for (int j = 0; j < _yGrid.Nodes; j++)
             {
-               double y = _yGrid.Get(j) + 0.5 * _yGrid.Step;
+               double y = _yGrid.Get(j);
                result[i, j] = new Complex[_zGrid.Nodes];
 
                for (int k = 0; k < _zGrid.Nodes; k++)
@@ -331,19 +331,19 @@ namespace LiquidDynamics.Forms.TestProblem
 
          _graphControl.Clear();
 
-//         SquareVelocityField squareVelocityField = getSquareVelocityField(solution);
-//         _graphControl.DrawVelocityField(squareVelocityField, PaletteDrawingTools, SolutionPen);
-         UpwellingData upwelling = buildUpwellingData(solution.W)[_zSlice];
-         _graphControl.DrawUpwelling(upwelling, PaletteFactory.CreateBlueRedPalette());
+         SquareVelocityField squareVelocityField = getSquareVelocityField(solution);
+         _graphControl.DrawVelocityField(squareVelocityField, PaletteDrawingTools, SolutionPen);
+//         UpwellingData upwelling = buildUpwellingData(solution.W)[_zSlice];
+//         _graphControl.DrawUpwelling(upwelling, PaletteFactory.CreateBlueRedPalette());
 
          _graphControl.Invalidate();
 
-//         _paletteControl.MinValue = squareVelocityField.GetMinVector().Length;
-//         _paletteControl.MaxValue = squareVelocityField.GetMaxVector().Length;
-         float value = Math.Max(Math.Abs(upwelling.GetMinIntensity()),
-                                Math.Abs(upwelling.GetMaxIntensity()));
-         _paletteControl.MinValue = -value;
-         _paletteControl.MaxValue = value;
+         _paletteControl.MinValue = squareVelocityField.GetMinVector().Length;
+         _paletteControl.MaxValue = squareVelocityField.GetMaxVector().Length;
+//         float value = Math.Max(Math.Abs(upwelling.GetMinIntensity()),
+//                                Math.Abs(upwelling.GetMaxIntensity()));
+//         _paletteControl.MinValue = -value;
+//         _paletteControl.MaxValue = value;
          _paletteControl.Invalidate();
       }
 

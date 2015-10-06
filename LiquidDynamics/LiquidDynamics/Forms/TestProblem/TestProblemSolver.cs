@@ -80,7 +80,7 @@ namespace LiquidDynamics.Forms.TestProblem
       {
          TestProblemSolution solution = step(_barotropicSolver.Begin());
 
-         _verticalProblemSolver = new VerticalProblemSolver(_xResult, _yResult, _tau, _wind, _parameters, calcTheta(solution), _issykKulGrid3D);
+         _verticalProblemSolver = new VerticalProblemSolver(_x, _y, _tau, _wind, _parameters, calcTheta(solution), _issykKulGrid3D);
          solution.W = _verticalProblemSolver.Begin();
 
          return solution;
@@ -95,8 +95,8 @@ namespace LiquidDynamics.Forms.TestProblem
 
       private double[,] getU(TestProblemSolution solution)
       {
-         int n = _xResult.Nodes;
-         int m = _yResult.Nodes;
+         int n = _x.Nodes;
+         int m = _y.Nodes;
 
          var u = new double[n,m];
 
@@ -104,10 +104,11 @@ namespace LiquidDynamics.Forms.TestProblem
          {
             for (int j = 0; j < m; j++)
             {
-               if (_issykKulGrid3D.Grid2D[i, j] == GridCell.Empty)
-                  continue;
+//               if (_issykKulGrid3D.Grid2D[i, j] == GridCell.Empty)
+//                  continue;
 
-               Rectangle3D[] depthGrid = _issykKulGrid3D.GetDepthGrid(i, j);
+               Rectangle3D[] depthGrid = _issykKulGrid3D.GetDepthGrid(i == n - 1 ? n - 2 : i,
+                                                                      j == m - 1 ? m - 2 : j);
                double h = depthGrid[0].Hz * depthGrid.Length;
 
                u[i, j] = solution.BarotropicU[i, j] / h;
@@ -119,8 +120,8 @@ namespace LiquidDynamics.Forms.TestProblem
 
       private double[,] getV(TestProblemSolution solution)
       {
-         int n = _xResult.Nodes;
-         int m = _yResult.Nodes;
+         int n = _x.Nodes;
+         int m = _y.Nodes;
 
          var v = new double[n, m];
 
@@ -128,10 +129,11 @@ namespace LiquidDynamics.Forms.TestProblem
          {
             for (int j = 0; j < m; j++)
             {
-               if (_issykKulGrid3D.Grid2D[i, j] == GridCell.Empty)
-                  continue;
+//               if (_issykKulGrid3D.Grid2D[i, j] == GridCell.Empty)
+//                  continue;
 
-               Rectangle3D[] depthGrid = _issykKulGrid3D.GetDepthGrid(i, j);
+               Rectangle3D[] depthGrid = _issykKulGrid3D.GetDepthGrid(i == n - 1 ? n - 2 : i,
+                                                                      j == m - 1 ? m - 2 : j);
                double h = depthGrid[0].Hz * depthGrid.Length;
 
                v[i, j] = solution.BarotropicV[i, j] / h;
@@ -143,8 +145,8 @@ namespace LiquidDynamics.Forms.TestProblem
 
       private Complex[,][] calcTheta(TestProblemSolution solution)
       {
-         int n = _issykKulGrid3D.Grid2D.N;
-         int m = _issykKulGrid3D.Grid2D.M;
+         int n = solution.BarotropicU.N;
+         int m = solution.BarotropicU.M;
 
          SquareGridFunction u = solution.BarotropicU;
          SquareGridFunction v = solution.BarotropicV;
@@ -156,10 +158,11 @@ namespace LiquidDynamics.Forms.TestProblem
          {
             for (int j = 0; j < m; j++)
             {
-               if (_issykKulGrid3D.Grid2D[i, j] == GridCell.Empty)
-                  continue;
+//               if (_issykKulGrid3D.Grid2D[i, j] == GridCell.Empty)
+//                  continue;
 
-               Rectangle3D[] depthGrid = _issykKulGrid3D.GetDepthGrid(i, j);
+               Rectangle3D[] depthGrid = _issykKulGrid3D.GetDepthGrid(i == n - 1 ? n - 2 : i,
+                                                                      j == m - 1 ? m - 2 : j);
                double h = depthGrid[0].Hz * depthGrid.Length;
 
                double u0 = u[i, j] / h;
@@ -183,8 +186,8 @@ namespace LiquidDynamics.Forms.TestProblem
          SquareGridFunction u = barotropicResult.IterationResultU.Approximation;
          SquareGridFunction v = barotropicResult.IterationResultV.Approximation;
 
-         int n = _issykKulGrid3D.Grid2D.N;
-         int m = _issykKulGrid3D.Grid2D.M;
+         int n = u.N;
+         int m = u.M;
 
          var baroclinicResult = new Complex[n, m][];
          var barotropicU = new double[n, m];
@@ -194,15 +197,16 @@ namespace LiquidDynamics.Forms.TestProblem
          {
             for (int j = 0; j < m; j++)
             {
-               if (_issykKulGrid3D.Grid2D[i, j] == GridCell.Empty)
-                  continue;
+//               if (_issykKulGrid3D.Grid2D[i, j] == GridCell.Empty)
+//                  continue;
 
-               Rectangle3D[] grid = _issykKulGrid3D.GetDepthGrid(i, j);
+               Rectangle3D[] grid = _issykKulGrid3D.GetDepthGrid(i == n - 1 ? n - 2 : i,
+                                                                 j == m - 1 ? m - 2 : j);
                double dz = grid[0].Hz;
                double h = grid.Length * dz;
 
-               double uAvg = 0.25 * (u[i, j] + u[i, j + 1] + u[i + 1, j] + u[i + 1, j + 1]);
-               double vAvg = 0.25 * (v[i, j] + v[i, j + 1] + v[i + 1, j] + v[i + 1, j + 1]);
+               double uAvg = u[i, j];// 0.25 * (u[i, j] + u[i, j + 1] + u[i + 1, j] + u[i + 1, j + 1]);
+               double vAvg = v[i, j];// 0.25 * (v[i, j] + v[i, j + 1] + v[i + 1, j] + v[i + 1, j + 1]);
 
                barotropicU[i, j] = uAvg;
                barotropicV[i, j] = vAvg;
@@ -221,9 +225,9 @@ namespace LiquidDynamics.Forms.TestProblem
 
          return
             new TestProblemSolution(
-               getBarotropic(uBarotropic, vBarotropic),
-               uBarotropic,
-               vBarotropic, 
+               getBarotropic(u, v),
+               u,
+               v, 
                baroclinicResult
                );
       }
@@ -271,8 +275,8 @@ namespace LiquidDynamics.Forms.TestProblem
       {
          double h = grid[0].Hz * grid.Length;
 
-         double x = _xResult.Get(i);
-         double y = _yResult.Get(j);
+         double x = _x.Get(i);//_xResult.Get(i);
+         double y = _y.Get(j);//_yResult.Get(j);
 
          return 
             new BaroclinicProblemSolver(
