@@ -216,7 +216,7 @@ namespace BarotropicComponentProblem.IssykKulGrid
          int bottom = row;
          int top = row;
 
-         List<Point3D> data = cellInfo != null ? cellInfo.Data : new List<Point3D>();
+         List<Point3D> data = cellInfo.Data;
 
          while (data.Count == 0)
          {
@@ -239,7 +239,8 @@ namespace BarotropicComponentProblem.IssykKulGrid
          return
             new GridFunction(
                result.Select(info => new Point(info.Point.X, info.Point.Y)).ToArray(),
-               result.Select(info => info.Point.Z).ToArray());
+               result.Select(info => info.Point.Z).ToArray()
+               );
       }
 
       private List<Point3D> getPoints(int left, int right, int bottom, int top, CellInfo[,] surface)
@@ -433,10 +434,10 @@ namespace BarotropicComponentProblem.IssykKulGrid
                      rows.Add(j);
                   }
                }
-
-               for (int k = 0; k < depths.Count; k++)
-                  setDepth(grid[columns[k], rows[k]], depths[k]);
             }
+
+            for (int k = 0; k < depths.Count; k++)
+               setDepth(grid[columns[k], rows[k]], depths[k]);
 
             depths.Clear();
             columns.Clear();
