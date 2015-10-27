@@ -98,7 +98,7 @@ namespace LiquidDynamics.Forms.TestProblem
          double errorU, errorV;
          getError(solution, out errorU, out errorV);
 
-         double errorW = calculateError(solution.W);
+         double errorW = 0;//todo: calculateError(solution.W);
 
          printSolution(solution, errorU, errorV, errorW);
       }
@@ -284,8 +284,6 @@ namespace LiquidDynamics.Forms.TestProblem
          IBarotropicComponent exactBarotropic = _solution.GetBarotropicComponent();
          IBaroclinicComponent exactBaroclinic = _solution.GetBaroclinicComponent();
 
-         double h = _problemParameters.H;
-
          double maxU = 0;
          double maxV = 0;
          double diffU = 0;
@@ -302,17 +300,17 @@ namespace LiquidDynamics.Forms.TestProblem
                double u = exactBarotropic.U(_t, x, y);
                double v = exactBarotropic.V(_t, x, y);
 
-               for (int k = 0; k < _zGrid.Nodes; k++)
+//               for (int k = 0; k < _zGrid.Nodes; k++)
                {
-                  double z = _zGrid.Get(k);
+//                  double z = _zGrid.Get(k);
 
-                  Complex theta = exactBaroclinic.Theta(_t, x, y, z);
+//                  Complex theta = exactBaroclinic.Theta(_t, x, y, z);
 
-                  maxU = Math.Max(maxU, Math.Abs(u + theta.Re));
-                  maxV = Math.Max(maxV, Math.Abs(v + theta.Im));
+                  maxU = Math.Max(maxU, Math.Abs(u /*+ theta.Re*/));
+                  maxV = Math.Max(maxV, Math.Abs(v /*+ theta.Im*/));
 
-                  diffU = Math.Max(diffU, Math.Abs(u + theta.Re - uBarotropic[i, j] / h - baroclinic[i, j][k].Re));
-                  diffV = Math.Max(diffV, Math.Abs(v + theta.Im - vBarotropic[i, j] / h - baroclinic[i, j][k].Im));
+                  diffU = Math.Max(diffU, Math.Abs(u + /*theta.Re*/ - uBarotropic[i, j] /*- baroclinic[i, j][k].Re*/));
+                  diffV = Math.Max(diffV, Math.Abs(v + /*theta.Im*/ - vBarotropic[i, j] /*- baroclinic[i, j][k].Im*/));
                }
             }
          }
@@ -331,15 +329,15 @@ namespace LiquidDynamics.Forms.TestProblem
 
          _graphControl.Clear();
 
-         SquareVelocityField squareVelocityField = getSquareVelocityField(solution);
-         _graphControl.DrawVelocityField(squareVelocityField, PaletteDrawingTools, SolutionPen);
+//         SquareVelocityField squareVelocityField = getSquareVelocityField(solution);
+//         _graphControl.DrawVelocityField(squareVelocityField, PaletteDrawingTools, SolutionPen);
 //         UpwellingData upwelling = buildUpwellingData(solution.W)[_zSlice];
 //         _graphControl.DrawUpwelling(upwelling, PaletteFactory.CreateBlueRedPalette());
 
          _graphControl.Invalidate();
 
-         _paletteControl.MinValue = squareVelocityField.GetMinVector().Length;
-         _paletteControl.MaxValue = squareVelocityField.GetMaxVector().Length;
+//         _paletteControl.MinValue = squareVelocityField.GetMinVector().Length;
+//         _paletteControl.MaxValue = squareVelocityField.GetMaxVector().Length;
 //         float value = Math.Max(Math.Abs(upwelling.GetMinIntensity()),
 //                                Math.Abs(upwelling.GetMaxIntensity()));
 //         _paletteControl.MinValue = -value;
@@ -386,7 +384,7 @@ namespace LiquidDynamics.Forms.TestProblem
          double errorU, errorV;
          getError(solution, out errorU, out errorV);
 
-         double errorW = calculateError(solution.W);
+         double errorW = 0;//todo: calculateError(solution.W);
 
          printSolution(solution, errorU, errorV, errorW);
       }

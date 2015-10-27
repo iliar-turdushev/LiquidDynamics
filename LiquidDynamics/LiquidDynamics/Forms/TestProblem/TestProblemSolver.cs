@@ -80,8 +80,8 @@ namespace LiquidDynamics.Forms.TestProblem
       {
          TestProblemSolution solution = step(_barotropicSolver.Begin());
 
-         _verticalProblemSolver = new VerticalProblemSolver(_x, _y, _tau, _wind, _parameters, calcTheta(solution), _issykKulGrid3D);
-         solution.W = _verticalProblemSolver.Begin();
+         //_verticalProblemSolver = new VerticalProblemSolver(_x, _y, _tau, _wind, _parameters, calcTheta(solution), _issykKulGrid3D);
+         //solution.W = _verticalProblemSolver.Begin();
 
          return solution;
       }
@@ -89,7 +89,7 @@ namespace LiquidDynamics.Forms.TestProblem
       public TestProblemSolution Step()
       {
          TestProblemSolution solution = step(_barotropicSolver.Step());
-         solution.W = _verticalProblemSolver.Step(calcTheta(solution), getU(solution), getV(solution));
+//         solution.W = _verticalProblemSolver.Step(calcTheta(solution), getU(solution), getV(solution));
          return solution;
       }
 
@@ -183,53 +183,69 @@ namespace LiquidDynamics.Forms.TestProblem
 
       private TestProblemSolution step(IterationMethodResult barotropicResult)
       {
+         IssykKulGrid2D grid2D = _issykKulGrid3D.Grid2D;
+         int n = grid2D.N;
+         int m = grid2D.M;
+
          SquareGridFunction u = barotropicResult.IterationResultU.Approximation;
          SquareGridFunction v = barotropicResult.IterationResultV.Approximation;
 
-         int n = u.N;
-         int m = u.M;
-
-         var baroclinicResult = new Complex[n, m][];
-         var barotropicU = new double[n, m];
-         var barotropicV = new double[n, m];
+         var baroclinicResult = new Complex[n + 1, m + 1][];
+         var barotropicU = new double[n + 1, m + 1];
+         var barotropicV = new double[n + 1, m + 1];
 
          for (int i = 0; i < n; i++)
          {
             for (int j = 0; j < m; j++)
             {
-//               if (_issykKulGrid3D.Grid2D[i, j] == GridCell.Empty)
-//                  continue;
+               GridCell cell = grid2D[i, j];
 
-               Rectangle3D[] grid = _issykKulGrid3D.GetDepthGrid(i == n - 1 ? n - 2 : i,
-                                                                 j == m - 1 ? m - 2 : j);
-               double dz = grid[0].Hz;
-               double h = grid.Length * dz;
+               if (cell == GridCell.Empty)
+                  continue;
 
-               double uAvg = u[i, j];// 0.25 * (u[i, j] + u[i, j + 1] + u[i + 1, j] + u[i + 1, j + 1]);
-               double vAvg = v[i, j];// 0.25 * (v[i, j] + v[i, j + 1] + v[i + 1, j] + v[i + 1, j + 1]);
+               barotropicU[i, j] = u[i, j] / cell.P(0, 0).Z;
+               barotropicV[i, j] = v[i, j] / cell.P(0, 0).Z;
 
-               barotropicU[i, j] = uAvg;
-               barotropicV[i, j] = vAvg;
+               if (i == n - 1 || grid2D[i + 1, j] == GridCell.Empty)
+               {
+                  barotropicU[i + 1, j] = u[i + 1, j] / cell.P(2, 0).Z;
+                  barotropicV[i + 1, j] = v[i + 1, j] / cell.P(2, 0).Z;
+               }
 
-               BaroclinicProblemSolver solver =
-                  createBaroclinicProblemSolver(grid, i, j, uAvg, vAvg, _baroclinic[i, j]);
+               if (j == m - 1 || grid2D[i, j + 1] == GridCell.Empty)
+               {
+                  barotropicU[i, j + 1] = u[i, j + 1] / cell.P(0, 2).Z;
+                  barotropicV[i, j + 1] = v[i, j + 1] / cell.P(0, 2).Z;
+               }
 
-               baroclinicResult[i, j] = calculateBaroclinic(solver.Solve(), dz, h);
+               if ((i == n - 1 && j == m - 1) ||
+                   (i == n - 1 && j < m - 1 && grid2D[i, j + 1] == GridCell.Empty) ||
+                   (j == m - 1 && i < n - 1 && grid2D[i + 1, j] == GridCell.Empty) ||
+                   (i < n - 1 && j < m - 1 && grid2D[i + 1, j + 1] == GridCell.Empty))
+               {
+                  barotropicU[i + 1, j + 1] = u[i + 1, j + 1] / cell.P(2, 2).Z;
+                  barotropicV[i + 1, j + 1] = v[i + 1, j + 1] / cell.P(2, 2).Z;
+               }
+
+//               Rectangle3D[] grid = _issykKulGrid3D.GetDepthGrid(i == n - 1 ? n - 2 : i,
+//                                                                 j == m - 1 ? m - 2 : j);
+//               double dz = grid[0].Hz;
+//               double h = grid.Length * dz;
+//               
+//               BaroclinicProblemSolver solver =
+//                  createBaroclinicProblemSolver(grid, i, j, uAvg, vAvg, _baroclinic[i, j]);
+//
+//               baroclinicResult[i, j] = calculateBaroclinic(solver.Solve(), dz, h);
             }
          }
 
          _baroclinic = baroclinicResult;
 
-         var uBarotropic = new SquareGridFunction(_xResult, _yResult, barotropicU);
-         var vBarotropic = new SquareGridFunction(_xResult, _yResult, barotropicV);
+         var uResult = new SquareGridFunction(_x, _y, barotropicU);
+         var vResult = new SquareGridFunction(_x, _y, barotropicV);
 
-         return
-            new TestProblemSolution(
-               getBarotropic(u, v),
-               u,
-               v, 
-               baroclinicResult
-               );
+         return new TestProblemSolution(getBarotropic(uResult, vResult),
+                                        uResult, vResult, baroclinicResult);
       }
 
       private BarotropicComponentProblemSolver createBarotropicSolver()
