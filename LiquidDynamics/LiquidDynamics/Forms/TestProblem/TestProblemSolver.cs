@@ -72,8 +72,8 @@ namespace LiquidDynamics.Forms.TestProblem
          _barotropicSolver = createBarotropicSolver();
          _baroclinic = initialTheta;
 
-         _xResult = getMiddleNodesGrid(_x);
-         _yResult = getMiddleNodesGrid(_y);
+//         _xResult = getMiddleNodesGrid(_x);
+//         _yResult = getMiddleNodesGrid(_y);
       }
 
       public TestProblemSolution Begin()
@@ -206,16 +206,28 @@ namespace LiquidDynamics.Forms.TestProblem
                barotropicU[i, j] = u[i, j] / cell.P(0, 0).Z;
                barotropicV[i, j] = v[i, j] / cell.P(0, 0).Z;
 
+               baroclinicResult[i, j] =
+                  calculateBaroclinic(getDepthGrid(i, j), cell.P(0, 0).Z, i, j,
+                                      barotropicU[i, j], barotropicV[i, j]);
+
                if (i == n - 1 || grid2D[i + 1, j] == GridCell.Empty)
                {
                   barotropicU[i + 1, j] = u[i + 1, j] / cell.P(2, 0).Z;
                   barotropicV[i + 1, j] = v[i + 1, j] / cell.P(2, 0).Z;
+
+                  baroclinicResult[i + 1, j] =
+                     calculateBaroclinic(getDepthGrid(i + 1, j), cell.P(2, 0).Z, i + 1, j,
+                                         barotropicU[i + 1, j], barotropicV[i + 1, j]);
                }
 
                if (j == m - 1 || grid2D[i, j + 1] == GridCell.Empty)
                {
                   barotropicU[i, j + 1] = u[i, j + 1] / cell.P(0, 2).Z;
                   barotropicV[i, j + 1] = v[i, j + 1] / cell.P(0, 2).Z;
+
+                  baroclinicResult[i, j + 1] =
+                     calculateBaroclinic(getDepthGrid(i, j + 1), cell.P(0, 2).Z, i, j + 1,
+                                         barotropicU[i, j + 1], barotropicV[i, j + 1]);
                }
 
                if ((i == n - 1 && j == m - 1) ||
@@ -225,17 +237,11 @@ namespace LiquidDynamics.Forms.TestProblem
                {
                   barotropicU[i + 1, j + 1] = u[i + 1, j + 1] / cell.P(2, 2).Z;
                   barotropicV[i + 1, j + 1] = v[i + 1, j + 1] / cell.P(2, 2).Z;
-               }
 
-//               Rectangle3D[] grid = _issykKulGrid3D.GetDepthGrid(i == n - 1 ? n - 2 : i,
-//                                                                 j == m - 1 ? m - 2 : j);
-//               double dz = grid[0].Hz;
-//               double h = grid.Length * dz;
-//               
-//               BaroclinicProblemSolver solver =
-//                  createBaroclinicProblemSolver(grid, i, j, uAvg, vAvg, _baroclinic[i, j]);
-//
-//               baroclinicResult[i, j] = calculateBaroclinic(solver.Solve(), dz, h);
+                  baroclinicResult[i + 1, j + 1] =
+                     calculateBaroclinic(getDepthGrid(i + 1, j + 1), cell.P(2, 2).Z, i + 1, j + 1,
+                                         barotropicU[i + 1, j + 1], barotropicV[i + 1, j + 1]);
+               }
             }
          }
 
@@ -285,37 +291,88 @@ namespace LiquidDynamics.Forms.TestProblem
                             grid.Nodes - 1);
       }
 
-      private BaroclinicProblemSolver createBaroclinicProblemSolver(
-         Rectangle3D[] grid, int i, int j, double u, double v, Complex[] theta
+      private Complex[] calculateBaroclinic(
+         DepthGridParams gridParams, double h,
+         int i, int j, double u, double v
          )
       {
-         double h = grid[0].Hz * grid.Length;
+         BaroclinicProblemSolver solver =
+            createBaroclinicProblemSolver(
+               gridParams.Grid[0].Hz, gridParams.Grid.Length + 1, h,
+               i, j, u, v, _baroclinic[i, j]
+               );
 
-         double x = _x.Get(i);//_xResult.Get(i);
-         double y = _y.Get(j);//_yResult.Get(j);
+         return calculateBaroclinic(solver.Solve(), gridParams.Grid[0].Hz, h);
+      }
+
+      private DepthGridParams getDepthGrid(int i, int j)
+      {
+         DepthGridParams[] grids =
+            {
+               getDepthGridSafe(i - 1, j - 1),
+               getDepthGridSafe(i - 1, j),
+               getDepthGridSafe(i, j - 1),
+               getDepthGridSafe(i, j)
+            };
+
+         return grids.Where(g => g != null)
+                     .OrderBy(g => g.Grid.Length)
+                     .Last();
+      }
+
+      private DepthGridParams getDepthGridSafe(int i, int j)
+      {
+         int n = _issykKulGrid3D.Grid2D.N;
+         int m = _issykKulGrid3D.Grid2D.M;
+
+         if (i < 0 || i > n - 1)
+            return null;
+
+         if (j < 0 || j > m - 1)
+            return null;
+
+         if (_issykKulGrid3D.Grid2D[i, j] == GridCell.Empty)
+            return null;
+
+         return new DepthGridParams
+                   {
+                      Grid = _issykKulGrid3D.GetDepthGrid(i, j),
+                      Cell = _issykKulGrid3D.Grid2D[i, j]
+                   };
+      }
+
+      private BaroclinicProblemSolver createBaroclinicProblemSolver(
+         double dz, int nz, double h,
+         int i, int j,
+         double u, double v,
+         Complex[] theta
+         )
+      {
+         double x = _x.Get(i);
+         double y = _y.Get(j);
 
          return 
             new BaroclinicProblemSolver(
                _parameters,
-               createTheta0(u, v, theta, h),
+               createTheta0(u, v, theta),
                _tau,
-               grid[0].Hz,
-               grid.Length + 1,
+               dz,
+               nz,
                x,
                y,
                _wind.TauX(x, y),
                _wind.TauY(x, y),
-               getTauXb(u),
-               getTauYb(v)
+               getTauXb(u * h),
+               getTauYb(v * h)
                );
       }
       
-      private Complex[] createTheta0(double u, double v, Complex[] theta, double h)
+      private Complex[] createTheta0(double u, double v, Complex[] theta)
       {
          var result = new Complex[theta.Length];
 
          for (int i = 0; i < result.Length; i++)
-            result[i] = new Complex(u / h + theta[i].Re, v / h + theta[i].Im);
+            result[i] = new Complex(u + theta[i].Re, v + theta[i].Im);
 
          return result;
       }
@@ -360,6 +417,12 @@ namespace LiquidDynamics.Forms.TestProblem
                vectors[i, j] = new Vector(u.Grid(i, j), new Point(u[i, j], v[i, j]));
 
          return vectors;
+      }
+
+      private class DepthGridParams
+      {
+         public Rectangle3D[] Grid { get; set; }
+         public GridCell Cell { get; set; }
       }
    }
 }
