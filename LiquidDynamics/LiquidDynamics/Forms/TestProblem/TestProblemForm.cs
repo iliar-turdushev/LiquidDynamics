@@ -98,7 +98,7 @@ namespace LiquidDynamics.Forms.TestProblem
          double errorU, errorV;
          getError(solution, out errorU, out errorV);
 
-         double errorW = 0;//todo: calculateError(solution.W);
+         double errorW = calculateError(solution.W);
 
          printSolution(solution, errorU, errorV, errorW);
       }
@@ -160,8 +160,8 @@ namespace LiquidDynamics.Forms.TestProblem
 
                for (int k = 0; k < _zGrid.Nodes - 1; k++)
                {
-                  Point3D point3D = grid2D[i, j].P(0, 0);
-                  point3D.Z = _zGrid.Get(k);
+                  Point3D p = grid2D[i, j].P(0, 0);
+                  var point3D = new Point3D(p.X, p.Y, _zGrid.Get(k));
                   depthGrid[i, j][k] = new Rectangle3D(point3D, grid2D.Hx, grid2D.Hy, _zGrid.Step);
                }
             }
@@ -382,7 +382,7 @@ namespace LiquidDynamics.Forms.TestProblem
          double errorU, errorV;
          getError(solution, out errorU, out errorV);
 
-         double errorW = 0;//todo: calculateError(solution.W);
+         double errorW = calculateError(solution.W);
 
          printSolution(solution, errorU, errorV, errorW);
       }

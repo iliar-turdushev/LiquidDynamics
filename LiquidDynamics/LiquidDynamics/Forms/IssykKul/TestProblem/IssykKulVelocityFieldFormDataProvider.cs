@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Linq;
 using BarotropicComponentProblem;
 using BarotropicComponentProblem.IssykKulGrid;
 using BarotropicComponentProblem.TestProblem;
@@ -122,7 +123,7 @@ namespace LiquidDynamics.Forms.IssykKul.TestProblem
          int n = _grid.Grid2D.N;
          int m = _grid.Grid2D.M;
 
-         var theta = new Complex[n, m][];
+         var theta = new Complex[n + 1, m + 1][];
 
          for (int i = 0; i < n; i++)
          {
@@ -131,15 +132,76 @@ namespace LiquidDynamics.Forms.IssykKul.TestProblem
                if (_grid.Grid2D[i, j] == GridCell.Empty)
                   continue;
 
-               Rectangle3D[] depthGrid = _grid.GetDepthGrid(i, j);
-               theta[i, j] = new Complex[depthGrid.Length + 1];
+               theta[i, j] = initTheta(getLength(i, j));
 
-               for (int k = 0; k < depthGrid.Length + 1; k++)
-                  theta[i, j][k] = new Complex();
+               if (i == n - 1 || _grid.Grid2D[i + 1, j] == GridCell.Empty)
+                  theta[i + 1, j] = initTheta(getLength(i + 1, j));
+
+               if (j == m - 1 || _grid.Grid2D[i, j + 1] == GridCell.Empty)
+                  theta[i, j + 1] = initTheta(getLength(i, j + 1));
+               
+               if ((i == n - 1 && j == m - 1) ||
+                   (i == n - 1 && j < m - 1 && _grid.Grid2D[i, j + 1] == GridCell.Empty) ||
+                   (j == m - 1 && i < n - 1 && _grid.Grid2D[i + 1, j] == GridCell.Empty) ||
+                   (i < n - 1 && j < m - 1 && _grid.Grid2D[i + 1, j + 1] == GridCell.Empty))
+               {
+                  theta[i + 1, j + 1] = initTheta(getLength(i + 1, j + 1));
+               }
             }
          }
 
          return theta;
+      }
+
+      private Complex[] initTheta(int n)
+      {
+         var theta = new Complex[n + 1];
+
+         for (int k = 0; k < n + 1; k++)
+            theta[k] = new Complex();
+
+         return theta;
+      }
+
+
+      private int getLength(int i, int j)
+      {
+         DepthGridParams[] grids =
+            {
+               getDepthGridSafe(i - 1, j - 1),
+               getDepthGridSafe(i - 1, j),
+               getDepthGridSafe(i, j - 1),
+               getDepthGridSafe(i, j)
+            };
+
+         return grids.Where(g => g != null).Max(g => g.Grid.Length);
+      }
+
+      private DepthGridParams getDepthGridSafe(int i, int j)
+      {
+         int n = _grid.Grid2D.N;
+         int m = _grid.Grid2D.M;
+
+         if (i < 0 || i > n - 1)
+            return null;
+
+         if (j < 0 || j > m - 1)
+            return null;
+
+         if (_grid.Grid2D[i, j] == GridCell.Empty)
+            return null;
+
+         return new DepthGridParams
+                   {
+                      Grid = _grid.GetDepthGrid(i, j),
+                      Cell = _grid.Grid2D[i, j]
+                   };
+      }
+
+      private class DepthGridParams
+      {
+         public Rectangle3D[] Grid { get; set; }
+         public GridCell Cell { get; set; }
       }
 
       private int[,] getSurface(IssykKulGrid2D grid)

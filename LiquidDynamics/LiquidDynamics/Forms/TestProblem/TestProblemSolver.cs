@@ -28,9 +28,6 @@ namespace LiquidDynamics.Forms.TestProblem
 
       private Complex[,][] _baroclinic;
 
-      private Grid _xResult;
-      private Grid _yResult;
-      private Grid _zResult;
       private VerticalProblemSolver _verticalProblemSolver;
 
       public TestProblemSolver(
@@ -71,17 +68,14 @@ namespace LiquidDynamics.Forms.TestProblem
 
          _barotropicSolver = createBarotropicSolver();
          _baroclinic = initialTheta;
-
-//         _xResult = getMiddleNodesGrid(_x);
-//         _yResult = getMiddleNodesGrid(_y);
       }
 
       public TestProblemSolution Begin()
       {
          TestProblemSolution solution = step(_barotropicSolver.Begin());
 
-         //_verticalProblemSolver = new VerticalProblemSolver(_x, _y, _tau, _wind, _parameters, calcTheta(solution), _issykKulGrid3D);
-         //solution.W = _verticalProblemSolver.Begin();
+         _verticalProblemSolver = new VerticalProblemSolver(_x, _y, _tau, _wind, _parameters, calcTheta(solution), _issykKulGrid3D);
+         solution.W = _verticalProblemSolver.Begin();
 
          return solution;
       }
@@ -89,56 +83,28 @@ namespace LiquidDynamics.Forms.TestProblem
       public TestProblemSolution Step()
       {
          TestProblemSolution solution = step(_barotropicSolver.Step());
-//         solution.W = _verticalProblemSolver.Step(calcTheta(solution), getU(solution), getV(solution));
+         solution.W = _verticalProblemSolver.Step(calcTheta(solution), getU(solution), getV(solution));
          return solution;
       }
 
       private double[,] getU(TestProblemSolution solution)
       {
-         int n = _x.Nodes;
-         int m = _y.Nodes;
+         var u = new double[_x.Nodes,_y.Nodes];
 
-         var u = new double[n,m];
-
-         for (int i = 0; i < n; i++)
-         {
-            for (int j = 0; j < m; j++)
-            {
-//               if (_issykKulGrid3D.Grid2D[i, j] == GridCell.Empty)
-//                  continue;
-
-               Rectangle3D[] depthGrid = _issykKulGrid3D.GetDepthGrid(i == n - 1 ? n - 2 : i,
-                                                                      j == m - 1 ? m - 2 : j);
-               double h = depthGrid[0].Hz * depthGrid.Length;
-
-               u[i, j] = solution.BarotropicU[i, j] / h;
-            }
-         }
+         for (int i = 0; i < _x.Nodes; i++)
+            for (int j = 0; j < _y.Nodes; j++)
+               u[i, j] = solution.BarotropicU[i, j];
 
          return u;
       }
 
       private double[,] getV(TestProblemSolution solution)
       {
-         int n = _x.Nodes;
-         int m = _y.Nodes;
+         var v = new double[_x.Nodes, _y.Nodes];
 
-         var v = new double[n, m];
-
-         for (int i = 0; i < n; i++)
-         {
-            for (int j = 0; j < m; j++)
-            {
-//               if (_issykKulGrid3D.Grid2D[i, j] == GridCell.Empty)
-//                  continue;
-
-               Rectangle3D[] depthGrid = _issykKulGrid3D.GetDepthGrid(i == n - 1 ? n - 2 : i,
-                                                                      j == m - 1 ? m - 2 : j);
-               double h = depthGrid[0].Hz * depthGrid.Length;
-
-               v[i, j] = solution.BarotropicV[i, j] / h;
-            }
-         }
+         for (int i = 0; i < _x.Nodes; i++)
+            for (int j = 0; j < _y.Nodes; j++)
+               v[i, j] = solution.BarotropicV[i, j];
 
          return v;
       }
@@ -158,22 +124,16 @@ namespace LiquidDynamics.Forms.TestProblem
          {
             for (int j = 0; j < m; j++)
             {
-//               if (_issykKulGrid3D.Grid2D[i, j] == GridCell.Empty)
-//                  continue;
+               if (baroclinic[i, j] == null)
+                  continue;
 
-               Rectangle3D[] depthGrid = _issykKulGrid3D.GetDepthGrid(i == n - 1 ? n - 2 : i,
-                                                                      j == m - 1 ? m - 2 : j);
-               double h = depthGrid[0].Hz * depthGrid.Length;
+               int nz = baroclinic[i, j].Length;
+               theta[i, j] = new Complex[nz];
 
-               double u0 = u[i, j] / h;
-               double v0 = v[i, j] / h;
-
-               theta[i, j] = new Complex[depthGrid.Length + 1];
-
-               for (int k = 0; k < depthGrid.Length + 1; k++)
+               for (int k = 0; k < nz; k++)
                {
                   Complex c = baroclinic[i, j][k];
-                  theta[i, j][k] = new Complex(c.Re + u0, c.Im + v0);
+                  theta[i, j][k] = new Complex(c.Re + u[i, j], c.Im + v[i, j]);
                }
             }
          }
