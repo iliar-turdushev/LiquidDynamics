@@ -27,21 +27,32 @@ namespace Mathematics.Numerical
       }
 
       public static void Calculate(
-         Complex[] exact, Complex[] fact,
+         Complex[,][] exact, Complex[,][] fact,
          out double errorRe, out double errorIm
          )
       {
-         double maxRe = Math.Abs(exact[0].Re);
-         double maxIm = Math.Abs(exact[0].Im);
-         double maxDiffRe = Math.Abs(exact[0].Re - fact[0].Re);
-         double maxDiffIm = Math.Abs(exact[0].Im - fact[0].Im);
+         int nx = exact.GetLength(0);
+         int ny = exact.GetLength(1);
 
-         for (int i = 1; i < exact.Length; i++)
+         double maxRe = 0;
+         double maxIm = 0;
+         double maxDiffRe = 0;
+         double maxDiffIm = 0;
+
+         for (int i = 0; i < nx; i++)
          {
-            maxRe = Math.Max(maxRe, Math.Abs(exact[i].Re));
-            maxIm = Math.Max(maxIm, Math.Abs(exact[i].Im));
-            maxDiffRe = Math.Max(maxDiffRe, Math.Abs(exact[i].Re - fact[i].Re));
-            maxDiffIm = Math.Max(maxDiffIm, Math.Abs(exact[i].Im - fact[i].Im));
+            for (int j = 0; j < ny; j++)
+            {
+               int nz = exact[i, j].Length;
+
+               for (int k = 0; k < nz; k++)
+               {
+                  maxRe = Math.Max(maxRe, Math.Abs(exact[i, j][k].Re));
+                  maxIm = Math.Max(maxIm, Math.Abs(exact[i, j][k].Im));
+                  maxDiffRe = Math.Max(maxDiffRe, Math.Abs(exact[i, j][k].Re - fact[i, j][k].Re));
+                  maxDiffIm = Math.Max(maxDiffIm, Math.Abs(exact[i, j][k].Im - fact[i, j][k].Im));
+               }
+            }
          }
 
          errorRe = maxDiffRe / maxRe * 100;

@@ -29,24 +29,30 @@
       private void InitializeComponent()
       {
          this.components = new System.ComponentModel.Container();
+         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BaroclinicComponentForm));
          this._toolStrip = new System.Windows.Forms.ToolStrip();
          this._buttonBegin = new System.Windows.Forms.ToolStripButton();
          this._buttonStartStop = new System.Windows.Forms.ToolStripButton();
          this._buttonStep = new System.Windows.Forms.ToolStripButton();
+         this._labelNx = new System.Windows.Forms.ToolStripLabel();
+         this._textBoxNx = new System.Windows.Forms.ToolStripTextBox();
+         this._labelNy = new System.Windows.Forms.ToolStripLabel();
+         this._textBoxNy = new System.Windows.Forms.ToolStripTextBox();
+         this._labelNz = new System.Windows.Forms.ToolStripLabel();
+         this._textBoxNz = new System.Windows.Forms.ToolStripTextBox();
+         this._labelTau = new System.Windows.Forms.ToolStripLabel();
+         this._textBoxTau = new System.Windows.Forms.ToolStripTextBox();
+         this._buttonPlus = new System.Windows.Forms.ToolStripButton();
+         this._buttonMinus = new System.Windows.Forms.ToolStripButton();
+         this._buttonDrawMode = new System.Windows.Forms.ToolStripButton();
          this._labelX = new System.Windows.Forms.ToolStripLabel();
          this._textBoxX = new System.Windows.Forms.ToolStripTextBox();
          this._labelY = new System.Windows.Forms.ToolStripLabel();
          this._textBoxY = new System.Windows.Forms.ToolStripTextBox();
-         this._labelN = new System.Windows.Forms.ToolStripLabel();
-         this._textBoxN = new System.Windows.Forms.ToolStripTextBox();
-         this._labelTau = new System.Windows.Forms.ToolStripLabel();
-         this._textBoxTau = new System.Windows.Forms.ToolStripTextBox();
          this._splitContainer = new System.Windows.Forms.SplitContainer();
          this._graphControlU = new ControlLibrary.Controls.GraphControl();
          this._graphControlV = new ControlLibrary.Controls.GraphControl();
          this._timer = new System.Windows.Forms.Timer(this.components);
-         this._buttonPlus = new System.Windows.Forms.ToolStripButton();
-         this._buttonMinus = new System.Windows.Forms.ToolStripButton();
          this._toolStrip.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this._splitContainer)).BeginInit();
          this._splitContainer.Panel1.SuspendLayout();
@@ -60,16 +66,21 @@
             this._buttonBegin,
             this._buttonStartStop,
             this._buttonStep,
-            this._labelX,
-            this._textBoxX,
-            this._labelY,
-            this._textBoxY,
-            this._labelN,
-            this._textBoxN,
+            this._labelNx,
+            this._textBoxNx,
+            this._labelNy,
+            this._textBoxNy,
+            this._labelNz,
+            this._textBoxNz,
             this._labelTau,
             this._textBoxTau,
             this._buttonPlus,
-            this._buttonMinus});
+            this._buttonMinus,
+            this._buttonDrawMode,
+            this._labelX,
+            this._textBoxX,
+            this._labelY,
+            this._textBoxY});
          this._toolStrip.Location = new System.Drawing.Point(0, 0);
          this._toolStrip.Name = "_toolStrip";
          this._toolStrip.Size = new System.Drawing.Size(959, 25);
@@ -102,39 +113,41 @@
          this._buttonStep.Size = new System.Drawing.Size(23, 22);
          this._buttonStep.Click += new System.EventHandler(this.buttonStepClick);
          // 
-         // _labelX
+         // _labelNx
          // 
-         this._labelX.Name = "_labelX";
-         this._labelX.Size = new System.Drawing.Size(17, 22);
-         this._labelX.Text = "X:";
+         this._labelNx.Name = "_labelNx";
+         this._labelNx.Size = new System.Drawing.Size(24, 22);
+         this._labelNx.Text = "Nx:";
          // 
-         // _textBoxX
+         // _textBoxNx
          // 
-         this._textBoxX.Name = "_textBoxX";
-         this._textBoxX.Size = new System.Drawing.Size(50, 25);
+         this._textBoxNx.Name = "_textBoxNx";
+         this._textBoxNx.Size = new System.Drawing.Size(50, 25);
+         this._textBoxNx.Text = "20";
          // 
-         // _labelY
+         // _labelNy
          // 
-         this._labelY.Name = "_labelY";
-         this._labelY.Size = new System.Drawing.Size(17, 22);
-         this._labelY.Text = "Y:";
+         this._labelNy.Name = "_labelNy";
+         this._labelNy.Size = new System.Drawing.Size(25, 22);
+         this._labelNy.Text = "Ny:";
          // 
-         // _textBoxY
+         // _textBoxNy
          // 
-         this._textBoxY.Name = "_textBoxY";
-         this._textBoxY.Size = new System.Drawing.Size(50, 25);
+         this._textBoxNy.Name = "_textBoxNy";
+         this._textBoxNy.Size = new System.Drawing.Size(50, 25);
+         this._textBoxNy.Text = "20";
          // 
-         // _labelN
+         // _labelNz
          // 
-         this._labelN.Name = "_labelN";
-         this._labelN.Size = new System.Drawing.Size(19, 22);
-         this._labelN.Text = "N:";
+         this._labelNz.Name = "_labelNz";
+         this._labelNz.Size = new System.Drawing.Size(24, 22);
+         this._labelNz.Text = "Nz:";
          // 
-         // _textBoxN
+         // _textBoxNz
          // 
-         this._textBoxN.Name = "_textBoxN";
-         this._textBoxN.Size = new System.Drawing.Size(50, 25);
-         this._textBoxN.Text = "100";
+         this._textBoxNz.Name = "_textBoxNz";
+         this._textBoxNz.Size = new System.Drawing.Size(50, 25);
+         this._textBoxNz.Text = "20";
          // 
          // _labelTau
          // 
@@ -147,6 +160,61 @@
          this._textBoxTau.Name = "_textBoxTau";
          this._textBoxTau.Size = new System.Drawing.Size(50, 25);
          this._textBoxTau.Text = "0.01";
+         // 
+         // _buttonPlus
+         // 
+         this._buttonPlus.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+         this._buttonPlus.Image = global::LiquidDynamics.Properties.Resources.Plus;
+         this._buttonPlus.ImageTransparentColor = System.Drawing.Color.Magenta;
+         this._buttonPlus.Name = "_buttonPlus";
+         this._buttonPlus.Size = new System.Drawing.Size(23, 22);
+         this._buttonPlus.Click += new System.EventHandler(this.buttonPlusClick);
+         // 
+         // _buttonMinus
+         // 
+         this._buttonMinus.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+         this._buttonMinus.Image = global::LiquidDynamics.Properties.Resources.Minus;
+         this._buttonMinus.ImageTransparentColor = System.Drawing.Color.Magenta;
+         this._buttonMinus.Name = "_buttonMinus";
+         this._buttonMinus.Size = new System.Drawing.Size(23, 22);
+         this._buttonMinus.Click += new System.EventHandler(this.buttonMinusClick);
+         // 
+         // _buttonDrawMode
+         // 
+         this._buttonDrawMode.CheckOnClick = true;
+         this._buttonDrawMode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+         this._buttonDrawMode.Image = ((System.Drawing.Image)(resources.GetObject("_buttonDrawMode.Image")));
+         this._buttonDrawMode.ImageTransparentColor = System.Drawing.Color.Magenta;
+         this._buttonDrawMode.Name = "_buttonDrawMode";
+         this._buttonDrawMode.Size = new System.Drawing.Size(143, 22);
+         this._buttonDrawMode.Text = "Графики погрешностей";
+         this._buttonDrawMode.CheckedChanged += new System.EventHandler(this.buttonDrawModeCheckedChanged);
+         // 
+         // _labelX
+         // 
+         this._labelX.Name = "_labelX";
+         this._labelX.Size = new System.Drawing.Size(17, 22);
+         this._labelX.Text = "X:";
+         // 
+         // _textBoxX
+         // 
+         this._textBoxX.Name = "_textBoxX";
+         this._textBoxX.Size = new System.Drawing.Size(50, 25);
+         this._textBoxX.Text = "10";
+         this._textBoxX.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxXKeyPress);
+         // 
+         // _labelY
+         // 
+         this._labelY.Name = "_labelY";
+         this._labelY.Size = new System.Drawing.Size(17, 22);
+         this._labelY.Text = "Y:";
+         // 
+         // _textBoxY
+         // 
+         this._textBoxY.Name = "_textBoxY";
+         this._textBoxY.Size = new System.Drawing.Size(50, 25);
+         this._textBoxY.Text = "10";
+         this._textBoxY.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxYKeyPress);
          // 
          // _splitContainer
          // 
@@ -188,24 +256,6 @@
          // 
          this._timer.Tick += new System.EventHandler(this.timerTick);
          // 
-         // _buttonPlus
-         // 
-         this._buttonPlus.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-         this._buttonPlus.Image = global::LiquidDynamics.Properties.Resources.Plus;
-         this._buttonPlus.ImageTransparentColor = System.Drawing.Color.Magenta;
-         this._buttonPlus.Name = "_buttonPlus";
-         this._buttonPlus.Size = new System.Drawing.Size(23, 22);
-         this._buttonPlus.Click += new System.EventHandler(this.buttonPlusClick);
-         // 
-         // _buttonMinus
-         // 
-         this._buttonMinus.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-         this._buttonMinus.Image = global::LiquidDynamics.Properties.Resources.Minus;
-         this._buttonMinus.ImageTransparentColor = System.Drawing.Color.Magenta;
-         this._buttonMinus.Name = "_buttonMinus";
-         this._buttonMinus.Size = new System.Drawing.Size(23, 22);
-         this._buttonMinus.Click += new System.EventHandler(this.buttonMinusClick);
-         // 
          // BaroclinicComponentForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -236,17 +286,22 @@
       private System.Windows.Forms.ToolStripButton _buttonBegin;
       private System.Windows.Forms.ToolStripButton _buttonStartStop;
       private System.Windows.Forms.ToolStripButton _buttonStep;
-      private System.Windows.Forms.ToolStripLabel _labelX;
-      private System.Windows.Forms.ToolStripTextBox _textBoxX;
-      private System.Windows.Forms.ToolStripLabel _labelY;
-      private System.Windows.Forms.ToolStripTextBox _textBoxY;
-      private System.Windows.Forms.ToolStripLabel _labelN;
-      private System.Windows.Forms.ToolStripTextBox _textBoxN;
+      private System.Windows.Forms.ToolStripLabel _labelNx;
+      private System.Windows.Forms.ToolStripTextBox _textBoxNx;
+      private System.Windows.Forms.ToolStripLabel _labelNy;
+      private System.Windows.Forms.ToolStripTextBox _textBoxNy;
+      private System.Windows.Forms.ToolStripLabel _labelNz;
+      private System.Windows.Forms.ToolStripTextBox _textBoxNz;
       private System.Windows.Forms.ToolStripLabel _labelTau;
       private System.Windows.Forms.ToolStripTextBox _textBoxTau;
       private System.Windows.Forms.Timer _timer;
       private System.Windows.Forms.ToolStripButton _buttonPlus;
       private System.Windows.Forms.ToolStripButton _buttonMinus;
+      private System.Windows.Forms.ToolStripButton _buttonDrawMode;
+      private System.Windows.Forms.ToolStripLabel _labelX;
+      private System.Windows.Forms.ToolStripTextBox _textBoxX;
+      private System.Windows.Forms.ToolStripLabel _labelY;
+      private System.Windows.Forms.ToolStripTextBox _textBoxY;
 
    }
 }

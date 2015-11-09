@@ -27,10 +27,19 @@ namespace LiquidDynamics.Forms.BarotropicComponentNumerical
       }
 
       internal float MaxError { get; private set; }
+      internal float MaxErrorU { get; private set; }
+      internal float MaxErrorV { get; private set; }
+
       internal float Time { get; private set; }
 
       internal void AddError(double time, double errorU, double errorV)
       {
+         if (errorU > MaxErrorU)
+            MaxErrorU = (float) errorU;
+
+         if (errorV > MaxErrorV)
+            MaxErrorV = (float) errorV;
+
          if (errorU > MaxError)
             MaxError = (float) errorU;
 

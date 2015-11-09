@@ -1,9 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using BarotropicComponentProblem;
 using Common;
+using LiquidDynamics.Forms.BarotropicComponentNumerical;
 using Mathematics.MathTypes;
 using Mathematics.Numerical;
 using ModelProblem;
@@ -14,50 +14,55 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
 {
    internal class BaroclinicComponentDataProvider
    {
-      private const int ExactSolutionNodes = 500;
+      private const int ExactSolutionNodes = 100;
 
       private readonly Parameters _parameters;
 
-      private double _x;
-      private double _y;
+      private Grid _x;
+      private Grid _y;
       private Grid _z;
       private double _tau;
+
+      private Grid _demoZ;
 
       private double _time;
       private Solution _solution;
 
-      private Grid _demoZ;
-
-      private Complex[] _calculatedSolution;
+      private Complex[,][] _calculatedSolution;
 
       public BaroclinicComponentDataProvider(Parameters parameters)
       {
          Check.NotNull(parameters, "parameters");
          _parameters = parameters;
       }
+
+      public ErrorContainer Errors { get; private set; }
       
-      public SolveBaroclinicProblemResult Begin(double x, double y, int n, double tau)
+      public SolveBaroclinicProblemResult Begin(int nx, int ny, int nz, double tau)
       {
-         _x = x;
-         _y = y;
-         _z = createZGrid(n);
+         _x = Grid.Create(0, _parameters.SmallR, nx);
+         _y = Grid.Create(0, _parameters.SmallQ, ny);
+         _z = Grid.Create(0.0, _parameters.H, nz);
          _tau = tau;
+
+         _demoZ = Grid.Create(0.0, _parameters.H, ExactSolutionNodes);
 
          _time = 0;
          _solution = SolutionCreator.Create(_parameters);
-
-         _demoZ = createZGrid(ExactSolutionNodes);
-
-         Complex[] exact = calculateExactBaroclinic(_time, _demoZ);
+         
+         Complex[,][] exact = calculateExactBaroclinic(_time, _demoZ);
          _calculatedSolution = calculateExactBaroclinic(_time, _z);
+
+         Errors = new ErrorContainer();
+         Errors.AddError(_time, 0, 0);
 
          return
             new SolveBaroclinicProblemResult(
                _time,
-               toPoints(_demoZ, exact.Select(c => c.Re)),
-               toPoints(_demoZ, exact.Select(c => c.Im)),
-               toPoints(_z, _calculatedSolution.Select(c => c.Re)),
-               toPoints(_z, _calculatedSolution.Select(c => c.Im)),
+               toPoints(_demoZ, exact, c => c.Re),
+               toPoints(_demoZ, exact, c => c.Im),
+               toPoints(_z, _calculatedSolution, c => c.Re),
+               toPoints(_z, _calculatedSolution, c => c.Im),
                0.0,
                0.0
                );
@@ -65,57 +70,104 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
 
       public SolveBaroclinicProblemResult Step()
       {
-         var solver =
-            new BaroclinicProblemSolver(
-               createParameters(),
-               getExactTheta0(_time),
-               _tau, _z.Step, _z.Nodes,
-               _x, _y,
-               getTauX(), getTauY(),
-               getTauXb(_time + _tau), getTauYb(_time + _tau)
-               );
-
-         _calculatedSolution = calculateBaroclinic(solver.Solve());
+         calculateBaroclinic();
 
          double errorRe, errorIm;
-         Complex[] exact = calculateExactBaroclinic(_time + _tau, _z);
+         Complex[,][] exact = calculateExactBaroclinic(_time + _tau, _z);
          ErrorCalculator.Calculate(exact, _calculatedSolution, out errorRe, out errorIm);
 
-         Complex[] demo = calculateExactBaroclinic(_time + _tau, _demoZ);
+         Complex[,][] demo = calculateExactBaroclinic(_time + _tau, _demoZ);
 
          _time += _tau;
 
+         Errors.AddError(_time, errorRe, errorIm);
+
          return new SolveBaroclinicProblemResult(
             _time,
-            toPoints(_demoZ, demo.Select(c => c.Re)),
-            toPoints(_demoZ, demo.Select(c => c.Im)),
-            toPoints(_z, _calculatedSolution.Select(c => c.Re)),
-            toPoints(_z, _calculatedSolution.Select(c => c.Im)),
+            toPoints(_demoZ, demo, c => c.Re),
+            toPoints(_demoZ, demo, c => c.Im),
+            toPoints(_z, _calculatedSolution, c => c.Re),
+            toPoints(_z, _calculatedSolution, c => c.Im),
             errorRe,
             errorIm
             );
       }
 
-      private Grid createZGrid(int n)
-      {
-         return Grid.Create(0.0, _parameters.H, n);
-      }
-
-      private Complex[] calculateExactBaroclinic(double t, Grid z)
+      private Complex[,][] calculateExactBaroclinic(double t, Grid z)
       {
          IBaroclinicComponent baroclinic = _solution.GetBaroclinicComponent();
 
-         var result = new Complex[z.Nodes];
+         var result = new Complex[_x.Nodes, _y.Nodes][];
 
-         for (int i = 0; i < result.Length; i++)
-            result[i] = baroclinic.Theta(t, _x, _y, z.Get(i));
+         for (int i = 0; i < _x.Nodes; i++)
+         {
+            double x = _x.Get(i);
+
+            for (int j = 0; j < _y.Nodes; j++)
+            {
+               double y = _y.Get(j);
+               result[i, j] = new Complex[z.Nodes];
+
+               for (int k = 0; k < z.Nodes; k++)
+               {
+                  result[i, j][k] = baroclinic.Theta(t, x, y, z.Get(k));
+               }
+            }
+         }
 
          return result;
       }
 
-      private PointF[] toPoints(Grid z, IEnumerable<double> values)
+      private PointF[,][] toPoints(Grid z, Complex[,][] values, Func<Complex, double> selector)
       {
-         return values.Select((v, i) => new PointF((float) z.Get(i), (float) v)).ToArray();
+         int nx = values.GetLength(0);
+         int ny = values.GetLength(1);
+
+         var points = new PointF[nx, ny][];
+
+         for (int i = 0; i < nx; i++)
+         {
+            for (int j = 0; j < ny; j++)
+            {
+               int nz = values[i, j].Length;
+               points[i, j] = new PointF[nz];
+
+               for (int k = 0; k < nz; k++)
+               {
+                  var x = (float) z.Get(k);
+                  var y = (float) selector(values[i, j][k]);
+
+                  points[i, j][k] = new PointF(x, y);
+               }
+            }
+         }
+
+         return points;
+      }
+
+      private void calculateBaroclinic()
+      {
+         for (int i = 0; i < _x.Nodes; i++)
+         {
+            double x = _x.Get(i);
+
+            for (int j = 0; j < _y.Nodes; j++)
+            {
+               double y = _y.Get(j);
+
+               var solver =
+                  new BaroclinicProblemSolver(
+                     createParameters(),
+                     getExactTheta0(_time, i, j),
+                     _tau, _z.Step, _z.Nodes,
+                     x, y,
+                     getTauX(y), getTauY(x, y),
+                     getTauXb(_time + _tau, x, y), getTauYb(_time + _tau, x, y)
+                     );
+
+               _calculatedSolution[i, j] = calculateBaroclinic(solver.Solve());
+            }
+         }
       }
 
       private ProblemParameters createParameters()
@@ -135,46 +187,49 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
                    };
       }
 
-      private Complex[] getExactTheta0(double t)
+      private Complex[] getExactTheta0(double t, int i, int j)
       {
+         double x = _x.Get(i);
+         double y = _y.Get(j);
+
          IBarotropicComponent barotropic = _solution.GetBarotropicComponent();
-         double u = barotropic.U(t, _x, _y);
-         double v = barotropic.V(t, _x, _y);
+         double u = barotropic.U(t, x, y);
+         double v = barotropic.V(t, x, y);
 
          var result = new Complex[_z.Nodes];
 
-         for (int i = 0; i < _z.Nodes; i++)
+         for (int k = 0; k < _z.Nodes; k++)
          {
-            Complex theta = _calculatedSolution[i];
-            result[i] = new Complex(u + theta.Re, v + theta.Im);
+            Complex theta = _calculatedSolution[i, j][k];
+            result[k] = new Complex(u + theta.Re, v + theta.Im);
          }
 
          return result;
       }
 
-      private double getTauX()
+      private double getTauX(double y)
       {
          return -_parameters.F1 * _parameters.SmallQ * _parameters.Rho0 /
-                Math.PI * Math.Cos(Math.PI * _y / _parameters.SmallQ);
+                Math.PI * Math.Cos(Math.PI * y / _parameters.SmallQ);
       }
 
-      private double getTauY()
+      private double getTauY(double x, double y)
       {
          return _parameters.F2 * _parameters.SmallR * _parameters.Rho0 /
-                Math.PI * Math.Cos(Math.PI * _x / _parameters.SmallR) *
-                Math.Sin(Math.PI * _y / _parameters.SmallQ);
+                Math.PI * Math.Cos(Math.PI * x / _parameters.SmallR) *
+                Math.Sin(Math.PI * y / _parameters.SmallQ);
       }
 
-      private double getTauXb(double t)
+      private double getTauXb(double t, double x, double y)
       {
          var barotropic = _solution.GetBarotropicComponent();
-         return _parameters.Mu * _parameters.Rho0 * barotropic.U(t, _x, _y) * _parameters.H;
+         return _parameters.Mu * _parameters.Rho0 * barotropic.U(t, x, y) * _parameters.H;
       }
 
-      private double getTauYb(double t)
+      private double getTauYb(double t, double x, double y)
       {
          var barotropic = _solution.GetBarotropicComponent();
-         return _parameters.Mu * _parameters.Rho0 * barotropic.V(t, _x, _y) * _parameters.H;
+         return _parameters.Mu * _parameters.Rho0 * barotropic.V(t, x, y) * _parameters.H;
       }
 
       private Complex[] calculateBaroclinic(Complex[] theta)

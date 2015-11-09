@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using Common;
 using ControlLibrary.Controls;
@@ -16,12 +17,23 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
       private static readonly Pen ExactSolutionPen = new Pen(Color.Green, 1);
       private static readonly Pen CalculatedSolutionPen = new Pen(Color.Red, 1);
 
+      private static readonly Pen ErrorUPen = new Pen(Color.Red, 1)
+                                                 {StartCap = LineCap.RoundAnchor, EndCap = LineCap.RoundAnchor};
+
+      private static readonly Pen ErrorVPen = new Pen(Color.Green, 1)
+                                                 {StartCap = LineCap.RoundAnchor, EndCap = LineCap.RoundAnchor};
+
       private readonly Parameters _parameters;
       private readonly BaroclinicComponentDataProvider _provider;
 
       private bool _dynamicsAlive;
 
       private int _yBound;
+
+      private SolveBaroclinicProblemResult _result;
+
+      private int _x;
+      private int _y;
 
       public BaroclinicComponentForm(Parameters parameters)
       {
@@ -35,21 +47,20 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
          addLegend(_graphControlU);
          addLegend(_graphControlV);
 
-         _textBoxX.Text = string.Format("{0}", _parameters.SmallR / 2.0);
-         _textBoxY.Text = string.Format("{0}", _parameters.SmallQ / 2.0);
-
          _yBound = YBoundInitialValue;
+
+         _x = int.Parse(_textBoxX.Text);
+         _y = int.Parse(_textBoxY.Text);
       }
 
       private void buttonBeginClick(object sender, System.EventArgs e)
       {
          try
          {
-            SolveBaroclinicProblemResult result =
-               _provider.Begin(readX(), readY(), readN(), readTau());
+            _result = _provider.Begin(readNx(), readNy(), readNz(), readTau());
 
-            drawU(result);
-            drawV(result);
+            drawU(_result);
+            drawV(_result);
          }
          catch (InvalidFieldValueException error)
          {
@@ -100,11 +111,85 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
          }
       }
 
+      private void buttonDrawModeCheckedChanged(object sender, System.EventArgs e)
+      {
+         if (_buttonDrawMode.Checked)
+            _buttonDrawMode.Text = "Графики решений";
+         else
+            _buttonDrawMode.Text = "Графики погрешностей";
+      }
+
+      private void textBoxXKeyPress(object sender, KeyPressEventArgs e)
+      {
+         if (_buttonDrawMode.Checked)
+            return;
+
+         switch (e.KeyChar)
+         {
+            case (char) Keys.Return:
+               int cut;
+
+               if (!int.TryParse(_textBoxX.Text, out cut))
+               {
+                  MessageBox.Show(Resources.IncorrectValue, Resources.ApplicationName,
+                                  MessageBoxButtons.OK, MessageBoxIcon.Error);
+                  return;
+               }
+
+               try
+               {
+                  _x = cut;
+                  drawU(_result);
+                  drawV(_result);
+               }
+               catch (InvalidFieldValueException exception)
+               {
+                  MessageBox.Show(exception.Message, Resources.ApplicationName,
+                                  MessageBoxButtons.OK, MessageBoxIcon.Error);
+               }
+
+               break;
+         }
+      }
+
+      private void textBoxYKeyPress(object sender, KeyPressEventArgs e)
+      {
+         if (_buttonDrawMode.Checked)
+            return;
+
+         switch (e.KeyChar)
+         {
+            case (char) Keys.Return:
+               int cut;
+
+               if (!int.TryParse(_textBoxY.Text, out cut))
+               {
+                  MessageBox.Show(Resources.IncorrectValue, Resources.ApplicationName,
+                                  MessageBoxButtons.OK, MessageBoxIcon.Error);
+                  return;
+               }
+
+               try
+               {
+                  _y = cut;
+                  drawU(_result);
+                  drawV(_result);
+               }
+               catch (InvalidFieldValueException exception)
+               {
+                  MessageBox.Show(exception.Message, Resources.ApplicationName,
+                                  MessageBoxButtons.OK, MessageBoxIcon.Error);
+               }
+
+               break;
+         }
+      }
+
       private void step()
       {
-         SolveBaroclinicProblemResult result = _provider.Step();
-         drawU(result);
-         drawV(result);
+         _result = _provider.Step();
+         drawU(_result);
+         drawV(_result);
       }
 
       private void addLegend(GraphControl graphControl)
@@ -116,13 +201,48 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
       private void drawU(SolveBaroclinicProblemResult result)
       {
          string caption = string.Format("U: Time = {0:F4}, Error = {1:F4}%", result.Time, result.ErrorU);
-         drawSolutions(_graphControlU, result.ExactU, result.CalculatedU, caption);
+
+         if (_buttonDrawMode.Checked)
+         {
+            drawErrors(_provider.Errors.ErrorsU, _provider.Errors.Time, _provider.Errors.MaxErrorU,
+                       _graphControlU, ErrorUPen, caption);
+         }
+         else
+         {
+            drawSolutions(_graphControlU, result.ExactU[_x, _y], result.CalculatedU[_x, _y], caption);
+         }
       }
 
       private void drawV(SolveBaroclinicProblemResult result)
       {
          string caption = string.Format("V: Time = {0:F4}, Error = {1:F4}%", result.Time, result.ErrorV);
-         drawSolutions(_graphControlV, result.ExactV, result.CalculatedV, caption);
+
+         if (_buttonDrawMode.Checked)
+         {
+            drawErrors(_provider.Errors.ErrorsV, _provider.Errors.Time, _provider.Errors.MaxErrorV,
+                       _graphControlV, ErrorVPen, caption);
+         }
+         else
+         {
+            drawSolutions(_graphControlV, result.ExactV[_x, _y], result.CalculatedV[_x, _y], caption);
+         }
+      }
+
+      private void drawErrors(
+         PointF[] errors, float time, float maxError,
+         GraphControl graphControl, Pen pen, string caption
+         )
+      {
+         graphControl.Clear();
+
+         if (errors.Length > 1)
+         {
+            graphControl.Caption = caption;
+            graphControl.AxisBounds = new Bounds(0.0F, time, 0.0F, maxError);
+            graphControl.DrawLines(errors, pen);
+         }
+
+         graphControl.Invalidate();
       }
 
       private void drawSolutions(GraphControl graphControl, PointF[] exact, PointF[] calculated, string caption)
@@ -151,19 +271,19 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
          _graphControlV.Invalidate();
       }
 
-      private double readX()
+      private int readNx()
       {
-         return readDoubleValue(_textBoxX.Text, "X");
+         return readIntValue(_textBoxNx.Text, "Nx");
       }
 
-      private double readY()
+      private int readNy()
       {
-         return readDoubleValue(_textBoxY.Text, "Y");
+         return readIntValue(_textBoxNy.Text, "Ny");
       }
 
-      private int readN()
+      private int readNz()
       {
-         return readIntValue(_textBoxN.Text, "N");
+         return readIntValue(_textBoxNz.Text, "Nz");
       }
 
       private double readTau()

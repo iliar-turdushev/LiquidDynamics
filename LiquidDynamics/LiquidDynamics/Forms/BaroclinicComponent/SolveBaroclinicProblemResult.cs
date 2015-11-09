@@ -7,10 +7,10 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
    {
       public SolveBaroclinicProblemResult(
          double time, 
-         PointF[] exactU, 
-         PointF[] exactV, 
-         PointF[] calculatedU, 
-         PointF[] calculatedV, 
+         PointF[,][] exactU,
+         PointF[,][] exactV,
+         PointF[,][] calculatedU,
+         PointF[,][] calculatedV, 
          double errorU, 
          double errorV
          )
@@ -31,11 +31,11 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
 
       public double Time { get; private set; }
 
-      public PointF[] ExactU { get; private set; }
-      public PointF[] ExactV { get; private set; }
+      public PointF[,][] ExactU { get; private set; }
+      public PointF[,][] ExactV { get; private set; }
 
-      public PointF[] CalculatedU { get; private set; }
-      public PointF[] CalculatedV { get; private set; }
+      public PointF[,][] CalculatedU { get; private set; }
+      public PointF[,][] CalculatedV { get; private set; }
 
       public double ErrorU { get; private set; }
       public double ErrorV { get; private set; }
