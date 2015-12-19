@@ -101,7 +101,7 @@ namespace LiquidDynamics.Forms.BaroclinicStream
                      s * d * (theta0[k] - theta0[k - 1]);
          }
 
-         psi[n - 1] = -mu * (u + I * v);
+         psi[n - 1] = -mu * (u + I * v) * _parameters.H;
          return psi;
       }
 

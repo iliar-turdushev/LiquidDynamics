@@ -1,8 +1,13 @@
 ﻿using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using BarotropicComponentProblem;
 using Common;
+using ControlLibrary.Controls;
+using ControlLibrary.Types;
 using LiquidDynamics.Forms.BarotropicComponentNumerical;
+using LiquidDynamics.Properties;
 using Mathematics.MathTypes;
 using Mathematics.Numerical;
 using ModelProblem;
@@ -13,6 +18,15 @@ namespace LiquidDynamics.Forms.BaroclinicStream
 {
    public partial class BaroclinicStreamForm : Form
    {
+      private static readonly Pen ExactSolutionPen = new Pen(Color.Green, 1);
+      private static readonly Pen CalculatedSolutionPen = new Pen(Color.Red, 1);
+
+      private static readonly Pen ErrorUPen = new Pen(Color.Red, 1)
+                                                 {StartCap = LineCap.RoundAnchor, EndCap = LineCap.RoundAnchor};
+
+      private static readonly Pen ErrorVPen = new Pen(Color.Green, 1)
+                                                 {StartCap = LineCap.RoundAnchor, EndCap = LineCap.RoundAnchor};
+
       private readonly ProblemParameters _problemParameters;
       private readonly ModelWind _wind;
       private readonly Solution _solution;
@@ -24,9 +38,18 @@ namespace LiquidDynamics.Forms.BaroclinicStream
       private int _ny;
       private int _nz;
 
+      private int _xCut;
+      private int _yCut;
+
       private Grid _x;
       private Grid _y;
       private Grid _z;
+      
+      private Complex[,][] _psi0;
+
+      private ErrorContainer _errorContainer;
+
+      private bool _dynamicsAlive;
 
       public BaroclinicStreamForm(Parameters parameters)
       {
@@ -38,37 +61,72 @@ namespace LiquidDynamics.Forms.BaroclinicStream
                                parameters.Rho0);
          _solution = SolutionCreator.Create(parameters);
 
-         _t = 0;
-         _tau = 0.1;
-
-         _nx = 20;
-         _ny = 20;
-         _nz = 20;
-
-         _x = Grid.Create(0, parameters.SmallR, _nx);
-         _y = Grid.Create(0, parameters.SmallQ, _ny);
-         _z = Grid.Create(0, parameters.H, _nz);
-
          InitializeComponent();
+         _comboBoxGraphType.SelectedIndex = 0;
       }
 
-      private void button1_Click(object sender, EventArgs e)
+      private void buttonResetClick(object sender, EventArgs e)
       {
-         double[,] u = calculateU(_t + _tau);
-         double[,] v = calculateV(_t + _tau);
+         _buttonStartStop.Enabled = true;
+         _buttonStep.Enabled = true;
 
-         Complex[,][] theta0 = calculateTheta(_t);
-         Complex[,][] theta = calculateTheta(_t + _tau);
-         Complex[,][] psi0 = calculatePsi(_t);
+         try
+         {
+            _tau = readTau();
+            _t = _tau;
 
-         Complex[,][] psi = calculatePsi(_t + _tau);
-         Complex[,][] calculatedPsi = calculateBaroclinicStream(u, v, theta0, theta, psi0);
+            _nx = readNx();
+            _ny = readNy();
+            _nz = readNz();
 
-         double errorRe;
-         double errorIm;
-         ErrorCalculator.Calculate(psi, calculatedPsi, out errorRe, out errorIm);
+            _xCut = readXCut();
+            _yCut = readYCut();
 
-         Text = string.Format("{0}; {1}", errorRe, errorIm);
+            _x = Grid.Create(0, _problemParameters.SmallR, _nx);
+            _y = Grid.Create(0, _problemParameters.SmallQ, _ny);
+            _z = Grid.Create(0, _problemParameters.H, _nz);
+            
+            _errorContainer = new ErrorContainer();
+            _errorContainer.AddError(time: 0, errorU: 0, errorV: 0);
+
+            _psi0 = calculateThetaStream(_t - _tau);
+
+            step();
+         }
+         catch (InvalidFieldValueException error)
+         {
+            MessageBox.Show(error.Message, Resources.ApplicationName,
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+         }
+      }
+
+      private void buttonStartStopClick(object sender, EventArgs e)
+      {
+         _dynamicsAlive = !_dynamicsAlive;
+         _timer.Enabled = _dynamicsAlive;
+
+         if (_dynamicsAlive)
+         {
+            _buttonStartStop.Image = Resources.Pause;
+            setButtonsAccessibility(false);
+         }
+         else
+         {
+            _buttonStartStop.Image = Resources.Start;
+            setButtonsAccessibility(true);
+         }
+      }
+
+      private void buttonStepClick(object sender, EventArgs e)
+      {
+         _t += _tau;
+         step();
+      }
+
+      private void timerTick(object sender, EventArgs e)
+      {
+         _t += _tau;
+         step();
       }
 
       private ProblemParameters createProblemParameters(Parameters parameters)
@@ -88,19 +146,43 @@ namespace LiquidDynamics.Forms.BaroclinicStream
                    };
       }
 
+      private void step()
+      {
+         Complex[,][] exactPsi = calculateThetaStream(_t);
+
+         double[,] u = calculateU(_t);
+         double[,] v = calculateV(_t);
+         Complex[,][] theta0 = calculateTheta(_t - _tau);
+         Complex[,][] theta = calculateTheta(_t);
+         Complex[,][] calculatedPsi = calculateBaroclinicStream(u, v, theta0, theta, _psi0);
+
+         double errorRe;
+         double errorIm;
+         ErrorCalculator.Calculate(exactPsi, calculatedPsi, out errorRe, out errorIm);
+
+         _errorContainer.AddError(_t, errorRe, errorIm);
+
+         if (_comboBoxGraphType.SelectedIndex == 0)
+            drawPsi(exactPsi, calculatedPsi, errorRe, errorIm);
+         else if (_comboBoxGraphType.SelectedIndex == 1)
+            drawErrors();
+
+         _psi0 = calculatedPsi;
+      }
+
       private double[,] calculateU(double t)
       {
          IBarotropicComponent barotropic = _solution.GetBarotropicComponent();
-         return g(t, barotropic.U);
+         return barotropicCalculator(t, barotropic.U);
       }
 
       private double[,] calculateV(double t)
       {
          IBarotropicComponent barotropic = _solution.GetBarotropicComponent();
-         return g(t, barotropic.V);
+         return barotropicCalculator(t, barotropic.V);
       }
 
-      private double[,] g(double t, Func<double, double, double, double> func)
+      private double[,] barotropicCalculator(double t, Func<double, double, double, double> func)
       {
          var result = new double[_x.Nodes, _y.Nodes];
 
@@ -121,16 +203,18 @@ namespace LiquidDynamics.Forms.BaroclinicStream
       private Complex[,][] calculateTheta(double t)
       {
          IBaroclinicComponent baroclinic = _solution.GetBaroclinicComponent();
-         return f(t, baroclinic.Theta);
+         return baroclinicCalculator(t, baroclinic.Theta);
       }
 
-      private Complex[,][] calculatePsi(double t)
+      private Complex[,][] calculateThetaStream(double t)
       {
          IBaroclinicComponent baroclinic = _solution.GetBaroclinicComponent();
-         return f(t, baroclinic.ThetaStream);
+         return baroclinicCalculator(t, baroclinic.ThetaStream);
       }
 
-      private Complex[,][] f(double t, Func<double, double, double, double, Complex> func)
+      private Complex[,][] baroclinicCalculator(
+         double t, Func<double, double, double, double, Complex> func
+         )
       {
          var result = new Complex[_x.Nodes,_y.Nodes][];
 
@@ -164,6 +248,129 @@ namespace LiquidDynamics.Forms.BaroclinicStream
                                                 theta0, theta, psi0,
                                                 _problemParameters, _wind);
          return c.Calculate();
+      }
+
+      private void drawPsi(Complex[,][] exactPsi, Complex[,][] calculatedPsi,
+                           double errorRe, double errorIm)
+      {
+         Complex[] ep = exactPsi[_xCut, _yCut];
+         Complex[] cp = calculatedPsi[_xCut, _yCut];
+
+         var eu = new PointF[_z.Nodes];
+         var ev = new PointF[_z.Nodes];
+         var cu = new PointF[_z.Nodes];
+         var cv = new PointF[_z.Nodes];
+
+         for (int i = 0; i < _z.Nodes; i++)
+         {
+            var z = (float) _z.Get(i);
+
+            eu[i] = new PointF(z, (float) ep[i].Re);
+            ev[i] = new PointF(z, (float) ep[i].Im);
+
+            cu[i] = new PointF(z, (float) cp[i].Re);
+            cv[i] = new PointF(z, (float) cp[i].Im);
+         }
+
+         _uGraphControl.AxisBounds = new Bounds(0, (float) _problemParameters.H, -10, 10);
+         _uGraphControl.Caption = string.Format("Time = {0:F4}, Error = {1:F4}%", _t, errorRe);
+         _uGraphControl.Clear();
+         _uGraphControl.DrawCurve(eu, ExactSolutionPen);
+         _uGraphControl.DrawCurve(cu, CalculatedSolutionPen);
+         _uGraphControl.Invalidate();
+
+         _vGraphControl.AxisBounds = new Bounds(0, (float) _problemParameters.H, -10, 10);
+         _vGraphControl.Caption = string.Format("Time = {0:F4}, Error = {1:F4}%", _t, errorIm);
+         _vGraphControl.Clear();
+         _vGraphControl.DrawCurve(ev, ExactSolutionPen);
+         _vGraphControl.DrawCurve(cv, CalculatedSolutionPen);
+         _vGraphControl.Invalidate();
+      }
+
+      private void drawErrors()
+      {
+         drawErrors(_uGraphControl, ErrorUPen, _errorContainer.ErrorsU, _errorContainer.MaxErrorU);
+         drawErrors(_vGraphControl, ErrorVPen, _errorContainer.ErrorsV, _errorContainer.MaxErrorV);
+      }
+
+      private void drawErrors(GraphControl graphControl, Pen pen, PointF[] errorCurve, float maxError)
+      {
+         graphControl.Clear();
+
+         if (errorCurve.Length > 1)
+         {
+            graphControl.Caption = string.Format("Time = {0:F4}", _t);
+            graphControl.AxisBounds = new Bounds(0.0F, (float) _t, 0.0F, maxError);
+            graphControl.DrawLines(errorCurve, pen);
+         }
+
+         graphControl.Invalidate();
+      }
+
+      private double readTau()
+      {
+         return readDoubleValue(_textBoxTau.Text, "Tau");
+      }
+
+      private int readNx()
+      {
+         return readIntValue(_textBoxNx.Text, "Nx");
+      }
+
+      private int readNy()
+      {
+         return readIntValue(_textBoxNy.Text, "Ny");
+      }
+
+      private int readNz()
+      {
+         return readIntValue(_textBoxNz.Text, "Nz");
+      }
+
+      private int readXCut()
+      {
+         return readIntValue(_textBoxX.Text, "X");
+      }
+
+      private int readYCut()
+      {
+         return readIntValue(_textBoxY.Text, "Y");
+      }
+
+      private static double readDoubleValue(string textToRead, string parameterName)
+      {
+         double value;
+
+         if (!double.TryParse(textToRead, out value))
+         {
+            generateError(parameterName);
+         }
+
+         return value;
+      }
+
+      private static int readIntValue(string textToRead, string parameterName)
+      {
+         int value;
+
+         if (!int.TryParse(textToRead, out value))
+         {
+            generateError(parameterName);
+         }
+
+         return value;
+      }
+
+      private static void generateError(string parameterName)
+      {
+         var message = string.Format(Resources.InvalidParameterValue, parameterName);
+         throw new InvalidFieldValueException(message);
+      }
+
+      private void setButtonsAccessibility(bool enabled)
+      {
+         _buttonReset.Enabled = enabled;
+         _buttonStep.Enabled = enabled;
       }
    }
 }
