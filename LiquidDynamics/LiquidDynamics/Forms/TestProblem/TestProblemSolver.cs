@@ -244,13 +244,6 @@ namespace LiquidDynamics.Forms.TestProblem
          return new IterationProcessParameters(_sigma, _delta, _k, initialApproximation);
       }
 
-      private Grid getMiddleNodesGrid(Grid grid)
-      {
-         return Grid.Create(grid.Get(0) + grid.Step * 0.5,
-                            grid.Get(grid.Nodes - 1) - grid.Step * 0.5,
-                            grid.Nodes - 1);
-      }
-
       private Complex[] calculateBaroclinic(
          DepthGridParams gridParams, double h,
          int i, int j, double u, double v

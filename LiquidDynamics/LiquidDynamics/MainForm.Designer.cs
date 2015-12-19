@@ -53,6 +53,7 @@
          this.testProblemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.issykKulToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.verticalComponentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this.streamToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this._menuStrip.SuspendLayout();
          this.SuspendLayout();
          // 
@@ -67,7 +68,8 @@
             this.baroclinicComponentToolStripMenuItem,
             this.testProblemToolStripMenuItem,
             this.issykKulToolStripMenuItem,
-            this.verticalComponentToolStripMenuItem});
+            this.verticalComponentToolStripMenuItem,
+            this.streamToolStripMenuItem});
          this._menuStrip.Location = new System.Drawing.Point(0, 0);
          this._menuStrip.Name = "_menuStrip";
          this._menuStrip.Size = new System.Drawing.Size(1370, 24);
@@ -257,6 +259,13 @@
          this.verticalComponentToolStripMenuItem.Text = "Вертикальная компонента";
          this.verticalComponentToolStripMenuItem.Click += new System.EventHandler(this.verticalComponentToolStripMenuItemClick);
          // 
+         // streamToolStripMenuItem
+         // 
+         this.streamToolStripMenuItem.Name = "streamToolStripMenuItem";
+         this.streamToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
+         this.streamToolStripMenuItem.Text = "Поток";
+         this.streamToolStripMenuItem.Click += new System.EventHandler(this.streamToolStripMenuItem_Click);
+         // 
          // MainForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -303,6 +312,7 @@
       private System.Windows.Forms.ToolStripMenuItem testProblemToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem issykKulToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem verticalComponentToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem streamToolStripMenuItem;
    }
 }
 

@@ -92,6 +92,13 @@
       <DependentUpon>BaroclinicComponentForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\BaroclinicComponent\SolveBaroclinicProblemResult.cs" />
+    <Compile Include="Forms\BaroclinicStream\BaroclinicStreamCalculator.cs" />
+    <Compile Include="Forms\BaroclinicStream\BaroclinicStreamForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BaroclinicStream\BaroclinicStreamForm.Designer.cs">
+      <DependentUpon>BaroclinicStreamForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\BarotropicComponentNumerical\BarotropicComponentNumericalForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -301,6 +308,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Forms\BaroclinicComponent\BaroclinicComponentForm.resx">
       <DependentUpon>BaroclinicComponentForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BaroclinicStream\BaroclinicStreamForm.resx">
+      <DependentUpon>BaroclinicStreamForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BarotropicComponentNumerical\BarotropicComponentNumericalForm.resx">
       <DependentUpon>BarotropicComponentNumericalForm.cs</DependentUpon>

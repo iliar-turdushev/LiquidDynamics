@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Forms;
 using LiquidDynamics.Controls;
 using LiquidDynamics.Forms.BaroclinicComponent;
+using LiquidDynamics.Forms.BaroclinicStream;
 using LiquidDynamics.Forms.BarotropicComponent;
 using LiquidDynamics.Forms.BarotropicComponentNumerical;
 using LiquidDynamics.Forms.EkmanSpiral;
@@ -173,6 +174,11 @@ namespace LiquidDynamics
       private void verticalComponentToolStripMenuItemClick(object sender, EventArgs e)
       {
          showForm(new VerticalComponentForm(_problemParameters));
+      }
+
+      private void streamToolStripMenuItem_Click(object sender, EventArgs e)
+      {
+         showForm(new BaroclinicStreamForm(_problemParameters));
       }
    }
 }
