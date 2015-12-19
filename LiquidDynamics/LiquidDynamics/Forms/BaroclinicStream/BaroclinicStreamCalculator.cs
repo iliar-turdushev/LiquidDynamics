@@ -23,12 +23,14 @@ namespace LiquidDynamics.Forms.BaroclinicStream
 
       private readonly ProblemParameters _parameters;
       private readonly IWind _wind;
+      private readonly Sigma _sigma;
 
       public BaroclinicStreamCalculator(
          Grid x, Grid y, Grid z, double tau,
          double[,] uBarotropic, double[,] vBarotropic,
          Complex[,][] theta0, Complex[,][] theta, Complex[,][] psi0,
-         ProblemParameters parameters, IWind wind
+         ProblemParameters parameters, IWind wind,
+         Sigma sigma
          )
       {
          _x = x;
@@ -42,6 +44,7 @@ namespace LiquidDynamics.Forms.BaroclinicStream
          _psi0 = psi0;
          _parameters = parameters;
          _wind = wind;
+         _sigma = sigma;
       }
 
       public Complex[,][] Calculate()
@@ -107,18 +110,28 @@ namespace LiquidDynamics.Forms.BaroclinicStream
 
       private Complex calculateSigma(double y)
       {
-         double mu = _parameters.Mu;
-         double l = calculateL(y);
+         switch (_sigma)
+         {
+            case Sigma.Half:
+               return 0.5;
 
-         double exp = Math.Exp(-mu * _tau);
-         double alpha = 1.0 - Math.Cos(l * _tau) * exp;
-         double beta = Math.Sin(l * _tau) * exp;
+            case Sigma.One:
+               return 1.0;
 
-         double sqr = alpha * alpha + beta * beta;
-         double a = (mu * alpha + l * beta) / sqr;
-         double b = (l * alpha - mu * beta) / sqr;
+            default:
+               double mu = _parameters.Mu;
+               double l = calculateL(y);
 
-         return (a + I * b - 1.0 / _tau) / (mu + I * l);
+               double exp = Math.Exp(-mu * _tau);
+               double alpha = 1.0 - Math.Cos(l * _tau) * exp;
+               double beta = Math.Sin(l * _tau) * exp;
+
+               double sqr = alpha * alpha + beta * beta;
+               double a = (mu * alpha + l * beta) / sqr;
+               double b = (l * alpha - mu * beta) / sqr;
+
+               return (a + I * b - 1.0 / _tau) / (mu + I * l);
+         }
       }
 
       private double calculateL(double y)

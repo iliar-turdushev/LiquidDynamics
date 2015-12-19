@@ -62,7 +62,9 @@ namespace LiquidDynamics.Forms.BaroclinicStream
          _solution = SolutionCreator.Create(parameters);
 
          InitializeComponent();
+
          _comboBoxGraphType.SelectedIndex = 0;
+         _comboBoxSigma.SelectedIndex = 0;
       }
 
       private void buttonResetClick(object sender, EventArgs e)
@@ -246,8 +248,24 @@ namespace LiquidDynamics.Forms.BaroclinicStream
          var c = new BaroclinicStreamCalculator(_x, _y, _z, _tau,
                                                 u, v,
                                                 theta0, theta, psi0,
-                                                _problemParameters, _wind);
+                                                _problemParameters, _wind,
+                                                getSigma());
          return c.Calculate();
+      }
+
+      private Sigma getSigma()
+      {
+         switch (_comboBoxSigma.SelectedIndex)
+         {
+            case 0:
+               return Sigma.Half;
+
+            case 1:
+               return Sigma.One;
+
+            default:
+               return Sigma.Special;
+         }
       }
 
       private void drawPsi(Complex[,][] exactPsi, Complex[,][] calculatedPsi,
