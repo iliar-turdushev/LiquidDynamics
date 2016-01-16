@@ -31,6 +31,7 @@
          this.components = new System.ComponentModel.Container();
          this._toolStrip = new System.Windows.Forms.ToolStrip();
          this._buttonReset = new System.Windows.Forms.ToolStripButton();
+         this._buttonStartPause = new System.Windows.Forms.ToolStripButton();
          this._buttonStep = new System.Windows.Forms.ToolStripButton();
          this._labelNx = new System.Windows.Forms.ToolStripLabel();
          this._textBoxNx = new System.Windows.Forms.ToolStripTextBox();
@@ -42,9 +43,10 @@
          this._textBoxTau = new System.Windows.Forms.ToolStripTextBox();
          this._labelSlice = new System.Windows.Forms.ToolStripLabel();
          this._textBoxSlice = new System.Windows.Forms.ToolStripTextBox();
+         this._labelGraphType = new System.Windows.Forms.ToolStripLabel();
+         this._comboBoxGraphType = new System.Windows.Forms.ToolStripComboBox();
          this._graphControl = new ControlLibrary.Controls.GraphControl();
          this._paletteControl = new ControlLibrary.Controls.PaletteControl();
-         this._buttonStartPause = new System.Windows.Forms.ToolStripButton();
          this._timer = new System.Windows.Forms.Timer(this.components);
          this._toolStrip.SuspendLayout();
          this.SuspendLayout();
@@ -64,7 +66,9 @@
             this._labelTau,
             this._textBoxTau,
             this._labelSlice,
-            this._textBoxSlice});
+            this._textBoxSlice,
+            this._labelGraphType,
+            this._comboBoxGraphType});
          this._toolStrip.Location = new System.Drawing.Point(0, 0);
          this._toolStrip.Name = "_toolStrip";
          this._toolStrip.Size = new System.Drawing.Size(780, 25);
@@ -78,6 +82,16 @@
          this._buttonReset.Name = "_buttonReset";
          this._buttonReset.Size = new System.Drawing.Size(23, 22);
          this._buttonReset.Click += new System.EventHandler(this.buttonResetClick);
+         // 
+         // _buttonStartPause
+         // 
+         this._buttonStartPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+         this._buttonStartPause.Enabled = false;
+         this._buttonStartPause.Image = global::LiquidDynamics.Properties.Resources.Start;
+         this._buttonStartPause.ImageTransparentColor = System.Drawing.Color.Magenta;
+         this._buttonStartPause.Name = "_buttonStartPause";
+         this._buttonStartPause.Size = new System.Drawing.Size(23, 22);
+         this._buttonStartPause.Click += new System.EventHandler(this.buttonStartPauseClick);
          // 
          // _buttonStep
          // 
@@ -99,7 +113,7 @@
          // 
          this._textBoxNx.Name = "_textBoxNx";
          this._textBoxNx.Size = new System.Drawing.Size(50, 25);
-         this._textBoxNx.Text = "50";
+         this._textBoxNx.Text = "20";
          // 
          // _labelNy
          // 
@@ -111,7 +125,7 @@
          // 
          this._textBoxNy.Name = "_textBoxNy";
          this._textBoxNy.Size = new System.Drawing.Size(50, 25);
-         this._textBoxNy.Text = "50";
+         this._textBoxNy.Text = "20";
          // 
          // _labelNz
          // 
@@ -149,6 +163,21 @@
          this._textBoxSlice.Size = new System.Drawing.Size(50, 25);
          this._textBoxSlice.Text = "25";
          // 
+         // _labelGraphType
+         // 
+         this._labelGraphType.Name = "_labelGraphType";
+         this._labelGraphType.Size = new System.Drawing.Size(51, 22);
+         this._labelGraphType.Text = "График:";
+         // 
+         // _comboBoxGraphType
+         // 
+         this._comboBoxGraphType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+         this._comboBoxGraphType.Items.AddRange(new object[] {
+            "Вертикальной компоненты",
+            "Погрешности"});
+         this._comboBoxGraphType.Name = "_comboBoxGraphType";
+         this._comboBoxGraphType.Size = new System.Drawing.Size(175, 25);
+         // 
          // _graphControl
          // 
          this._graphControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -170,16 +199,6 @@
          this._paletteControl.Name = "_paletteControl";
          this._paletteControl.Size = new System.Drawing.Size(111, 423);
          this._paletteControl.TabIndex = 2;
-         // 
-         // _buttonStartPause
-         // 
-         this._buttonStartPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-         this._buttonStartPause.Enabled = false;
-         this._buttonStartPause.Image = global::LiquidDynamics.Properties.Resources.Start;
-         this._buttonStartPause.ImageTransparentColor = System.Drawing.Color.Magenta;
-         this._buttonStartPause.Name = "_buttonStartPause";
-         this._buttonStartPause.Size = new System.Drawing.Size(23, 22);
-         this._buttonStartPause.Click += new System.EventHandler(this.buttonStartPauseClick);
          // 
          // _timer
          // 
@@ -222,6 +241,8 @@
       private ControlLibrary.Controls.PaletteControl _paletteControl;
       private System.Windows.Forms.ToolStripButton _buttonStartPause;
       private System.Windows.Forms.Timer _timer;
+      private System.Windows.Forms.ToolStripLabel _labelGraphType;
+      private System.Windows.Forms.ToolStripComboBox _comboBoxGraphType;
 
    }
 }

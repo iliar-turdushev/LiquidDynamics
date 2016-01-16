@@ -34,8 +34,13 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
 
       private VerticalProblemSolver _solver;
 
+      internal VerticalComponentErrorContainer Errors { get; private set; }
+
       public VerticalComponentResult Begin(int nx, int ny, int nz, double tau, Parameters parameters)
       {
+         Errors = new VerticalComponentErrorContainer();
+         Errors.AddError(0, 0);
+
          _xGrid = Grid.Create(0, parameters.SmallR, nx + 1);
          _yGrid = Grid.Create(0, parameters.SmallQ, ny + 1);
          _zGrid = Grid.Create(0, parameters.H, nz + 1);
@@ -56,7 +61,10 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
          _w = _solver.Begin();
          _exactW = calculateExactW();
 
-         return new VerticalComponentResult(buildUpwellingData(), calculateError(), _t);
+         double error = calculateError();
+         Errors.AddError(_t, error);
+
+         return new VerticalComponentResult(buildUpwellingData(), error, _t);
       }
 
       private IssykKulGrid3D createGrid3D()
@@ -115,7 +123,10 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
          _w = _solver.Step(calculateTheta(_t), u(_t), v(_t));
          _exactW = calculateExactW();
 
-         return new VerticalComponentResult(buildUpwellingData(), calculateError(), _t);
+         double error = calculateError();
+         Errors.AddError(_t, error);
+
+         return new VerticalComponentResult(buildUpwellingData(), error, _t);
       }
 
       private ProblemParameters createProblemParameters()

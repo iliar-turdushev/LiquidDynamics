@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using Common;
 using ControlLibrary.Drawing;
@@ -10,6 +12,10 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
 {
    public partial class VerticalComponentForm : Form
    {
+      private const int DrawUpwelling = 0;
+
+      private static readonly Pen ErrorPen = new Pen(Color.Red, 1)
+                                                {StartCap = LineCap.RoundAnchor, EndCap = LineCap.RoundAnchor};
       private readonly IPaletteDrawingTools _paletteDrawingTools;
 
       private readonly Parameters _parameters;
@@ -30,6 +36,8 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
 
          _paletteDrawingTools = PaletteFactory.CreateBlueRedPalette();
          _paletteControl.PaletteDrawingTools = _paletteDrawingTools;
+
+         _comboBoxGraphType.SelectedIndex = 0;
       }
 
       private void buttonResetClick(object sender, EventArgs e)
@@ -37,7 +45,7 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
          try
          {
             _result = _solver.Begin(readNx(), readNy(), readNz(), readTau(), _parameters);
-            drawUpwelling(_result.UpwellingData[readSlice()]);
+            drawGraph();
 
             _buttonStep.Enabled = true;
             _buttonStartPause.Enabled = true;
@@ -52,7 +60,7 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
       private void buttonStepClick(object sender, EventArgs e)
       {
          _result = _solver.Step();
-         drawUpwelling(_result.UpwellingData[readSlice()]);
+         drawGraph();
       }
 
       private void buttonStartPauseClick(object sender, EventArgs e)
@@ -75,7 +83,7 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
       private void timerTick(object sender, EventArgs e)
       {
          _result = _solver.Step();
-         drawUpwelling(_result.UpwellingData[readSlice()]);
+         drawGraph();
       }
 
       private void setButtonsAccessibility(bool isEnabled)
@@ -84,28 +92,50 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
          _buttonReset.Enabled = isEnabled;
       }
 
-      private void drawUpwelling(UpwellingData upwellingData)
+      private void drawGraph()
       {
+         if (_comboBoxGraphType.SelectedIndex == DrawUpwelling)
+            drawUpwelling();
+         else
+            drawError();
+
+         drawPallete();
+      }
+
+      private void drawUpwelling()
+      {
+         UpwellingData upwellingData = _result.UpwellingData[readSlice()];
+
          _graphControl.AxisBounds = new Bounds(0, (float) _parameters.SmallR,
                                                0, (float) _parameters.SmallQ);
 
          _graphControl.Clear();
-         _graphControl.Caption = getCaption();
+         _graphControl.Caption = string.Format("Time = {0:F4}, Error = {1:F4}%", _result.Time, _result.Error);
          _graphControl.DrawUpwelling(upwellingData, _paletteDrawingTools);
          _graphControl.Invalidate();
+      }
 
+      private void drawError()
+      {
+         _graphControl.AxisBounds = new Bounds(0, _solver.Errors.Time, 0, _solver.Errors.MaxError);
+
+         _graphControl.Clear();
+         _graphControl.Caption = string.Format("Time = {0:F4}, Error = {1:F4}%",
+                                               _solver.Errors.Time, _result.Error);
+         _graphControl.DrawLines(_solver.Errors.Errors, ErrorPen);
+         _graphControl.Invalidate();
+      }
+
+      private void drawPallete()
+      {
+         UpwellingData upwellingData = _result.UpwellingData[readSlice()];
+         
          float value = Math.Max(Math.Abs(upwellingData.GetMinIntensity()),
                                 Math.Abs(upwellingData.GetMaxIntensity()));
 
          _paletteControl.MinValue = -value;
          _paletteControl.MaxValue = value;
          _paletteControl.Invalidate();
-      }
-
-      private string getCaption()
-      {
-         return string.Format("Time = {0:F4}, Error = {1:F4}%",
-                              _result.Time, _result.Error);
       }
 
       private int readNx()

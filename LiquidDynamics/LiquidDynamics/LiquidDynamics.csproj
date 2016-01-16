@@ -232,6 +232,7 @@
     </Compile>
     <Compile Include="Forms\VelocityField\UWSquareVelocityField.cs" />
     <Compile Include="Forms\VelocityField\VWSquareVelocityField.cs" />
+    <Compile Include="Forms\VerticalComponentNumerical\VerticalComponentErrorContainer.cs" />
     <Compile Include="Forms\VerticalComponentNumerical\VerticalComponentForm.cs">
       <SubType>Form</SubType>
     </Compile>

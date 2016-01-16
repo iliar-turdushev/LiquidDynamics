@@ -41,6 +41,8 @@
          this._textBoxNz = new System.Windows.Forms.ToolStripTextBox();
          this._labelTau = new System.Windows.Forms.ToolStripLabel();
          this._textBoxTau = new System.Windows.Forms.ToolStripTextBox();
+         this._labelSigma = new System.Windows.Forms.ToolStripLabel();
+         this._comboBoxSigma = new System.Windows.Forms.ToolStripComboBox();
          this._labelGraphType = new System.Windows.Forms.ToolStripLabel();
          this._comboBoxGraphType = new System.Windows.Forms.ToolStripComboBox();
          this._labelX = new System.Windows.Forms.ToolStripLabel();
@@ -51,8 +53,6 @@
          this._uGraphControl = new ControlLibrary.Controls.GraphControl();
          this._vGraphControl = new ControlLibrary.Controls.GraphControl();
          this._timer = new System.Windows.Forms.Timer(this.components);
-         this._labelSigma = new System.Windows.Forms.ToolStripLabel();
-         this._comboBoxSigma = new System.Windows.Forms.ToolStripComboBox();
          this._toolStrip.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this._splitContainer)).BeginInit();
          this._splitContainer.Panel1.SuspendLayout();
@@ -165,6 +165,22 @@
          this._textBoxTau.Size = new System.Drawing.Size(50, 25);
          this._textBoxTau.Text = "0.1";
          // 
+         // _labelSigma
+         // 
+         this._labelSigma.Name = "_labelSigma";
+         this._labelSigma.Size = new System.Drawing.Size(43, 22);
+         this._labelSigma.Text = "Sigma:";
+         // 
+         // _comboBoxSigma
+         // 
+         this._comboBoxSigma.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+         this._comboBoxSigma.Items.AddRange(new object[] {
+            "0.5",
+            "1.0",
+            "Специальный вид"});
+         this._comboBoxSigma.Name = "_comboBoxSigma";
+         this._comboBoxSigma.Size = new System.Drawing.Size(121, 25);
+         // 
          // _labelGraphType
          // 
          this._labelGraphType.Name = "_labelGraphType";
@@ -201,7 +217,7 @@
          // _textBoxY
          // 
          this._textBoxY.Name = "_textBoxY";
-         this._textBoxY.Size = new System.Drawing.Size(50, 25);
+         this._textBoxY.Size = new System.Drawing.Size(50, 23);
          this._textBoxY.Text = "10";
          // 
          // _splitContainer
@@ -219,7 +235,7 @@
          // 
          this._splitContainer.Panel2.Controls.Add(this._vGraphControl);
          this._splitContainer.Size = new System.Drawing.Size(890, 432);
-         this._splitContainer.SplitterDistance = 444;
+         this._splitContainer.SplitterDistance = 443;
          this._splitContainer.TabIndex = 2;
          // 
          // _uGraphControl
@@ -230,7 +246,7 @@
          this._uGraphControl.Caption = "U";
          this._uGraphControl.Location = new System.Drawing.Point(3, 3);
          this._uGraphControl.Name = "_uGraphControl";
-         this._uGraphControl.Size = new System.Drawing.Size(436, 424);
+         this._uGraphControl.Size = new System.Drawing.Size(435, 424);
          this._uGraphControl.TabIndex = 0;
          // 
          // _vGraphControl
@@ -241,28 +257,12 @@
          this._vGraphControl.Caption = "V";
          this._vGraphControl.Location = new System.Drawing.Point(3, 3);
          this._vGraphControl.Name = "_vGraphControl";
-         this._vGraphControl.Size = new System.Drawing.Size(434, 424);
+         this._vGraphControl.Size = new System.Drawing.Size(435, 424);
          this._vGraphControl.TabIndex = 0;
          // 
          // _timer
          // 
          this._timer.Tick += new System.EventHandler(this.timerTick);
-         // 
-         // _labelSigma
-         // 
-         this._labelSigma.Name = "_labelSigma";
-         this._labelSigma.Size = new System.Drawing.Size(43, 22);
-         this._labelSigma.Text = "Sigma:";
-         // 
-         // _comboBoxSigma
-         // 
-         this._comboBoxSigma.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-         this._comboBoxSigma.Items.AddRange(new object[] {
-            "0.5",
-            "1.0",
-            "Специальный вид"});
-         this._comboBoxSigma.Name = "_comboBoxSigma";
-         this._comboBoxSigma.Size = new System.Drawing.Size(121, 25);
          // 
          // BaroclinicStreamForm
          // 
