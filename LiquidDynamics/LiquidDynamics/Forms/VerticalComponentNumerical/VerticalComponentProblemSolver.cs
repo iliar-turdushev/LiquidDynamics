@@ -36,9 +36,9 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
 
       public VerticalComponentResult Begin(int nx, int ny, int nz, double tau, Parameters parameters)
       {
-         _xGrid = createGrid(nx, parameters.SmallR);
-         _yGrid = createGrid(ny, parameters.SmallQ);
-         _zGrid = createZGrid(nz, parameters.H);
+         _xGrid = Grid.Create(0, parameters.SmallR, nx + 1);
+         _yGrid = Grid.Create(0, parameters.SmallQ, ny + 1);
+         _zGrid = Grid.Create(0, parameters.H, nz + 1);
 
          _t = tau;
          _tau = tau;
@@ -72,8 +72,8 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
 
                for (int k = 0; k < _zGrid.Nodes - 1; k++)
                {
-                  Point3D point3D = grid2D[i, j].P(0, 0);
-                  point3D.Z = _zGrid.Get(k);
+                  Point3D p = grid2D[i, j].P(0, 0);
+                  var point3D = new Point3D(p.X, p.Y, _zGrid.Get(k));
                   depthGrid[i, j][k] = new Rectangle3D(point3D, grid2D.Hx, grid2D.Hy, _zGrid.Step);
                }
             }
@@ -84,8 +84,8 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
 
       private IssykKulGrid2D createGrid()
       {
-         int n = _xGrid.Nodes;
-         int m = _yGrid.Nodes;
+         int n = _xGrid.Nodes - 1;
+         int m = _yGrid.Nodes - 1;
 
          double hx = _xGrid.Step;
          double hy = _yGrid.Step;
@@ -96,11 +96,11 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
 
          for (int i = 0; i < n; i++)
          {
-            double x = _xGrid.Get(i) - hx / 2;
+            double x = _xGrid.Get(i);
 
             for (int j = 0; j < m; j++)
             {
-               double y = _yGrid.Get(j) - hy / 2;
+               double y = _yGrid.Get(j);
                cells[i, j] = new GridCell(x, y, hx, hy, z);
             }
          }
@@ -214,22 +214,14 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
          return result;
       }
 
-      private Grid createGrid(int cells, double length)
-      {
-         double halfCellLength = length / (2.0 * cells);
-         return Grid.Create(halfCellLength, length - halfCellLength, cells);
-      }
-
-      private static Grid createZGrid(int cells, double depth)
-      {
-         return Grid.Create(0.0, depth, cells + 1);
-      }
-
       private double[,][] calculateExactW()
       {
-         int nx = _xGrid.Nodes;
-         int ny = _yGrid.Nodes;
+         int nx = _xGrid.Nodes - 1;
+         int ny = _yGrid.Nodes - 1;
          int nz = _zGrid.Nodes;
+
+         double halfHx = _xGrid.Step / 2;
+         double halfHy = _yGrid.Step / 2;
 
          IVerticalComponent vertical = _solution.GetVerticalComponent();
 
@@ -237,11 +229,11 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
 
          for (int i = 0; i < nx; i++)
          {
-            double x = _xGrid.Get(i);
+            double x = _xGrid.Get(i) + halfHx;
 
             for (int j = 0; j < ny; j++)
             {
-               double y = _yGrid.Get(j);
+               double y = _yGrid.Get(j) + halfHy;
                w[i, j] = new double[nz];
 
                for (int k = 0; k < nz; k++)
@@ -257,8 +249,8 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
 
       private double calculateError()
       {
-         int nx = _xGrid.Nodes;
-         int ny = _yGrid.Nodes;
+         int nx = _xGrid.Nodes - 1;
+         int ny = _yGrid.Nodes - 1;
          int nz = _zGrid.Nodes;
          
          double max = 0.0;
@@ -288,8 +280,8 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
 
       private UpwellingData buildUpwellingData(int slice)
       {
-         int nx = _xGrid.Nodes;
-         int ny = _yGrid.Nodes;
+         int nx = _xGrid.Nodes - 1;
+         int ny = _yGrid.Nodes - 1;
 
          var gridPoints = new PointF[nx, ny];
          var intensities = new float[nx, ny];

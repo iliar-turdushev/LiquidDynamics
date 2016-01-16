@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using BarotropicComponentProblem;
 using BarotropicComponentProblem.IssykKulGrid;
 using Mathematics.MathTypes;
