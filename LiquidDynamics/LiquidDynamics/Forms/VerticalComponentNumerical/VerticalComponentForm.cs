@@ -17,6 +17,8 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
 
       private VerticalComponentResult _result;
 
+      private bool _dynamicsActive;
+
       public VerticalComponentForm(Parameters parameters)
       {
          Check.NotNull(parameters, "parameters");
@@ -36,6 +38,9 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
          {
             _result = _solver.Begin(readNx(), readNy(), readNz(), readTau(), _parameters);
             drawUpwelling(_result.UpwellingData[readSlice()]);
+
+            _buttonStep.Enabled = true;
+            _buttonStartPause.Enabled = true;
          }
          catch (InvalidFieldValueException error)
          {
@@ -48,6 +53,35 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
       {
          _result = _solver.Step();
          drawUpwelling(_result.UpwellingData[readSlice()]);
+      }
+
+      private void buttonStartPauseClick(object sender, EventArgs e)
+      {
+         _dynamicsActive = !_dynamicsActive;
+         _timer.Enabled = _dynamicsActive;
+
+         if (_dynamicsActive)
+         {
+            _buttonStartPause.Image = Resources.Pause;
+            setButtonsAccessibility(false);
+         }
+         else
+         {
+            _buttonStartPause.Image = Resources.Start;
+            setButtonsAccessibility(true);
+         }
+      }
+
+      private void timerTick(object sender, EventArgs e)
+      {
+         _result = _solver.Step();
+         drawUpwelling(_result.UpwellingData[readSlice()]);
+      }
+
+      private void setButtonsAccessibility(bool isEnabled)
+      {
+         _buttonStep.Enabled = isEnabled;
+         _buttonReset.Enabled = isEnabled;
       }
 
       private void drawUpwelling(UpwellingData upwellingData)

@@ -288,11 +288,11 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
 
          for (var i = 0; i < nx; i++)
          {
-            double x = _xGrid.Get(i);
+            double x = 0.5 * (_xGrid.Get(i) + _xGrid.Get(i + 1));
 
             for (var j = 0; j < ny; j++)
             {
-               double y = _yGrid.Get(j);
+               double y = 0.5 * (_yGrid.Get(j) + _yGrid.Get(j + 1));
                gridPoints[i, j] = new PointF((float) x, (float) y);
                intensities[i, j] = (float) _w[i, j][slice];
             }

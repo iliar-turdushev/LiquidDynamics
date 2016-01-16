@@ -28,11 +28,11 @@
       /// </summary>
       private void InitializeComponent()
       {
+         this.components = new System.ComponentModel.Container();
          this._toolStrip = new System.Windows.Forms.ToolStrip();
          this._buttonReset = new System.Windows.Forms.ToolStripButton();
          this._buttonStep = new System.Windows.Forms.ToolStripButton();
          this._labelNx = new System.Windows.Forms.ToolStripLabel();
-         this._graphControl = new ControlLibrary.Controls.GraphControl();
          this._textBoxNx = new System.Windows.Forms.ToolStripTextBox();
          this._labelNy = new System.Windows.Forms.ToolStripLabel();
          this._textBoxNy = new System.Windows.Forms.ToolStripTextBox();
@@ -40,9 +40,12 @@
          this._textBoxNz = new System.Windows.Forms.ToolStripTextBox();
          this._labelTau = new System.Windows.Forms.ToolStripLabel();
          this._textBoxTau = new System.Windows.Forms.ToolStripTextBox();
-         this._textBoxSlice = new System.Windows.Forms.ToolStripTextBox();
          this._labelSlice = new System.Windows.Forms.ToolStripLabel();
+         this._textBoxSlice = new System.Windows.Forms.ToolStripTextBox();
+         this._graphControl = new ControlLibrary.Controls.GraphControl();
          this._paletteControl = new ControlLibrary.Controls.PaletteControl();
+         this._buttonStartPause = new System.Windows.Forms.ToolStripButton();
+         this._timer = new System.Windows.Forms.Timer(this.components);
          this._toolStrip.SuspendLayout();
          this.SuspendLayout();
          // 
@@ -50,6 +53,7 @@
          // 
          this._toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._buttonReset,
+            this._buttonStartPause,
             this._buttonStep,
             this._labelNx,
             this._textBoxNx,
@@ -78,6 +82,7 @@
          // _buttonStep
          // 
          this._buttonStep.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+         this._buttonStep.Enabled = false;
          this._buttonStep.Image = global::LiquidDynamics.Properties.Resources.StepForward;
          this._buttonStep.ImageTransparentColor = System.Drawing.Color.Magenta;
          this._buttonStep.Name = "_buttonStep";
@@ -89,17 +94,6 @@
          this._labelNx.Name = "_labelNx";
          this._labelNx.Size = new System.Drawing.Size(24, 22);
          this._labelNx.Text = "Nx:";
-         // 
-         // _graphControl
-         // 
-         this._graphControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-         this._graphControl.Caption = "Вертикальная компонента";
-         this._graphControl.Location = new System.Drawing.Point(12, 28);
-         this._graphControl.Name = "_graphControl";
-         this._graphControl.Size = new System.Drawing.Size(639, 423);
-         this._graphControl.TabIndex = 1;
          // 
          // _textBoxNx
          // 
@@ -143,17 +137,28 @@
          this._textBoxTau.Size = new System.Drawing.Size(50, 25);
          this._textBoxTau.Text = "0.1";
          // 
+         // _labelSlice
+         // 
+         this._labelSlice.Name = "_labelSlice";
+         this._labelSlice.Size = new System.Drawing.Size(36, 22);
+         this._labelSlice.Text = "Срез:";
+         // 
          // _textBoxSlice
          // 
          this._textBoxSlice.Name = "_textBoxSlice";
          this._textBoxSlice.Size = new System.Drawing.Size(50, 25);
          this._textBoxSlice.Text = "25";
          // 
-         // _labelSlice
+         // _graphControl
          // 
-         this._labelSlice.Name = "_labelSlice";
-         this._labelSlice.Size = new System.Drawing.Size(36, 22);
-         this._labelSlice.Text = "Срез:";
+         this._graphControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+         this._graphControl.Caption = "Вертикальная компонента";
+         this._graphControl.Location = new System.Drawing.Point(12, 28);
+         this._graphControl.Name = "_graphControl";
+         this._graphControl.Size = new System.Drawing.Size(639, 423);
+         this._graphControl.TabIndex = 1;
          // 
          // _paletteControl
          // 
@@ -165,6 +170,20 @@
          this._paletteControl.Name = "_paletteControl";
          this._paletteControl.Size = new System.Drawing.Size(111, 423);
          this._paletteControl.TabIndex = 2;
+         // 
+         // _buttonStartPause
+         // 
+         this._buttonStartPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+         this._buttonStartPause.Enabled = false;
+         this._buttonStartPause.Image = global::LiquidDynamics.Properties.Resources.Start;
+         this._buttonStartPause.ImageTransparentColor = System.Drawing.Color.Magenta;
+         this._buttonStartPause.Name = "_buttonStartPause";
+         this._buttonStartPause.Size = new System.Drawing.Size(23, 22);
+         this._buttonStartPause.Click += new System.EventHandler(this.buttonStartPauseClick);
+         // 
+         // _timer
+         // 
+         this._timer.Tick += new System.EventHandler(this.timerTick);
          // 
          // VerticalComponentForm
          // 
@@ -201,6 +220,8 @@
       private System.Windows.Forms.ToolStripLabel _labelSlice;
       private System.Windows.Forms.ToolStripTextBox _textBoxSlice;
       private ControlLibrary.Controls.PaletteControl _paletteControl;
+      private System.Windows.Forms.ToolStripButton _buttonStartPause;
+      private System.Windows.Forms.Timer _timer;
 
    }
 }
