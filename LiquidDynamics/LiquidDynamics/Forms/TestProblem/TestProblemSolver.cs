@@ -249,7 +249,7 @@ namespace LiquidDynamics.Forms.TestProblem
          int i, int j, double u, double v
          )
       {
-         BaroclinicProblemSolver solver =
+         BaroclinicProblemSolverHyperbolic solver =
             createBaroclinicProblemSolver(
                gridParams.Grid[0].Hz, gridParams.Grid.Length + 1, h,
                i, j, u, v, _baroclinic[i, j]
@@ -294,7 +294,7 @@ namespace LiquidDynamics.Forms.TestProblem
                    };
       }
 
-      private BaroclinicProblemSolver createBaroclinicProblemSolver(
+      private BaroclinicProblemSolverHyperbolic createBaroclinicProblemSolver(
          double dz, int nz, double h,
          int i, int j,
          double u, double v,
@@ -305,7 +305,7 @@ namespace LiquidDynamics.Forms.TestProblem
          double y = _y.Get(j);
 
          return 
-            new BaroclinicProblemSolver(
+            new BaroclinicProblemSolverHyperbolic(
                _parameters,
                createTheta0(u, v, theta),
                _tau,

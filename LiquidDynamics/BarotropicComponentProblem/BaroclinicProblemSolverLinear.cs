@@ -4,7 +4,7 @@ using Mathematics.MathTypes;
 
 namespace BarotropicComponentProblem
 {
-   public sealed class BaroclinicProblemSolver
+   public sealed class BaroclinicProblemSolverLinear : IBaroclinicProblemSolver
    {
       private static readonly Complex I = Complex.I;
 
@@ -34,7 +34,7 @@ namespace BarotropicComponentProblem
       private readonly double _l;
       private readonly Complex _sigma;
 
-      public BaroclinicProblemSolver(
+      public BaroclinicProblemSolverLinear(
          ProblemParameters problemParameters,
          Complex[] theta0,
          double tau,

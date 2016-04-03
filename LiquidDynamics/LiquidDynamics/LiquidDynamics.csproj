@@ -91,6 +91,7 @@
     <Compile Include="Forms\BaroclinicComponent\BaroclinicComponentForm.Designer.cs">
       <DependentUpon>BaroclinicComponentForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\BaroclinicComponent\SchemeType.cs" />
     <Compile Include="Forms\BaroclinicComponent\SolveBaroclinicProblemResult.cs" />
     <Compile Include="Forms\BaroclinicStream\BaroclinicStreamCalculator.cs" />
     <Compile Include="Forms\BaroclinicStream\BaroclinicStreamForm.cs">

@@ -34,6 +34,8 @@
          this._buttonBegin = new System.Windows.Forms.ToolStripButton();
          this._buttonStartStop = new System.Windows.Forms.ToolStripButton();
          this._buttonStep = new System.Windows.Forms.ToolStripButton();
+         this._labelSchemeType = new System.Windows.Forms.ToolStripLabel();
+         this._comboBoxSchemeType = new System.Windows.Forms.ToolStripComboBox();
          this._labelNx = new System.Windows.Forms.ToolStripLabel();
          this._textBoxNx = new System.Windows.Forms.ToolStripTextBox();
          this._labelNy = new System.Windows.Forms.ToolStripLabel();
@@ -66,6 +68,8 @@
             this._buttonBegin,
             this._buttonStartStop,
             this._buttonStep,
+            this._labelSchemeType,
+            this._comboBoxSchemeType,
             this._labelNx,
             this._textBoxNx,
             this._labelNy,
@@ -112,6 +116,21 @@
          this._buttonStep.Name = "_buttonStep";
          this._buttonStep.Size = new System.Drawing.Size(23, 22);
          this._buttonStep.Click += new System.EventHandler(this.buttonStepClick);
+         // 
+         // _labelSchemeType
+         // 
+         this._labelSchemeType.Name = "_labelSchemeType";
+         this._labelSchemeType.Size = new System.Drawing.Size(44, 22);
+         this._labelSchemeType.Text = "Схема:";
+         // 
+         // _comboBoxSchemeType
+         // 
+         this._comboBoxSchemeType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+         this._comboBoxSchemeType.Items.AddRange(new object[] {
+            "Линейные тестовые функции",
+            "Гиперболические тестовые функции"});
+         this._comboBoxSchemeType.Name = "_comboBoxSchemeType";
+         this._comboBoxSchemeType.Size = new System.Drawing.Size(121, 25);
          // 
          // _labelNx
          // 
@@ -302,6 +321,8 @@
       private System.Windows.Forms.ToolStripTextBox _textBoxX;
       private System.Windows.Forms.ToolStripLabel _labelY;
       private System.Windows.Forms.ToolStripTextBox _textBoxY;
+      private System.Windows.Forms.ToolStripLabel _labelSchemeType;
+      private System.Windows.Forms.ToolStripComboBox _comboBoxSchemeType;
 
    }
 }

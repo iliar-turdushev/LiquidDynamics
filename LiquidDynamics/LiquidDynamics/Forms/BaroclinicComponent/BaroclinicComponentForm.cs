@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.ComponentModel;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using Common;
@@ -11,6 +12,8 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
 {
    public partial class BaroclinicComponentForm : Form
    {
+      private const int BaroclinicSolverLinearIndex = 0;
+
       private const int YBoundStep = 10;
       private const int YBoundInitialValue = 20;
 
@@ -51,13 +54,15 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
 
          _x = int.Parse(_textBoxX.Text);
          _y = int.Parse(_textBoxY.Text);
+
+         _comboBoxSchemeType.SelectedIndex = BaroclinicSolverLinearIndex;
       }
 
       private void buttonBeginClick(object sender, System.EventArgs e)
       {
          try
          {
-            _result = _provider.Begin(readNx(), readNy(), readNz(), readTau());
+            _result = _provider.Begin(readNx(), readNy(), readNz(), readTau(), getSchemeType());
 
             drawU(_result);
             drawV(_result);
@@ -319,6 +324,19 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
       {
          var message = string.Format(Resources.InvalidParameterValue, parameterName);
          throw new InvalidFieldValueException(message);
+      }
+
+      private SchemeType getSchemeType()
+      {
+         switch (_comboBoxSchemeType.SelectedIndex)
+         {
+            case 0:
+               return SchemeType.Linear;
+            case 1:
+               return SchemeType.Hyperbolic;
+            default:
+               throw new InvalidEnumArgumentException();
+         }
       }
    }
 }

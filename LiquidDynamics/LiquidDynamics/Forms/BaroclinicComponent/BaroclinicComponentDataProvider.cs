@@ -22,6 +22,7 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
       private Grid _y;
       private Grid _z;
       private double _tau;
+      private SchemeType _schemeType;
 
       private Grid _demoZ;
 
@@ -38,12 +39,13 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
 
       public ErrorContainer Errors { get; private set; }
       
-      public SolveBaroclinicProblemResult Begin(int nx, int ny, int nz, double tau)
+      public SolveBaroclinicProblemResult Begin(int nx, int ny, int nz, double tau, SchemeType schemeType)
       {
          _x = Grid.Create(0, _parameters.SmallR, nx);
          _y = Grid.Create(0, _parameters.SmallQ, ny);
          _z = Grid.Create(0.0, _parameters.H, nz);
          _tau = tau;
+         _schemeType = schemeType;
 
          _demoZ = Grid.Create(0.0, _parameters.H, ExactSolutionNodes);
 
@@ -154,20 +156,34 @@ namespace LiquidDynamics.Forms.BaroclinicComponent
             for (int j = 0; j < _y.Nodes; j++)
             {
                double y = _y.Get(j);
-
-               var solver =
-                  new BaroclinicProblemSolver(
-                     createParameters(),
-                     getExactTheta0(_time, i, j),
-                     _tau, _z.Step, _z.Nodes,
-                     x, y,
-                     getTauX(y), getTauY(x, y),
-                     getTauXb(_time + _tau, x, y), getTauYb(_time + _tau, x, y)
-                     );
-
+               IBaroclinicProblemSolver solver = createSolver(x, y, i, j);
                _calculatedSolution[i, j] = calculateBaroclinic(solver.Solve());
             }
          }
+      }
+
+      private IBaroclinicProblemSolver createSolver(double x, double y, int i, int j)
+      {
+         if (_schemeType == SchemeType.Linear)
+         {
+            return new BaroclinicProblemSolverLinear(
+               createParameters(),
+               getExactTheta0(_time, i, j),
+               _tau, _z.Step, _z.Nodes,
+               x, y,
+               getTauX(y), getTauY(x, y),
+               getTauXb(_time + _tau, x, y), getTauYb(_time + _tau, x, y)
+               );
+         }
+
+         return new BaroclinicProblemSolverHyperbolic(
+            createParameters(),
+            getExactTheta0(_time, i, j),
+            _tau, _z.Step, _z.Nodes,
+            x, y,
+            getTauX(y), getTauY(x, y),
+            getTauXb(_time + _tau, x, y), getTauYb(_time + _tau, x, y)
+            );
       }
 
       private ProblemParameters createParameters()

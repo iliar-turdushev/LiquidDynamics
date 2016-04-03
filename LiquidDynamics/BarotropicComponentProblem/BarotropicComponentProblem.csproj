@@ -40,10 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaroclinicProblemSolver.cs" />
+    <Compile Include="BaroclinicProblemSolverLinear.cs" />
+    <Compile Include="BaroclinicProblemSolverHyperbolic.cs" />
     <Compile Include="BarotropicComponent.cs" />
     <Compile Include="BarotropicComponentProblemSolver.cs" />
     <Compile Include="GridParameters.cs" />
+    <Compile Include="IBaroclinicProblemSolver.cs" />
     <Compile Include="IBarotropicComponentProblem.cs" />
     <Compile Include="InitialCondition.cs" />
     <Compile Include="IssykKulGrid\GridCell.cs" />
