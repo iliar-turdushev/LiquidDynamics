@@ -167,7 +167,7 @@ namespace LiquidDynamics.Forms.BaroclinicStream
          if (_comboBoxGraphType.SelectedIndex == 0)
             drawPsi(exactPsi, calculatedPsi, errorRe, errorIm);
          else if (_comboBoxGraphType.SelectedIndex == 1)
-            drawErrors();
+            drawErrors(errorRe, errorIm);
 
          _psi0 = calculatedPsi;
       }
@@ -305,19 +305,19 @@ namespace LiquidDynamics.Forms.BaroclinicStream
          _vGraphControl.Invalidate();
       }
 
-      private void drawErrors()
+      private void drawErrors(double errorRe, double errorIm)
       {
-         drawErrors(_uGraphControl, ErrorUPen, _errorContainer.ErrorsU, _errorContainer.MaxErrorU);
-         drawErrors(_vGraphControl, ErrorVPen, _errorContainer.ErrorsV, _errorContainer.MaxErrorV);
+         drawErrors(_uGraphControl, ErrorUPen, _errorContainer.ErrorsU, _errorContainer.MaxErrorU, (float) errorRe);
+         drawErrors(_vGraphControl, ErrorVPen, _errorContainer.ErrorsV, _errorContainer.MaxErrorV, (float) errorIm);
       }
 
-      private void drawErrors(GraphControl graphControl, Pen pen, PointF[] errorCurve, float maxError)
+      private void drawErrors(GraphControl graphControl, Pen pen, PointF[] errorCurve, float maxError, float currentError)
       {
          graphControl.Clear();
 
          if (errorCurve.Length > 1)
          {
-            graphControl.Caption = string.Format("Time = {0:F4}", _t);
+            graphControl.Caption = $"Time = {_t:F4}; Error = {currentError:F10}%";
             graphControl.AxisBounds = new Bounds(0.0F, (float) _t, 0.0F, maxError);
             graphControl.DrawLines(errorCurve, pen);
          }

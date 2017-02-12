@@ -350,42 +350,32 @@ namespace LiquidDynamics.Forms.VerticalComponentNumerical
          double dz = getDz(i, j);
          double nu = _parameters.Nu;
 
-         Complex sigma = calculateSigma(j);
-
          Complex[] theta0 = _theta0[i, j];
          Complex[] theta1 = _theta1[i, j];
 
          var psi = new Complex[nz];
          psi[0] = calculatePsi1(i, j);
 
+         double sigma = 1.0;
+         double s = (1 - sigma) / sigma;
+
+         double l = calculateL(j);
+         Complex lamda = (1 + Complex.I) * Math.Sqrt(l / (2 * nu));
+         Complex r = lamda * dz / 2;
+         Complex d = nu / dz * r / Complex.Sinh(2 * r);
+         
          for (int k = 1; k < nz - 1; k++)
          {
-            psi[k] = nu * (theta1[k + 1] - theta1[k]) / (2.0 * dz) +
-                     nu * (theta1[k] - theta1[k - 1]) / (2.0 * dz) +
-                     (1.0 / sigma - 1.0) * (nu * (theta0[k + 1] - theta0[k]) / (2.0 * dz) +
-                                            nu * (theta0[k] - theta0[k - 1]) / (2.0 * dz) -
-                                            psi0[k]);
+            psi[k] = -s * psi0[k] +
+                     d * (theta1[k + 1] - theta1[k]) +
+                     d * (theta1[k] - theta1[k - 1]) +
+                     s * d * (theta0[k + 1] - theta0[k]) +
+                     s * d * (theta0[k] - theta0[k - 1]);
          }
 
          psi[nz - 1] = calculatePsiN(i, j);
 
          return psi;
-      }
-
-      private Complex calculateSigma(int j)
-      {
-         double mu = _parameters.Mu;
-         double l = calculateL(j);
-
-         double exp = Math.Exp(-mu * _tau);
-         double alpha = 1.0 - Math.Cos(l * _tau) * exp;
-         double beta = Math.Sin(l * _tau) * exp;
-
-         double sqr = alpha * alpha + beta * beta;
-         double a = (mu * alpha + l * beta) / sqr;
-         double b = (l * alpha - mu * beta) / sqr;
-
-         return (a + Complex.I * b - 1.0 / _tau) / (mu + Complex.I * l);
       }
 
       private double calculateL(int j)

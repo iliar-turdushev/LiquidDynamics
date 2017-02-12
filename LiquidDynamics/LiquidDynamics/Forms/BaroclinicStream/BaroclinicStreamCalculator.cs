@@ -87,10 +87,14 @@ namespace LiquidDynamics.Forms.BaroclinicStream
          double rho0 = _parameters.Rho0;
          double nu = _parameters.Nu;
          double mu = _parameters.Mu;
-         Complex sigma = calculateSigma(y);
 
-         double d = nu / (2 * dz);
+         Complex sigma = calculateSigma(y);
          Complex s = (1 - sigma) / sigma;
+         
+         double l = calculateL(y);
+         Complex lamda = (1 + Complex.I) * Math.Sqrt(l / (2 * nu));
+         Complex r = lamda * dz / 2;
+         Complex d = nu / dz * r / Complex.Sinh(2 * r);
 
          var psi = new Complex[n];
          psi[0] = -(_wind.TauX(x, y) + I * _wind.TauY(x, y)) / rho0;

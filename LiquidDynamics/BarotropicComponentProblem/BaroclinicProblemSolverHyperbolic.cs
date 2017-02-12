@@ -76,7 +76,7 @@ namespace BarotropicComponentProblem
          _tauYb = tauYb;
 
          _l = calculateL();
-         _sigma = calculateSigma();
+         _sigma = 1.0;
 
          _lamda = (1 + I) * Math.Sqrt(_l / (2 * _nu));
          _r = _lamda * dz / 2;
@@ -163,19 +163,6 @@ namespace BarotropicComponentProblem
       private double calculateL()
       {
          return _l0 + _beta * _y;
-      }
-
-      private Complex calculateSigma()
-      {
-         double exp = Math.Exp(-_mu * _tau);
-         double alpha = 1.0 - Math.Cos(_l * _tau) * exp;
-         double beta = Math.Sin(_l * _tau) * exp;
-
-         double sqr = alpha * alpha + beta * beta;
-         double a = (_mu * alpha + _l * beta) / sqr;
-         double b = (_l * alpha - _mu * beta) / sqr;
-
-         return (a + I * b - 1.0 / _tau) / (_mu + I * _l);
       }
 
       private Complex s(Complex theta)
