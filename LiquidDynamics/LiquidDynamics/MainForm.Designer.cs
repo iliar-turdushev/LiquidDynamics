@@ -31,15 +31,16 @@
          this._menuStrip = new System.Windows.Forms.MenuStrip();
          this._problemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this._problemParametersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this._graphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this._testProblemMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this._graphParametersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this._velocityFieldToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this._uvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this._uwToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this._vwToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this._barotropicComponentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this._ekmanSpiralToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this._upwellingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this._analyticalSolutionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this._barotropicComponentMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this._ekmanSpiralMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this._upwellingMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this._velocityFieldMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this._uvMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this._uwMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+         this._vwMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this._barotropicComponentSolutionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this._stommelModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this._krigingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,7 +62,7 @@
          // 
          this._menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._problemToolStripMenuItem,
-            this._graphToolStripMenuItem,
+            this._testProblemMenuItem,
             this._barotropicComponentSolutionToolStripMenuItem,
             this.issykKulVelocityFieldToolStripMenuItem,
             this.issykKulWindToolStripMenuItem,
@@ -91,76 +92,84 @@
          this._problemParametersToolStripMenuItem.Text = "Параметры";
          this._problemParametersToolStripMenuItem.Click += new System.EventHandler(this.problemParametersToolStripMenuItemClick);
          // 
-         // _graphToolStripMenuItem
+         // _testProblemMenuItem
          // 
-         this._graphToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+         this._testProblemMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._graphParametersToolStripMenuItem,
-            this._velocityFieldToolStripMenuItem,
-            this._barotropicComponentToolStripMenuItem,
-            this._ekmanSpiralToolStripMenuItem,
-            this._upwellingToolStripMenuItem});
-         this._graphToolStripMenuItem.Name = "_graphToolStripMenuItem";
-         this._graphToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
-         this._graphToolStripMenuItem.Text = "Графики";
+            this._analyticalSolutionsMenuItem});
+         this._testProblemMenuItem.Name = "_testProblemMenuItem";
+         this._testProblemMenuItem.Size = new System.Drawing.Size(107, 20);
+         this._testProblemMenuItem.Text = "Тестовая задача";
          // 
          // _graphParametersToolStripMenuItem
          // 
          this._graphParametersToolStripMenuItem.Name = "_graphParametersToolStripMenuItem";
-         this._graphParametersToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+         this._graphParametersToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
          this._graphParametersToolStripMenuItem.Text = "Параметры";
          this._graphParametersToolStripMenuItem.Click += new System.EventHandler(this.graphParametersToolStripMenuItemClick);
          // 
-         // _velocityFieldToolStripMenuItem
+         // _analyticalSolutionsMenuItem
          // 
-         this._velocityFieldToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this._uvToolStripMenuItem,
-            this._uwToolStripMenuItem,
-            this._vwToolStripMenuItem});
-         this._velocityFieldToolStripMenuItem.Name = "_velocityFieldToolStripMenuItem";
-         this._velocityFieldToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
-         this._velocityFieldToolStripMenuItem.Text = "Поле скоростей";
+         this._analyticalSolutionsMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._barotropicComponentMenuItem,
+            this._ekmanSpiralMenuItem,
+            this._upwellingMenuItem,
+            this._velocityFieldMenuItem});
+         this._analyticalSolutionsMenuItem.Name = "_analyticalSolutionsMenuItem";
+         this._analyticalSolutionsMenuItem.Size = new System.Drawing.Size(206, 22);
+         this._analyticalSolutionsMenuItem.Text = "Аналитичекие решения";
          // 
-         // _uvToolStripMenuItem
+         // _barotropicComponentMenuItem
          // 
-         this._uvToolStripMenuItem.Name = "_uvToolStripMenuItem";
-         this._uvToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
-         this._uvToolStripMenuItem.Text = "(u, v)";
-         this._uvToolStripMenuItem.Click += new System.EventHandler(this.uvToolStripMenuItemClick);
+         this._barotropicComponentMenuItem.Name = "_barotropicComponentMenuItem";
+         this._barotropicComponentMenuItem.Size = new System.Drawing.Size(216, 22);
+         this._barotropicComponentMenuItem.Text = "Баротропная компонента";
+         this._barotropicComponentMenuItem.Click += new System.EventHandler(this.barotropicComponentMenuItemClick);
          // 
-         // _uwToolStripMenuItem
+         // _ekmanSpiralMenuItem
          // 
-         this._uwToolStripMenuItem.Name = "_uwToolStripMenuItem";
-         this._uwToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
-         this._uwToolStripMenuItem.Text = "(u, w)";
-         this._uwToolStripMenuItem.Click += new System.EventHandler(this.uwToolStripMenuItemClick);
+         this._ekmanSpiralMenuItem.Name = "_ekmanSpiralMenuItem";
+         this._ekmanSpiralMenuItem.Size = new System.Drawing.Size(216, 22);
+         this._ekmanSpiralMenuItem.Text = "Спираль Экмана";
+         this._ekmanSpiralMenuItem.Click += new System.EventHandler(this.ekmanSpiralMenuItemClick);
          // 
-         // _vwToolStripMenuItem
+         // _upwellingMenuItem
          // 
-         this._vwToolStripMenuItem.Name = "_vwToolStripMenuItem";
-         this._vwToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
-         this._vwToolStripMenuItem.Text = "(v, w)";
-         this._vwToolStripMenuItem.Click += new System.EventHandler(this.vwToolStripMenuItemClick);
+         this._upwellingMenuItem.Name = "_upwellingMenuItem";
+         this._upwellingMenuItem.Size = new System.Drawing.Size(216, 22);
+         this._upwellingMenuItem.Text = "Апвеллинг";
+         this._upwellingMenuItem.Click += new System.EventHandler(this.upwellingMenuItemClick);
          // 
-         // _barotropicComponentToolStripMenuItem
+         // _velocityFieldMenuItem
          // 
-         this._barotropicComponentToolStripMenuItem.Name = "_barotropicComponentToolStripMenuItem";
-         this._barotropicComponentToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
-         this._barotropicComponentToolStripMenuItem.Text = "Баротропная компонента";
-         this._barotropicComponentToolStripMenuItem.Click += new System.EventHandler(this.barotropicComponentToolStripMenuItemClick);
+         this._velocityFieldMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._uvMenuItem,
+            this._uwMenuItem,
+            this._vwMenuItem});
+         this._velocityFieldMenuItem.Name = "_velocityFieldMenuItem";
+         this._velocityFieldMenuItem.Size = new System.Drawing.Size(216, 22);
+         this._velocityFieldMenuItem.Text = "Поле скоростей";
          // 
-         // _ekmanSpiralToolStripMenuItem
+         // _uvMenuItem
          // 
-         this._ekmanSpiralToolStripMenuItem.Name = "_ekmanSpiralToolStripMenuItem";
-         this._ekmanSpiralToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
-         this._ekmanSpiralToolStripMenuItem.Text = "Спираль Экмана";
-         this._ekmanSpiralToolStripMenuItem.Click += new System.EventHandler(this.ekmanSpiralToolStripMenuItemClick);
+         this._uvMenuItem.Name = "_uvMenuItem";
+         this._uvMenuItem.Size = new System.Drawing.Size(152, 22);
+         this._uvMenuItem.Text = "(u, v)";
+         this._uvMenuItem.Click += new System.EventHandler(this.uvMenuItemClick);
          // 
-         // _upwellingToolStripMenuItem
+         // _uwMenuItem
          // 
-         this._upwellingToolStripMenuItem.Name = "_upwellingToolStripMenuItem";
-         this._upwellingToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
-         this._upwellingToolStripMenuItem.Text = "Апвеллинг";
-         this._upwellingToolStripMenuItem.Click += new System.EventHandler(this.upwellingToolStripMenuItemClick);
+         this._uwMenuItem.Name = "_uwMenuItem";
+         this._uwMenuItem.Size = new System.Drawing.Size(152, 22);
+         this._uwMenuItem.Text = "(u, w)";
+         this._uwMenuItem.Click += new System.EventHandler(this.uwMenuItemClick);
+         // 
+         // _vwMenuItem
+         // 
+         this._vwMenuItem.Name = "_vwMenuItem";
+         this._vwMenuItem.Size = new System.Drawing.Size(152, 22);
+         this._vwMenuItem.Text = "(v, w)";
+         this._vwMenuItem.Click += new System.EventHandler(this.vwMenuItemClick);
          // 
          // _barotropicComponentSolutionToolStripMenuItem
          // 
@@ -289,15 +298,9 @@
 
       private System.Windows.Forms.MenuStrip _menuStrip;
       private System.Windows.Forms.ToolStripMenuItem _problemToolStripMenuItem;
-      private System.Windows.Forms.ToolStripMenuItem _graphToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem _testProblemMenuItem;
       private System.Windows.Forms.ToolStripMenuItem _problemParametersToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem _graphParametersToolStripMenuItem;
-      private System.Windows.Forms.ToolStripMenuItem _velocityFieldToolStripMenuItem;
-      private System.Windows.Forms.ToolStripMenuItem _uvToolStripMenuItem;
-      private System.Windows.Forms.ToolStripMenuItem _uwToolStripMenuItem;
-      private System.Windows.Forms.ToolStripMenuItem _vwToolStripMenuItem;
-      private System.Windows.Forms.ToolStripMenuItem _ekmanSpiralToolStripMenuItem;
-      private System.Windows.Forms.ToolStripMenuItem _upwellingToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem _barotropicComponentSolutionToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem _stommelModelToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem _krigingToolStripMenuItem;
@@ -305,7 +308,6 @@
       private System.Windows.Forms.ToolStripMenuItem _krigingTestProblemToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem issykKulGridToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem _barotropicComponentTestProblemToolStripMenuItem;
-      private System.Windows.Forms.ToolStripMenuItem _barotropicComponentToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem issykKulVelocityFieldToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem issykKulWindToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem baroclinicComponentToolStripMenuItem;
@@ -313,6 +315,14 @@
       private System.Windows.Forms.ToolStripMenuItem issykKulToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem verticalComponentToolStripMenuItem;
       private System.Windows.Forms.ToolStripMenuItem streamToolStripMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem _analyticalSolutionsMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem _barotropicComponentMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem _ekmanSpiralMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem _upwellingMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem _velocityFieldMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem _uvMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem _uwMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem _vwMenuItem;
    }
 }
 

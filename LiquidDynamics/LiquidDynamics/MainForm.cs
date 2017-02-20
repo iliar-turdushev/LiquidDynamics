@@ -64,6 +64,7 @@ namespace LiquidDynamics
       private void showForm(Form form)
       {
          form.MdiParent = this;
+         form.WindowState = FormWindowState.Maximized;
          form.Show();
       }
 
@@ -85,42 +86,42 @@ namespace LiquidDynamics
                             Resources.GraphParameters);
       }
 
-      private void uvToolStripMenuItemClick(object sender, EventArgs e)
-      {
-         var field = new UVSquareVelocityField(_problemParameters, _graphParameters);
-         showForm(new SquareVelocityFieldForm(field) {Text = Resources.UVSquareVelocityField});
-      }
-
-      private void uwToolStripMenuItemClick(object sender, EventArgs e)
-      {
-         var field = new UWSquareVelocityField(_problemParameters, _graphParameters);
-         showForm(new SquareVelocityFieldForm(field) {Text = Resources.UWSquareVelocityField});
-      }
-
-      private void vwToolStripMenuItemClick(object sender, EventArgs e)
-      {
-         var field = new VWSquareVelocityField(_problemParameters, _graphParameters);
-         showForm(new SquareVelocityFieldForm(field) {Text = Resources.VWSquareVelocityField});
-      }
-      
-      private void barotropicComponentToolStripMenuItemClick(object sender, EventArgs e)
+      private void barotropicComponentMenuItemClick(object sender, EventArgs e)
       {
          var barotropicComponent = new BarotropicComponentDataProvider(_problemParameters, _graphParameters);
          showForm(new BarotropicComponentForm(barotropicComponent));
       }
 
-      private void ekmanSpiralToolStripMenuItemClick(object sender, EventArgs e)
+      private void ekmanSpiralMenuItemClick(object sender, EventArgs e)
       {
          var ekmanSpiral = new EkmanSpiralDataProvider(_problemParameters, _graphParameters);
          showForm(new EkmanSpiralForm(ekmanSpiral));
       }
 
-      private void upwellingToolStripMenuItemClick(object sender, EventArgs e)
+      private void upwellingMenuItemClick(object sender, EventArgs e)
       {
          var upwelling = new UpwellingDataProvider(_problemParameters, _graphParameters);
          showForm(new UpwellingForm(upwelling));
       }
 
+      private void uvMenuItemClick(object sender, EventArgs e)
+      {
+         var field = new UVSquareVelocityField(_problemParameters, _graphParameters);
+         showForm(new SquareVelocityFieldForm(field) {Text = Resources.UVSquareVelocityField});
+      }
+
+      private void uwMenuItemClick(object sender, EventArgs e)
+      {
+         var field = new UWSquareVelocityField(_problemParameters, _graphParameters);
+         showForm(new SquareVelocityFieldForm(field) {Text = Resources.UWSquareVelocityField});
+      }
+
+      private void vwMenuItemClick(object sender, EventArgs e)
+      {
+         var field = new VWSquareVelocityField(_problemParameters, _graphParameters);
+         showForm(new SquareVelocityFieldForm(field) {Text = Resources.VWSquareVelocityField});
+      }
+      
       private void stommelModelToolStripMenuItemClick(object sender, EventArgs e)
       {
          showForm(new StommelModelForm());
