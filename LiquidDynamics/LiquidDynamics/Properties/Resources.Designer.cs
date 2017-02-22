@@ -61,6 +61,15 @@ namespace LiquidDynamics.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Баротропная компонента.
+        /// </summary>
+        internal static string Analytical_Barotropic_MessageBoxCaption {
+            get {
+                return ResourceManager.GetString("Analytical_Barotropic_MessageBoxCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Параметр {0} должен быть числом с плавающей точкой..
         /// </summary>
         internal static string Analytical_Barotropic_ParameterMustBeDouble {

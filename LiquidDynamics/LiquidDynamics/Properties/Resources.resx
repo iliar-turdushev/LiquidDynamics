@@ -193,4 +193,7 @@
   <data name="Analytical_Barotrpic_ParameterMustBeGreaterThanZero" xml:space="preserve">
     <value>Параметр {0} должен быть больше 0.</value>
   </data>
+  <data name="Analytical_Barotropic_MessageBoxCaption" xml:space="preserve">
+    <value>Баротропная компонента</value>
+  </data>
 </root>

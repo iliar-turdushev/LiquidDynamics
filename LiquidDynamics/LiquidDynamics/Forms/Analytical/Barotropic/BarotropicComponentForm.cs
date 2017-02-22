@@ -39,7 +39,7 @@ namespace LiquidDynamics.Forms.Analytical.Barotropic
          }
          catch (InvalidFieldValueException error)
          {
-            MessageBox.Show(error.Message, Resources.ApplicationName,
+            MessageBox.Show(error.Message, Resources.Analytical_Barotropic_MessageBoxCaption,
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
          }
       }
