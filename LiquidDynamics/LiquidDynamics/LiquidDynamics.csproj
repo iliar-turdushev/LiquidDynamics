@@ -114,13 +114,13 @@
     <Compile Include="Forms\BarotropicComponentNumerical\GridParameters.cs" />
     <Compile Include="Forms\BarotropicComponentNumerical\ModelWind.cs" />
     <Compile Include="Forms\BarotropicComponentNumerical\SchemeType.cs" />
-    <Compile Include="Forms\BarotropicComponent\BarotropicComponentForm.cs">
+    <Compile Include="Forms\Analytical\Barotropic\BarotropicComponentForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\BarotropicComponent\BarotropicComponentForm.Designer.cs">
+    <Compile Include="Forms\Analytical\Barotropic\BarotropicComponentForm.Designer.cs">
       <DependentUpon>BarotropicComponentForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\BarotropicComponent\BarotropicComponentDataProvider.cs" />
+    <Compile Include="Forms\Analytical\Barotropic\BarotropicComponentDataProvider.cs" />
     <Compile Include="Forms\EkmanSpiral\EkmanSpiralDataProvider.cs" />
     <Compile Include="Forms\EkmanSpiral\EkmanSpiralForm.cs">
       <SubType>Form</SubType>
@@ -318,7 +318,7 @@
     <EmbeddedResource Include="Forms\BarotropicComponentNumerical\BarotropicComponentNumericalForm.resx">
       <DependentUpon>BarotropicComponentNumericalForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\BarotropicComponent\BarotropicComponentForm.resx">
+    <EmbeddedResource Include="Forms\Analytical\Barotropic\BarotropicComponentForm.resx">
       <DependentUpon>BarotropicComponentForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\EkmanSpiral\EkmanSpiralForm.resx">

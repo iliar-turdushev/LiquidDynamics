@@ -2,9 +2,9 @@
 using System.Windows;
 using System.Windows.Forms;
 using LiquidDynamics.Controls;
+using LiquidDynamics.Forms.Analytical.Barotropic;
 using LiquidDynamics.Forms.BaroclinicComponent;
 using LiquidDynamics.Forms.BaroclinicStream;
-using LiquidDynamics.Forms.BarotropicComponent;
 using LiquidDynamics.Forms.BarotropicComponentNumerical;
 using LiquidDynamics.Forms.EkmanSpiral;
 using LiquidDynamics.Forms.IssykKul.Equation;
@@ -88,8 +88,7 @@ namespace LiquidDynamics
 
       private void barotropicComponentMenuItemClick(object sender, EventArgs e)
       {
-         var barotropicComponent = new BarotropicComponentDataProvider(_problemParameters, _graphParameters);
-         showForm(new BarotropicComponentForm(barotropicComponent));
+         showForm(new BarotropicComponentForm(_problemParameters));
       }
 
       private void ekmanSpiralMenuItemClick(object sender, EventArgs e)

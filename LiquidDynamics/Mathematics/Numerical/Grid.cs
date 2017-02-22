@@ -1,4 +1,6 @@
-﻿namespace Mathematics.Numerical
+﻿using System;
+
+namespace Mathematics.Numerical
 {
    public sealed class Grid
    {
@@ -30,9 +32,12 @@
 
       public int Nodes { get; private set; }
 
+      [Obsolete("Use indexer this[int index] instead of this method.")]
       public double Get(int index)
       {
          return _grid[index];
       }
+
+      public double this[int index] => _grid[index];
    }
 }

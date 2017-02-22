@@ -5,22 +5,18 @@ namespace ControlLibrary.Types
 {
    public sealed class Vector
    {
-      private readonly float _length;
-
       public Vector(PointF startPoint, PointF endPoint)
       {
          StartPoint = startPoint;
          EndPoint = endPoint;
-         _length = getVectorLength(endPoint);
+         Length = getVectorLength(endPoint);
       }
-
+      
       public PointF StartPoint { get; private set; }
+
       public PointF EndPoint { get; private set; }
 
-      public float Length
-      {
-         get { return _length; }
-      }
+      public float Length { get; private set; }
 
       private static float getVectorLength(PointF end)
       {
