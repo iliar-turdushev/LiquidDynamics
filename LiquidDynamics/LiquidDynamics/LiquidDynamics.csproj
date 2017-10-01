@@ -248,6 +248,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Wind\IWind.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\ProblemParametersControl.xaml.cs">
