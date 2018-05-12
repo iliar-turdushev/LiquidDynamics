@@ -247,6 +247,7 @@
     <Compile Include="MathModel\Grid.cs" />
     <Compile Include="MathModel\MeasureUnit.cs" />
     <Compile Include="MathModel\MeasureUnitConverter.cs" />
+    <Compile Include="MathModel\TestProblem\Wind.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -15,7 +15,8 @@ namespace LiquidDynamics.Views.TestProblem
    {
       private static readonly string[] Graphs =
          {
-            "Касательное напряжение трения ветра"
+            "Касательное напряжение трения ветра",
+            "Скорость ветра"
          };
 
       private static readonly Pen VectorPen = new Pen(Color.Red, 1) {EndCap = LineCap.ArrowAnchor};
@@ -27,12 +28,16 @@ namespace LiquidDynamics.Views.TestProblem
          initCbGraphs();
       }
 
-      private void btnRun_Click(object sender, System.EventArgs e)
+      private void btnRun_Click(object sender, EventArgs e)
       {
          switch (_cbGraph.SelectedIndex)
          {
             case 0:
                buildTau();
+               break;
+
+            case 1:
+               buildWind();
                break;
          }
       }
@@ -96,40 +101,55 @@ namespace LiquidDynamics.Views.TestProblem
 
       private void buildTau()
       {
-         double f1;
-         double f2;
-         double r;
-         double q;
-         int nx;
-         int ny;
+         Grid gx; // 1
+         Grid gy; // 1
+         Tau tau; // 1
 
+         if (calcTau(out tau, out gx, out gy))
+         {
+            Tau t = DimTau(tau); // г/(см*с^2)
+            Grid x = DimLen(gx); // см
+            Grid y = DimLen(gy); // см
+            drawVectors(t.TauX, t.TauY, x, y);
+         }
+      }
+
+      // [gx] = [gy] = 1
+      // [tau] = 1
+      private bool calcTau(out Tau tau, out Grid gx, out Grid gy)
+      {
          try
          {
-            f1 = getF1(); // 1
-            f2 = getF2(); // 1
-            r = getR(); // 1
-            q = getQ(); // 1
-            nx = getNx();
-            ny = getNy();
+            double f1 = getF1(); // 1
+            double f2 = getF2(); // 1
+            double r = getR(); // 1
+            double q = getQ(); // 1
+            int nx = getNx();
+            int ny = getNy();
+
+            gx = new Grid(r, nx); // 1
+            gy = new Grid(q, ny); // 1
+            tau = Tau.Calc(f1, f2, r, q, gx, gy); // 1
+
+            return true;
          }
          catch (FormatException e)
          {
             showErrorMessage(e);
-            return;
-         }
 
-         var gx = new Grid(r, nx); // 1
-         var gy = new Grid(q, ny); // 1
-         Tau tau = Tau.Calc(f1, f2, r, q, gx, gy); // 1
-         
-         drawTau(DimTau(tau), DimLen(gx), DimLen(gy));
+            gx = null;
+            gy = null;
+            tau = null;
+
+            return false;
+         }
       }
-      
-      // [tau] = г/(см*с^2)
+
+      // [vx] = [vy] = размерные величины
       // [gx] = [gy] = см
-      private void drawTau(Tau tau, Grid gx, Grid gy)
+      private void drawVectors(double[,] vx, double[,] vy, Grid gx, Grid gy)
       {
-         SquareVelocityField vectors = buildVectorField(tau, gx, gy);
+         SquareVelocityField vectors = buildVectorField(vx, vy, gx, gy);
 
          _gcGraph.Clear();
          _gcGraph.Caption = Graphs[_cbGraph.SelectedIndex];
@@ -142,11 +162,11 @@ namespace LiquidDynamics.Views.TestProblem
          _gcGraph.Invalidate();
       }
 
-      // [tau] = г/(см*с^2)
+      // [vx] = [vy] = размерные величины
       // [gx] = [gy] = см
-      private static SquareVelocityField buildVectorField(Tau tau, Grid gx, Grid gy)
+      private static SquareVelocityField buildVectorField(double[,] vx, double[,] vy, Grid gx, Grid gy)
       {
-         var vecs = new Vector[tau.Ny, tau.Ny];
+         var vecs = new Vector[gx.N, gy.N];
 
          for (int i = 0; i < gx.N; i++)
          {
@@ -155,8 +175,8 @@ namespace LiquidDynamics.Views.TestProblem
             for (int j = 0; j < gy.N; j++)
             {
                var sy = (float) ToKm(gy[j], MeasureUnit.Cm); // км
-               var ex = (float) tau.TauX[i, j];
-               var ey = (float) tau.TauY[i, j];
+               var ex = (float) vx[i, j];
+               var ey = (float) vy[i, j];
                vecs[i, j] = new Vector(sx, sy, ex, ey);
             }
          }
@@ -165,6 +185,23 @@ namespace LiquidDynamics.Views.TestProblem
          float h = (float) ToKm(gy.H, MeasureUnit.Cm); // км
 
          return new SquareVelocityField(vecs, w, h);
+      }
+
+      private void buildWind()
+      {
+         Grid gx; // 1
+         Grid gy; // 1
+         Tau tau; // 1
+
+         if (calcTau(out tau, out gx, out gy))
+         {
+            Wind wind = Wind.Create(tau); // 1
+
+            Wind w = DimWind(wind); // см/с
+            Grid x = DimLen(gx); // см
+            Grid y = DimLen(gy); // см
+            drawVectors(w.Wx, w.Wy, x, y);
+         }
       }
    }
 }

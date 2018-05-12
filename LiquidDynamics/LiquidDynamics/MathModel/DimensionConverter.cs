@@ -4,14 +4,16 @@ namespace LiquidDynamics.MathModel
 {
    public static class DimensionConverter
    {
-      private const double L0 = 1E+7;        // см
-      private const double H0S = 3 * 1E+4;   // см
-      private const double U0S = 5;          // см/с
-      private const double L0S = 1E-4;       // 1/с
-      private const double Rho0S = 1;        // г/см^3
+      public const double L0 = 1E+7;            // см
+      public const double H0S = 3 * 1E+4;       // см
+      public const double U0S = 5;              // см/с
+      public const double L0S = 1E-4;           // 1/с
+      public const double Rho0S = 1;            // г/см^3
+      public const double W0 = 10;              // см/с
+      public const double Gamma = 3.25 * 1E-6;  // г/см^3
 
-      private const double TauCoef = Rho0S * U0S * H0S * L0S; // г/(см*с^2)
-
+      public const double TauCoef = Rho0S * U0S * H0S * L0S; // г/(см*с^2)
+      
       // [len] = 1
       // [out] = см
       public static double DimLen(double len) => len * L0;
@@ -54,5 +56,24 @@ namespace LiquidDynamics.MathModel
       // [tau] = г/(см*с^2)
       // [out] = 1
       public static double DimlTau(double tau) => tau / TauCoef;
+      
+      // [wind] = 1
+      // [out] = см/с
+      public static Wind DimWind(Wind wind)
+      {
+         double[,] wx = new double[wind.Nx, wind.Ny];
+         double[,] wy = new double[wind.Nx, wind.Ny];
+
+         for (int i = 0; i < wind.Nx; i++)
+         {
+            for (int j = 0; j < wind.Ny; j++)
+            {
+               wx[i, j] = W0 * wind.Wx[i, j];
+               wy[i, j] = W0 * wind.Wy[i, j];
+            }
+         }
+
+         return new Wind(wx, wy, wind.Nx, wind.Ny);
+      }
    }
 }
