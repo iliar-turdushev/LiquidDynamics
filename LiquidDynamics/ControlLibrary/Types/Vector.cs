@@ -5,13 +5,18 @@ namespace ControlLibrary.Types
 {
    public sealed class Vector
    {
+      public Vector(float sx, float sy, float ex, float ey)
+         : this(new PointF(sx, sy), new PointF(ex, ey))
+      {
+      }
+
       public Vector(PointF startPoint, PointF endPoint)
       {
          StartPoint = startPoint;
          EndPoint = endPoint;
          Length = getVectorLength(endPoint);
       }
-      
+
       public PointF StartPoint { get; private set; }
 
       public PointF EndPoint { get; private set; }

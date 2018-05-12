@@ -243,12 +243,23 @@
     <Compile Include="Forms\VerticalComponentNumerical\VerticalComponentProblemSolver.cs" />
     <Compile Include="Forms\VerticalComponentNumerical\VerticalComponentResult.cs" />
     <Compile Include="Forms\VerticalComponentNumerical\VerticalProblemSolver.cs" />
+    <Compile Include="MathModel\DimensionConverter.cs" />
+    <Compile Include="MathModel\Grid.cs" />
+    <Compile Include="MathModel\MeasureUnit.cs" />
+    <Compile Include="MathModel\MeasureUnitConverter.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Wind\IWind.cs" />
+    <Compile Include="MathModel\TestProblem\Tau.cs" />
+    <Compile Include="Utils\StringConverter.cs" />
+    <Compile Include="Views\TestProblem\TestProblemForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\TestProblem\TestProblemForm.Designer.cs">
+      <DependentUpon>TestProblemForm.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\ProblemParametersControl.xaml.cs">
@@ -369,6 +380,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\TestProblem\TestProblemForm.resx">
+      <DependentUpon>TestProblemForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

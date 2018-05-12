@@ -1,6 +1,6 @@
 ﻿namespace LiquidDynamics
 {
-   internal partial class MainForm
+   public partial class MainForm
    {
       /// <summary>
       /// Required designer variable.
@@ -29,6 +29,7 @@
       private void InitializeComponent()
       {
          this._menuStrip = new System.Windows.Forms.MenuStrip();
+         this._miTestProblem = new System.Windows.Forms.ToolStripMenuItem();
          this._problemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this._problemParametersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this._testProblemMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,6 +62,7 @@
          // _menuStrip
          // 
          this._menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._miTestProblem,
             this._problemToolStripMenuItem,
             this._testProblemMenuItem,
             this._barotropicComponentSolutionToolStripMenuItem,
@@ -76,6 +78,13 @@
          this._menuStrip.Size = new System.Drawing.Size(1370, 24);
          this._menuStrip.TabIndex = 0;
          this._menuStrip.Text = "MenuStrip";
+         // 
+         // _miTestProblem
+         // 
+         this._miTestProblem.Name = "_miTestProblem";
+         this._miTestProblem.Size = new System.Drawing.Size(107, 20);
+         this._miTestProblem.Text = "Тестовая задача";
+         this._miTestProblem.Click += new System.EventHandler(this.miTestProblem_Click);
          // 
          // _problemToolStripMenuItem
          // 
@@ -153,21 +162,21 @@
          // _uvMenuItem
          // 
          this._uvMenuItem.Name = "_uvMenuItem";
-         this._uvMenuItem.Size = new System.Drawing.Size(152, 22);
+         this._uvMenuItem.Size = new System.Drawing.Size(104, 22);
          this._uvMenuItem.Text = "(u, v)";
          this._uvMenuItem.Click += new System.EventHandler(this.uvMenuItemClick);
          // 
          // _uwMenuItem
          // 
          this._uwMenuItem.Name = "_uwMenuItem";
-         this._uwMenuItem.Size = new System.Drawing.Size(152, 22);
+         this._uwMenuItem.Size = new System.Drawing.Size(104, 22);
          this._uwMenuItem.Text = "(u, w)";
          this._uwMenuItem.Click += new System.EventHandler(this.uwMenuItemClick);
          // 
          // _vwMenuItem
          // 
          this._vwMenuItem.Name = "_vwMenuItem";
-         this._vwMenuItem.Size = new System.Drawing.Size(152, 22);
+         this._vwMenuItem.Size = new System.Drawing.Size(104, 22);
          this._vwMenuItem.Text = "(v, w)";
          this._vwMenuItem.Click += new System.EventHandler(this.vwMenuItemClick);
          // 
@@ -285,7 +294,7 @@
          this.IsMdiContainer = true;
          this.MainMenuStrip = this._menuStrip;
          this.Name = "MainForm";
-         this.Text = "Тестовая задача";
+         this.Text = "Гидродинамика";
          this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
          this._menuStrip.ResumeLayout(false);
          this._menuStrip.PerformLayout();
@@ -323,6 +332,7 @@
       private System.Windows.Forms.ToolStripMenuItem _uvMenuItem;
       private System.Windows.Forms.ToolStripMenuItem _uwMenuItem;
       private System.Windows.Forms.ToolStripMenuItem _vwMenuItem;
+      private System.Windows.Forms.ToolStripMenuItem _miTestProblem;
    }
 }
 

@@ -17,6 +17,15 @@ namespace ControlLibrary.Types
          CellSize = cellSize;
       }
 
+      public SquareVelocityField(Vector[,] vectors, float width, float height)
+      {
+         if (vectors == null)
+            throw new ArgumentNullException(nameof (vectors));
+
+         Vectors = vectors;
+         CellSize = new SizeF(width, height);
+      }
+
       public Vector[,] Vectors { get; private set; }
       public SizeF CellSize { get; private set; }
 

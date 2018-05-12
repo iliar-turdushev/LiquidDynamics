@@ -15,16 +15,16 @@ using LiquidDynamics.Forms.IssykKul.Wind;
 using LiquidDynamics.Forms.Kriging;
 using LiquidDynamics.Forms.ParametersForms;
 using LiquidDynamics.Forms.StommelModel;
-using LiquidDynamics.Forms.TestProblem;
 using LiquidDynamics.Forms.Upwelling;
 using LiquidDynamics.Forms.VelocityField;
 using LiquidDynamics.Forms.VerticalComponentNumerical;
 using LiquidDynamics.Properties;
+using LiquidDynamics.Views.TestProblem;
 using ModelProblem;
 
 namespace LiquidDynamics
 {
-   internal partial class MainForm : Form
+   public partial class MainForm : Form
    {
       private readonly Parameters _problemParameters;
       private readonly GraphParameters _graphParameters;
@@ -163,7 +163,7 @@ namespace LiquidDynamics
 
       private void testProblemToolStripMenuItemClick(object sender, EventArgs e)
       {
-         showForm(new TestProblemForm(_problemParameters));
+         showForm(new Forms.TestProblem.TestProblemForm(_problemParameters));
       }
 
       private void issykKulToolStripMenuItemClick(object sender, EventArgs e)
@@ -179,6 +179,11 @@ namespace LiquidDynamics
       private void streamToolStripMenuItem_Click(object sender, EventArgs e)
       {
          showForm(new BaroclinicStreamForm(_problemParameters));
+      }
+      
+      private void miTestProblem_Click(object sender, EventArgs e)
+      {
+         showForm(new TestProblemForm());
       }
    }
 }
