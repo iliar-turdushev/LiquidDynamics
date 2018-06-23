@@ -62,11 +62,15 @@
          this._gcGraph.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+         this._gcGraph.BackColor = System.Drawing.SystemColors.Control;
+         this._gcGraph.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
          this._gcGraph.Caption = "График";
          this._gcGraph.Location = new System.Drawing.Point(12, 12);
          this._gcGraph.Name = "_gcGraph";
          this._gcGraph.Size = new System.Drawing.Size(720, 470);
          this._gcGraph.TabIndex = 0;
+         this._gcGraph.XAxisName = null;
+         this._gcGraph.YAxisName = null;
          // 
          // _gbGraph
          // 

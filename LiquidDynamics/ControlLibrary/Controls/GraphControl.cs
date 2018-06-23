@@ -21,8 +21,11 @@ namespace ControlLibrary.Controls
       private const int HorizontalBarOffsetBottom = 60;
       private const int VerticalBarOffsetLeft = 80;
 
+      private const int XAxisNameOffset = 35;
+      private const int YAxisNameOffset = 10;
+
       private const int ShiftFromLegend = 30;
-      private const int LegendOffset = 35;
+      private const int LegendOffset = 20;
       private const int LegendElementLength = 40;
       private const int LegendItemsStep = 20;
       private const int LegendTextStep = 5;
@@ -40,15 +43,18 @@ namespace ControlLibrary.Controls
       private static readonly Pen MajorTicksPen = new Pen(Color.Black, 1);
       private static readonly Pen MinorTicksPen = new Pen(Color.Black, 1);
 
-      private static readonly Font CaptionFont = new Font("Courier New", 10);
-      private static readonly Brush CaptionBrush = Brushes.Blue;
+      private static readonly Font CaptionFont = new Font("Segoe UI", 14);
+      private static readonly Brush CaptionBrush = Brushes.Black;
 
       private const string LabelFormat = "F3";
-      private static readonly Font LabelFont = new Font("Courier New", 8);
+      private static readonly Font LabelFont = new Font("Segoe UI", 8);
       private static readonly Brush LabelBrush = Brushes.Blue;
 
-      private static readonly Font LegendFont = new Font("Courier New", 10);
-      private static readonly Brush LegendBrush = Brushes.Blue;
+      private static readonly Font LegendFont = new Font("Segoe UI", 10);
+      private static readonly Brush LegendBrush = Brushes.Black;
+
+      private static readonly Font AxisNameFont = new Font("Segoe UI", 10, FontStyle.Bold);
+      private static readonly Brush AxisNameBrush = Brushes.Black;
 
       #endregion
 
@@ -65,15 +71,19 @@ namespace ControlLibrary.Controls
 
          _drawers = new List<IGraphDrawer>();
          _legendItems = new List<LegendItem>();
+
          AxisBounds = new Bounds(0, 1, 0, 1);
       }
 
       public string Caption { get; set; }
+      public string XAxisName { get; set; }
+      public string YAxisName { get; set; }
       public Bounds AxisBounds { get; set; }
 
       public void Clear()
       {
          _drawers.Clear();
+         _legendItems.Clear();
       }
 
       public void DrawVelocityField(SquareVelocityField velocityField, Pen vectorPen)
@@ -125,26 +135,19 @@ namespace ControlLibrary.Controls
 
       protected override void OnPaint(PaintEventArgs args)
       {
-         var drawingContext = args.Graphics;
-         drawingContext.SmoothingMode = SmoothingMode.AntiAlias;
+         Graphics g = args.Graphics;
+         g.SmoothingMode = SmoothingMode.AntiAlias;
 
          var rectangle = new Rectangle(OffsetLeft, OffsetTop,
                                        DisplayRectangle.Width - (OffsetLeft + OffsetRight),
                                        DisplayRectangle.Height - (OffsetTop + getOffsetBottom()));
 
-         if (!string.IsNullOrEmpty(Caption))
-            drawCaption(drawingContext);
-
-         if (AxisBounds != null)
-            drawAxisBars(drawingContext);
-         
-         if (_drawers.Count > 0)
-            drawGraphs(drawingContext, rectangle);
-
-         drawAxisBox(drawingContext, rectangle);
-
-         if (_legendItems.Count > 0)
-            drawLegend(drawingContext);
+         drawCaption(g);
+         drawAxisBars(g);
+         drawAxisBox(g, rectangle);
+         drawAxisNames(g);
+         drawLegend(g);
+         drawGraphs(g, rectangle);
       }
 
       protected override void OnResize(EventArgs e)
@@ -153,20 +156,18 @@ namespace ControlLibrary.Controls
          Invalidate();
       }
 
-      private void drawCaption(Graphics drawingContext)
+      private void drawCaption(Graphics g)
       {
-         var size = drawingContext.MeasureString(Caption, CaptionFont);
-         var x = (DisplayRectangle.Width - size.Width) / 2;
-         var y = (OffsetTop - size.Height) / 2;
-         drawingContext.DrawString(Caption, CaptionFont, CaptionBrush, x, y);
+         if (!string.IsNullOrEmpty(Caption))
+         {
+            SizeF size = g.MeasureString(Caption, CaptionFont);
+            float x = (DisplayRectangle.Width - size.Width) / 2;
+            float y = (OffsetTop - size.Height) / 2;
+            g.DrawString(Caption, CaptionFont, CaptionBrush, x, y);
+         }
       }
 
-      private void drawAxisBox(Graphics drawingContext, Rectangle rectangle)
-      {
-         drawingContext.DrawRectangle(AxisBoxPen, rectangle);
-      }
-
-      private void drawAxisBars(Graphics drawingContext)
+      private void drawAxisBars(Graphics g)
       {
          const float xStart = OffsetLeft;
          const float yStart = OffsetTop;
@@ -175,16 +176,16 @@ namespace ControlLibrary.Controls
          const float x = VerticalBarOffsetLeft;
          float y = DisplayRectangle.Height - getHorizontalBarOffsetBottom();
 
-         drawingContext.DrawLine(AxisPen, xStart, y, xEnd, y);
-         drawingContext.DrawLine(AxisPen, x, yStart, x, yEnd);
+         g.DrawLine(AxisPen, xStart, y, xEnd, y);
+         g.DrawLine(AxisPen, x, yStart, x, yEnd);
          
-         var drawMajorXTick = getHorizontalTickDrawer(drawingContext, MajorTicksPen, y, MajorTicksLength);
-         var drawMajorYTick = getVerticalTickDrawer(drawingContext, MajorTicksPen, x, MajorTicksLength);
-         var drawMinorXTick = getHorizontalTickDrawer(drawingContext, MinorTicksPen, y, MinorTicksLength);
-         var drawMinorYTick = getVerticalTickDrawer(drawingContext, MinorTicksPen, x, MinorTicksLength);
+         var drawMajorXTick = getHorizontalTickDrawer(g, MajorTicksPen, y, MajorTicksLength);
+         var drawMajorYTick = getVerticalTickDrawer(g, MajorTicksPen, x, MajorTicksLength);
+         var drawMinorXTick = getHorizontalTickDrawer(g, MinorTicksPen, y, MinorTicksLength);
+         var drawMinorYTick = getVerticalTickDrawer(g, MinorTicksPen, x, MinorTicksLength);
 
-         var drawHorizontalLabel = getHorizontalLabelDrawer(drawingContext, y + MajorTicksLength + TickLabelOffset);
-         var drawVerticalLabel = getVerticalLabelDrawer(drawingContext, x - MajorTicksLength - TickLabelOffset);
+         var drawHorizontalLabel = getHorizontalLabelDrawer(g, y + MajorTicksLength + TickLabelOffset);
+         var drawVerticalLabel = getVerticalLabelDrawer(g, x - MajorTicksLength - TickLabelOffset);
 
          var xCurrent = xStart;
          var xStep = (xEnd - xStart) / (MajorTicksCount - 1);
@@ -229,36 +230,88 @@ namespace ControlLibrary.Controls
          }
       }
 
-      private void drawGraphs(Graphics drawingContext, Rectangle clipRectangle)
+      private void drawAxisBox(Graphics drawingContext, Rectangle rectangle)
       {
-         drawingContext.SetClip(clipRectangle);
-         _drawers.ForEach(drawer => drawer.Draw(drawingContext, new CoordinatesConverter(clipRectangle, AxisBounds)));
-         drawingContext.ResetClip();
+         drawingContext.DrawRectangle(AxisBoxPen, rectangle);
       }
 
-      private Action<float> getHorizontalTickDrawer(Graphics drawingContext, Pen pen, float y, float tickLength)
+      private void drawAxisNames(Graphics g)
       {
-         var tickXStart = y - tickLength;
-         var tickXEnd = y + tickLength;
+         if (!string.IsNullOrEmpty(XAxisName))
+         {
+            SizeF sz = g.MeasureString(XAxisName, AxisNameFont);
+            float x = (DisplayRectangle.Width - OffsetRight + OffsetLeft - sz.Width) / 2;
+            float y = DisplayRectangle.Height - getHorizontalBarOffsetBottom() + XAxisNameOffset;
+            g.DrawString(XAxisName, AxisNameFont, AxisNameBrush, x, y);
+         }
 
-         return x => drawingContext.DrawLine(pen, x, tickXStart, x, tickXEnd);
+         if (!string.IsNullOrEmpty(YAxisName))
+         {
+            var fmt = new StringFormat(StringFormatFlags.DirectionVertical);
+            SizeF sz = g.MeasureString(YAxisName, AxisNameFont, Point.Empty, fmt);
+            float y = (DisplayRectangle.Height + OffsetTop - getOffsetBottom() - sz.Height) / 2;
+            g.DrawString(YAxisName, AxisNameFont, AxisNameBrush, YAxisNameOffset, y, fmt);
+         }
       }
 
-      private Action<float> getVerticalTickDrawer(Graphics drawingContext, Pen pen, float x, float tickLength)
+      private void drawLegend(Graphics g)
       {
-         var tickYStart = x - tickLength;
-         var tickYEnd = x + tickLength;
+         if (_legendItems.Count == 0)
+            return;
 
-         return y => drawingContext.DrawLine(pen, tickYStart, y, tickYEnd, y);
+         float x = OffsetLeft;
+         float y = DisplayRectangle.Height - LegendOffset;
+
+         foreach (LegendItem li in _legendItems)
+         {
+            float xEnd = x + LegendElementLength;
+            g.DrawLine(li.Pen, x, y, xEnd, y);
+
+            SizeF size = g.MeasureString(li.Text, LegendFont);
+            g.DrawString(li.Text, LegendFont, LegendBrush, xEnd + LegendTextStep, y - size.Height / 2);
+
+            x += LegendElementLength + LegendItemsStep + size.Width;
+         }
       }
 
-      private Action<float, float> getHorizontalLabelDrawer(Graphics drawingContext, float top)
+      private void drawGraphs(Graphics g, Rectangle rect)
+      {
+         if (_drawers.Count == 0)
+            return;
+
+         g.SetClip(rect);
+         var c = new CoordinatesConverter(rect, AxisBounds);
+         _drawers.ForEach(drawer => drawer.Draw(g, c));
+         g.ResetClip();
+      }
+
+      private int getOffsetBottom()
+      {
+         return OffsetBottom + (_legendItems.Count == 0 ? 0 : ShiftFromLegend);
+      }
+
+      private int getHorizontalBarOffsetBottom()
+      {
+         return HorizontalBarOffsetBottom + (_legendItems.Count == 0 ? 0 : ShiftFromLegend);
+      }
+
+      private static Action<float> getHorizontalTickDrawer(Graphics g, Pen pen, float y, float tickLen)
+      {
+         return x => g.DrawLine(pen, x, y - tickLen, x, y + tickLen);
+      }
+
+      private static Action<float> getVerticalTickDrawer(Graphics g, Pen pen, float x, float tickLen)
+      {
+         return y => g.DrawLine(pen, x - tickLen, y, x + tickLen, y);
+      }
+
+      private Action<float, float> getHorizontalLabelDrawer(Graphics g, float top)
       {
          return (x, value) =>
                    {
-                      var text = value.ToString(LabelFormat);
-                      var size = drawingContext.MeasureString(text, LabelFont);
-                      drawingContext.DrawString(text, LabelFont, LabelBrush, x - size.Width / 2, top);
+                      string text = value.ToString(LabelFormat);
+                      SizeF size = g.MeasureString(text, LabelFont);
+                      g.DrawString(text, LabelFont, LabelBrush, x - size.Width / 2, top);
                    };
       }
 
@@ -270,34 +323,6 @@ namespace ControlLibrary.Controls
                       var size = drawingContext.MeasureString(text, LabelFont);
                       drawingContext.DrawString(text, LabelFont, LabelBrush, right - size.Width, y - size.Height / 2);
                    };
-      }
-
-      private void drawLegend(Graphics drawingContext)
-      {
-         float x = OffsetLeft;
-         float y = DisplayRectangle.Height - LegendOffset;
-
-         foreach (var legendItem in _legendItems)
-         {
-            var xEnd = x + LegendElementLength;
-            drawingContext.DrawLine(legendItem.Pen, x, y, xEnd, y);
-
-            var size = drawingContext.MeasureString(legendItem.Text, LegendFont);
-            drawingContext.DrawString(legendItem.Text, LegendFont, LegendBrush,
-                                      xEnd + LegendTextStep, y - size.Height / 2);
-            
-            x += LegendElementLength + LegendItemsStep + size.Width;
-         }
-      }
-
-      private int getOffsetBottom()
-      {
-         return OffsetBottom + (_legendItems.Count == 0 ? 0 : ShiftFromLegend);
-      }
-
-      private int getHorizontalBarOffsetBottom()
-      {
-         return HorizontalBarOffsetBottom + (_legendItems.Count == 0 ? 0 : ShiftFromLegend);
       }
    }
 }

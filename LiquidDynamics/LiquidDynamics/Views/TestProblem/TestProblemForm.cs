@@ -110,7 +110,23 @@ namespace LiquidDynamics.Views.TestProblem
             Tau t = DimTau(tau); // г/(см*с^2)
             Grid x = DimLen(gx); // см
             Grid y = DimLen(gy); // см
-            drawVectors(t.TauX, t.TauY, x, y);
+            drawVectors(t.TauX, t.TauY, x, y, "г / (см * с^2)");
+         }
+      }
+
+      private void buildWind()
+      {
+         Grid gx; // 1
+         Grid gy; // 1
+         Tau tau; // 1
+
+         if (calcTau(out tau, out gx, out gy))
+         {
+            Wind wind = Wind.Create(tau); // 1
+            Wind w = DimWind(wind); // см/с
+            Grid x = DimLen(gx); // см
+            Grid y = DimLen(gy); // см
+            drawVectors(w.Wx, w.Wy, x, y, "см / с");
          }
       }
 
@@ -147,17 +163,18 @@ namespace LiquidDynamics.Views.TestProblem
 
       // [vx] = [vy] = размерные величины
       // [gx] = [gy] = см
-      private void drawVectors(double[,] vx, double[,] vy, Grid gx, Grid gy)
+      private void drawVectors(double[,] vx, double[,] vy, Grid gx, Grid gy, string legendText)
       {
          SquareVelocityField vectors = buildVectorField(vx, vy, gx, gy);
+         float x = (float) ToKm(gx[gx.N - 1], MeasureUnit.Cm); // км
+         float y = (float) ToKm(gy[gy.N - 1], MeasureUnit.Cm); // км
 
          _gcGraph.Clear();
          _gcGraph.Caption = Graphs[_cbGraph.SelectedIndex];
-
-         float x = (float) ToKm(gx[gx.N - 1], MeasureUnit.Cm); // км
-         float y = (float) ToKm(gy[gy.N - 1], MeasureUnit.Cm); // км
+         _gcGraph.XAxisName = "x, км";
+         _gcGraph.YAxisName = "y, км";
+         _gcGraph.AddLegend(legendText, VectorPen);
          _gcGraph.AxisBounds = new Bounds(0, x, 0, y);
-
          _gcGraph.DrawVelocityField(vectors, VectorPen);
          _gcGraph.Invalidate();
       }
@@ -185,23 +202,6 @@ namespace LiquidDynamics.Views.TestProblem
          float h = (float) ToKm(gy.H, MeasureUnit.Cm); // км
 
          return new SquareVelocityField(vecs, w, h);
-      }
-
-      private void buildWind()
-      {
-         Grid gx; // 1
-         Grid gy; // 1
-         Tau tau; // 1
-
-         if (calcTau(out tau, out gx, out gy))
-         {
-            Wind wind = Wind.Create(tau); // 1
-
-            Wind w = DimWind(wind); // см/с
-            Grid x = DimLen(gx); // см
-            Grid y = DimLen(gy); // см
-            drawVectors(w.Wx, w.Wy, x, y);
-         }
       }
    }
 }

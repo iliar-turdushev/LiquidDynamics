@@ -2,11 +2,6 @@ namespace ControlLibrary.Types
 {
    public sealed class Bounds
    {
-      public float XMin { get; set; }
-      public float XMax { get; set; }
-      public float YMin { get; set; }
-      public float YMax { get; set; }
-
       public Bounds(float xMin, float xMax, float yMin, float yMax)
       {
          XMin = xMin;
@@ -14,5 +9,10 @@ namespace ControlLibrary.Types
          YMin = yMin;
          YMax = yMax;
       }
+
+      public float XMin { get; }
+      public float XMax { get; }
+      public float YMin { get; }
+      public float YMax { get; }
    }
 }
