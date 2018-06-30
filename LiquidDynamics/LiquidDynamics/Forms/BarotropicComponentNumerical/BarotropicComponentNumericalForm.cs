@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using BarotropicComponentProblem.IterationMethod;
 using Common;
 using ControlLibrary.Controls;
-using ControlLibrary.Drawing;
+using ControlLibrary.Graphs;
 using ControlLibrary.Types;
 using LiquidDynamics.Properties;
 using ModelProblem;

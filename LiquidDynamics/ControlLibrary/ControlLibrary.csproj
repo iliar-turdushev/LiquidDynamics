@@ -64,7 +64,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BluePalette.cs" />
+    <Compile Include="Graphs\BluePalette.cs" />
     <Compile Include="Graphs\Graphs2D\CurveDrawer.cs" />
     <Compile Include="Graphs\Graphs2D\FilledRectangleDrawer.cs" />
     <Compile Include="Graphs\Graphs2D\LinesDrawer.cs" />
@@ -72,19 +72,20 @@
     <Compile Include="Graphs\Graphs2D\RectangleDrawer.cs" />
     <Compile Include="Graphs\Graphs2D\SquareVelocityFieldDrawer.cs" />
     <Compile Include="Graphs\Graphs3D\Curve3DDrawer.cs" />
-    <Compile Include="Drawing\IPaletteDrawingTools.cs" />
-    <Compile Include="Drawing\PaletteFactory.cs" />
-    <Compile Include="BlueRedPalette.cs" />
+    <Compile Include="Graphs\IPaletteDrawingTools.cs" />
+    <Compile Include="Graphs\PaletteFactory.cs" />
+    <Compile Include="Graphs\BlueRedPalette.cs" />
     <Compile Include="Graphs\Graphs3D\CustomDrawer.cs" />
     <Compile Include="Graphs\Graphs3D\IGraphDrawer3D.cs" />
     <Compile Include="Graphs\Graphs3D\Lines3DDrawer.cs" />
     <Compile Include="Graphs\Graphs3D\Points3DDrawer.cs" />
     <Compile Include="Graphs\Graphs3D\Rectangles3DDrawer.cs" />
     <Compile Include="Graphs\Graphs3D\Surface3DDrawer.cs" />
-    <Compile Include="LegendItem.cs" />
+    <Compile Include="Graphs\LegendItem.cs" />
     <Compile Include="Types\Bounds.cs" />
     <Compile Include="Types\Bounds3D.cs" />
-    <Compile Include="CoordinatesConverter.cs" />
+    <Compile Include="Graphs\CoordinatesConverter.cs" />
+    <Compile Include="Types\ColorMap.cs" />
     <Compile Include="Types\Curve3D.cs" />
     <Compile Include="Controls\Graph3DControl.cs">
       <SubType>UserControl</SubType>
@@ -93,7 +94,7 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Graphs\Graphs2D\IGraphDrawer.cs" />
-    <Compile Include="PaletteBase.cs" />
+    <Compile Include="Graphs\PaletteBase.cs" />
     <Compile Include="Controls\PaletteControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

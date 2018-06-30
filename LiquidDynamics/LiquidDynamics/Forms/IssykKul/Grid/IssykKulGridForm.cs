@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using ControlLibrary.Controls;
-using ControlLibrary.Drawing;
+using ControlLibrary.Graphs;
 using ControlLibrary.Types;
 using LiquidDynamics.Properties;
 using Tao.OpenGl;

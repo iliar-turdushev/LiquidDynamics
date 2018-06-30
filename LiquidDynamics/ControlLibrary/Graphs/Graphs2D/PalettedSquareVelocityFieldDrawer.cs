@@ -1,7 +1,6 @@
 using System;
 using System.Drawing;
 using Common;
-using ControlLibrary.Drawing;
 using ControlLibrary.Types;
 
 namespace ControlLibrary.Graphs.Graphs2D

@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using ControlLibrary.Types;
 
-namespace ControlLibrary
+namespace ControlLibrary.Graphs
 {
    internal sealed class CoordinatesConverter
    {

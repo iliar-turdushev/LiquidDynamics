@@ -1,4 +1,4 @@
-namespace ControlLibrary.Drawing
+namespace ControlLibrary.Graphs
 {
    public static class PaletteFactory
    {

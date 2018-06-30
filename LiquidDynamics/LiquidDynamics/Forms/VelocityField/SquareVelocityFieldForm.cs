@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using Common;
-using ControlLibrary.Drawing;
+using ControlLibrary.Graphs;
 using LiquidDynamics.Properties;
 
 namespace LiquidDynamics.Forms.VelocityField

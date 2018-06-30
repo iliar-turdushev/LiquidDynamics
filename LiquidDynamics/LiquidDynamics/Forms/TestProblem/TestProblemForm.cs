@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using BarotropicComponentProblem;
 using BarotropicComponentProblem.IssykKulGrid;
 using Common;
-using ControlLibrary.Drawing;
+using ControlLibrary.Graphs;
 using ControlLibrary.Types;
 using LiquidDynamics.Forms.BarotropicComponentNumerical;
 using LiquidDynamics.Properties;

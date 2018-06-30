@@ -4,7 +4,7 @@ using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Windows.Forms;
 using Common;
-using ControlLibrary.Drawing;
+using ControlLibrary.Graphs;
 using ControlLibrary.Types;
 using LiquidDynamics.Properties;
 using ModelProblem;

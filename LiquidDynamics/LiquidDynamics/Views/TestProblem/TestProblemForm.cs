@@ -175,7 +175,7 @@ namespace LiquidDynamics.Views.TestProblem
          _gcGraph.YAxisName = "y, км";
          _gcGraph.AddLegend(legendText, VectorPen);
          _gcGraph.AxisBounds = new Bounds(0, x, 0, y);
-         _gcGraph.DrawVelocityField(vectors, VectorPen);
+         _gcGraph.DrawVectorField(vectors, VectorPen);
          _gcGraph.Invalidate();
       }
 

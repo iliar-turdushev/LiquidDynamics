@@ -1,6 +1,6 @@
 using System.Drawing;
 
-namespace ControlLibrary
+namespace ControlLibrary.Graphs
 {
    internal sealed class LegendItem
    {

@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
 
-namespace ControlLibrary
+namespace ControlLibrary.Graphs
 {
    internal sealed class BlueRedPalette : PaletteBase
    {

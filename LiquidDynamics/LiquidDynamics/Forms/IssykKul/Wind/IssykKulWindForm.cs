@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-using ControlLibrary.Drawing;
+using ControlLibrary.Graphs;
 using ControlLibrary.Types;
 using LiquidDynamics.Properties;
 

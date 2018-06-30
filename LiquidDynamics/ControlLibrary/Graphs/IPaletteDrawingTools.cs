@@ -1,6 +1,6 @@
 using System.Drawing;
 
-namespace ControlLibrary.Drawing
+namespace ControlLibrary.Graphs
 {
    public interface IPaletteDrawingTools
    {

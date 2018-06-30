@@ -1,8 +1,7 @@
 using System;
 using System.Drawing;
-using ControlLibrary.Drawing;
 
-namespace ControlLibrary
+namespace ControlLibrary.Graphs
 {
    internal abstract class PaletteBase : IPaletteDrawingTools
    {

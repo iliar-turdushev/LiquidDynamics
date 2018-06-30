@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-using ControlLibrary.Drawing;
+using ControlLibrary.Graphs;
 using ControlLibrary.Graphs.Graphs2D;
 using ControlLibrary.Types;
 
@@ -89,6 +89,11 @@ namespace ControlLibrary.Controls
       public void DrawVelocityField(SquareVelocityField velocityField, Pen vectorPen)
       {
          _drawers.Add(new SquareVelocityFieldDrawer(velocityField, vectorPen));
+      }
+
+      public void DrawVectorField(SquareVelocityField velocityField, Pen vectorPen, ColorMap colorMap)
+      {
+
       }
 
       public void DrawVelocityField(
