@@ -68,9 +68,11 @@
     <Compile Include="Graphs\Graphs2D\CurveDrawer.cs" />
     <Compile Include="Graphs\Graphs2D\FilledRectangleDrawer.cs" />
     <Compile Include="Graphs\Graphs2D\LinesDrawer.cs" />
+    <Compile Include="Graphs\Parula.cs" />
     <Compile Include="Graphs\Graphs2D\PointsDrawer.cs" />
     <Compile Include="Graphs\Graphs2D\RectangleDrawer.cs" />
     <Compile Include="Graphs\Graphs2D\SquareVelocityFieldDrawer.cs" />
+    <Compile Include="Graphs\Graphs2D\VectorFieldDrawer.cs" />
     <Compile Include="Graphs\Graphs3D\Curve3DDrawer.cs" />
     <Compile Include="Graphs\IPaletteDrawingTools.cs" />
     <Compile Include="Graphs\PaletteFactory.cs" />

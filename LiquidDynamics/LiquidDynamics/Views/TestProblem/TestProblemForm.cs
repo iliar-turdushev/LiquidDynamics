@@ -19,7 +19,7 @@ namespace LiquidDynamics.Views.TestProblem
             "Скорость ветра"
          };
 
-      private static readonly Pen VectorPen = new Pen(Color.Red, 1) {EndCap = LineCap.ArrowAnchor};
+      private static readonly Pen VectorPen = new Pen(Color.Black, 1) {EndCap = LineCap.ArrowAnchor};
 
       public TestProblemForm()
       {

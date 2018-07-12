@@ -28,7 +28,6 @@
       /// </summary>
       private void InitializeComponent()
       {
-         this._gcGraph = new ControlLibrary.Controls.GraphControl();
          this._gbGraph = new System.Windows.Forms.GroupBox();
          this._cbGraph = new System.Windows.Forms.ComboBox();
          this._gbSizes = new System.Windows.Forms.GroupBox();
@@ -51,26 +50,12 @@
          this._lblNz = new System.Windows.Forms.Label();
          this._lblNy = new System.Windows.Forms.Label();
          this._lblNx = new System.Windows.Forms.Label();
+         this._gcGraph = new ControlLibrary.Controls.GraphControl();
          this._gbGraph.SuspendLayout();
          this._gbSizes.SuspendLayout();
          this._gbWind.SuspendLayout();
          this._gbGrid.SuspendLayout();
          this.SuspendLayout();
-         // 
-         // _gcGraph
-         // 
-         this._gcGraph.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-         this._gcGraph.BackColor = System.Drawing.SystemColors.Control;
-         this._gcGraph.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-         this._gcGraph.Caption = "График";
-         this._gcGraph.Location = new System.Drawing.Point(12, 12);
-         this._gcGraph.Name = "_gcGraph";
-         this._gcGraph.Size = new System.Drawing.Size(720, 470);
-         this._gcGraph.TabIndex = 0;
-         this._gcGraph.XAxisName = null;
-         this._gcGraph.YAxisName = null;
          // 
          // _gbGraph
          // 
@@ -284,6 +269,21 @@
          this._lblNx.Size = new System.Drawing.Size(23, 13);
          this._lblNx.TabIndex = 0;
          this._lblNx.Text = "Nx:";
+         // 
+         // _gcGraph
+         // 
+         this._gcGraph.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+         this._gcGraph.BackColor = System.Drawing.SystemColors.Control;
+         this._gcGraph.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+         this._gcGraph.Caption = "График";
+         this._gcGraph.Location = new System.Drawing.Point(12, 12);
+         this._gcGraph.Name = "_gcGraph";
+         this._gcGraph.Size = new System.Drawing.Size(720, 470);
+         this._gcGraph.TabIndex = 0;
+         this._gcGraph.XAxisName = null;
+         this._gcGraph.YAxisName = null;
          // 
          // TestProblemForm
          // 
