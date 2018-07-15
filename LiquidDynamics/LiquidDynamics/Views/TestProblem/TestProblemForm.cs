@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using ControlLibrary.Graphs;
 using ControlLibrary.Types;
 using LiquidDynamics.MathModel;
 using LiquidDynamics.MathModel.TestProblem;
@@ -49,7 +50,7 @@ namespace LiquidDynamics.Views.TestProblem
          _cbGraph.SelectedItem = Graphs[0];
          _cbGraph.EndUpdate();
       }
-
+      
       private int getNx()
       {
          return ToInt(_txtNx.Text, "Nx");
@@ -169,13 +170,20 @@ namespace LiquidDynamics.Views.TestProblem
          float x = (float) ToKm(gx[gx.N - 1], MeasureUnit.Cm); // км
          float y = (float) ToKm(gy[gy.N - 1], MeasureUnit.Cm); // км
 
+         IPaletteDrawingTools colorMap = PaletteFactory.CreateParulaPalette();
+
+         _pcColorMap.PaletteDrawingTools = colorMap;
+         _pcColorMap.MinValue = vectors.GetMinVector().Length;
+         _pcColorMap.MaxValue = vectors.GetMaxVector().Length;
+         _pcColorMap.Invalidate();
+
          _gcGraph.Clear();
          _gcGraph.Caption = Graphs[_cbGraph.SelectedIndex];
          _gcGraph.XAxisName = "x, км";
          _gcGraph.YAxisName = "y, км";
          _gcGraph.AddLegend(legendText, VectorPen);
          _gcGraph.AxisBounds = new Bounds(0, x, 0, y);
-         _gcGraph.DrawVectorField(vectors, VectorPen);
+         _gcGraph.DrawVectorField(vectors, VectorPen, colorMap);
          _gcGraph.Invalidate();
       }
 

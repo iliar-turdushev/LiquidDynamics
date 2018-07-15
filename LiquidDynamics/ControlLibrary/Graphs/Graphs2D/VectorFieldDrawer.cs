@@ -7,18 +7,26 @@ namespace ControlLibrary.Graphs.Graphs2D
    internal sealed class VectorFieldDrawer : IGraphDrawer
    {
       private readonly SquareVelocityField _vectorField;
+      private readonly IPaletteDrawingTools _colorMap;
       private readonly Pen _vectorPen;
 
-      public VectorFieldDrawer(SquareVelocityField vectorField, Pen vectorPen)
+      public VectorFieldDrawer(
+         SquareVelocityField vectorField,
+         Pen vectorPen,
+         IPaletteDrawingTools colorMap)
       {
          if (vectorField == null)
             throw new ArgumentNullException(nameof(vectorField));
 
          if (vectorPen == null)
             throw new ArgumentNullException(nameof(vectorPen));
-         
+
+         if (colorMap == null)
+            throw new ArgumentNullException(nameof(colorMap));
+
          _vectorField = vectorField;
          _vectorPen = (Pen) vectorPen.Clone();
+         _colorMap = colorMap;
       }
 
       public void Draw(Graphics drawingContext, CoordinatesConverter converter)
@@ -53,7 +61,8 @@ namespace ControlLibrary.Graphs.Graphs2D
                
                if (v != null)
                {
-                  _vectorPen.Color = Parula.GetColor(v.Length, minLen, maxLen);
+                  int density = _colorMap.ToDensity(v.Length, minLen, maxLen);
+                  _vectorPen.Color = _colorMap.GetColor(density);
 
                   PointF sp = converter.PointToScreen(v.StartPoint);
                   PointF ep = converter.PointToScreen(

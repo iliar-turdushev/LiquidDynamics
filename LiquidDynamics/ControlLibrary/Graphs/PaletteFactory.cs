@@ -15,5 +15,12 @@ namespace ControlLibrary.Graphs
          palette.Initialize();
          return palette;
       }
+
+      public static IPaletteDrawingTools CreateParulaPalette()
+      {
+         var palette = new ParulaPalette();
+         palette.Initialize();
+         return palette;
+      }
    }
 }

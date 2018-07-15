@@ -3,11 +3,11 @@ using System.Linq;
 
 namespace ControlLibrary.Graphs
 {
-   internal static class Parula
+   internal sealed class ParulaPalette : PaletteBase
    {
-      private static readonly Color[] Colors;
+      private static readonly Color[] ColorMap;
 
-      static Parula()
+      static ParulaPalette()
       {
          #region Parula colors
 
@@ -272,16 +272,27 @@ namespace ControlLibrary.Graphs
          };
 
          #endregion
-         
-         Colors = parula
+
+         ColorMap = parula
             .Select(c => Color.FromArgb((int) (c.r * 255), (int) (c.g * 255), (int) (c.b * 255)))
             .ToArray();
       }
 
-      public static Color GetColor(float value, float min, float max)
+      public override int MinDensity => 0;
+
+      public override int MaxDensity => ColorMap.Length - 1;
+
+      protected override void generatePalette()
       {
-         int idx = (int) ((Colors.Length - 1) * (value - min) / (max - min));
-         return Colors[idx];
+         Colors = ColorMap;
+         Pens = new Pen[Colors.Length];
+         Brushes = new Brush[Colors.Length];
+
+         for (int i = MinDensity; i <= MaxDensity; i++)
+         {
+            Pens[i] = new Pen(Colors[i]);
+            Brushes[i] = new SolidBrush(Colors[i]);
+         }
       }
    }
 }

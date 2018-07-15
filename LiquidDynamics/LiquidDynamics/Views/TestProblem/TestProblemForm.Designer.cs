@@ -50,11 +50,14 @@
          this._lblNz = new System.Windows.Forms.Label();
          this._lblNy = new System.Windows.Forms.Label();
          this._lblNx = new System.Windows.Forms.Label();
+         this._pnlGraph = new System.Windows.Forms.Panel();
+         this._pcColorMap = new ControlLibrary.Controls.PaletteControl();
          this._gcGraph = new ControlLibrary.Controls.GraphControl();
          this._gbGraph.SuspendLayout();
          this._gbSizes.SuspendLayout();
          this._gbWind.SuspendLayout();
          this._gbGrid.SuspendLayout();
+         this._pnlGraph.SuspendLayout();
          this.SuspendLayout();
          // 
          // _gbGraph
@@ -270,17 +273,40 @@
          this._lblNx.TabIndex = 0;
          this._lblNx.Text = "Nx:";
          // 
+         // _pnlGraph
+         // 
+         this._pnlGraph.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+         this._pnlGraph.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+         this._pnlGraph.Controls.Add(this._pcColorMap);
+         this._pnlGraph.Controls.Add(this._gcGraph);
+         this._pnlGraph.Location = new System.Drawing.Point(12, 12);
+         this._pnlGraph.Name = "_pnlGraph";
+         this._pnlGraph.Size = new System.Drawing.Size(720, 470);
+         this._pnlGraph.TabIndex = 10;
+         // 
+         // _pcColorMap
+         // 
+         this._pcColorMap.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+         this._pcColorMap.Location = new System.Drawing.Point(608, 3);
+         this._pcColorMap.MaxValue = 1F;
+         this._pcColorMap.MinValue = 0F;
+         this._pcColorMap.Name = "_pcColorMap";
+         this._pcColorMap.Size = new System.Drawing.Size(107, 462);
+         this._pcColorMap.TabIndex = 9;
+         // 
          // _gcGraph
          // 
          this._gcGraph.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
          this._gcGraph.BackColor = System.Drawing.SystemColors.Control;
-         this._gcGraph.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
          this._gcGraph.Caption = "График";
-         this._gcGraph.Location = new System.Drawing.Point(12, 12);
+         this._gcGraph.Location = new System.Drawing.Point(3, 3);
          this._gcGraph.Name = "_gcGraph";
-         this._gcGraph.Size = new System.Drawing.Size(720, 470);
+         this._gcGraph.Size = new System.Drawing.Size(599, 462);
          this._gcGraph.TabIndex = 0;
          this._gcGraph.XAxisName = null;
          this._gcGraph.YAxisName = null;
@@ -290,12 +316,12 @@
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.ClientSize = new System.Drawing.Size(1042, 494);
+         this.Controls.Add(this._pnlGraph);
          this.Controls.Add(this._gbGrid);
          this.Controls.Add(this._btnRun);
          this.Controls.Add(this._gbWind);
          this.Controls.Add(this._gbSizes);
          this.Controls.Add(this._gbGraph);
-         this.Controls.Add(this._gcGraph);
          this.Name = "TestProblemForm";
          this.Text = "Тестовая задача";
          this._gbGraph.ResumeLayout(false);
@@ -305,6 +331,7 @@
          this._gbWind.PerformLayout();
          this._gbGrid.ResumeLayout(false);
          this._gbGrid.PerformLayout();
+         this._pnlGraph.ResumeLayout(false);
          this.ResumeLayout(false);
 
       }
@@ -334,5 +361,7 @@
       private System.Windows.Forms.Label _lblNz;
       private System.Windows.Forms.Label _lblNy;
       private System.Windows.Forms.Label _lblNx;
+      private ControlLibrary.Controls.PaletteControl _pcColorMap;
+      private System.Windows.Forms.Panel _pnlGraph;
    }
 }

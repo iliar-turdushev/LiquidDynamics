@@ -91,9 +91,12 @@ namespace ControlLibrary.Controls
          _drawers.Add(new SquareVelocityFieldDrawer(velocityField, vectorPen));
       }
 
-      public void DrawVectorField(SquareVelocityField vectorField, Pen vectorPen)
+      public void DrawVectorField(
+         SquareVelocityField vectorField,
+         Pen vectorPen,
+         IPaletteDrawingTools colorMap)
       {
-         _drawers.Add(new VectorFieldDrawer(vectorField, vectorPen));
+         _drawers.Add(new VectorFieldDrawer(vectorField, vectorPen, colorMap));
       }
 
       public void DrawVelocityField(

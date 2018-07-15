@@ -32,7 +32,7 @@ namespace ControlLibrary.Controls
       private static readonly Pen MinorTicksPen = new Pen(Color.Black, 1);
 
       private const string LabelFormat = "F3";
-      private static readonly Font LabelFont = new Font("Courier New", 8);
+      private static readonly Font LabelFont = new Font("Segoe UI", 8);
       private static readonly Brush LabelBrush = Brushes.Blue;
 
       #endregion
@@ -45,7 +45,7 @@ namespace ControlLibrary.Controls
             ControlStyles.OptimizedDoubleBuffer,
             true);
 
-         PaletteDrawingTools = PaletteFactory.CreateBluePalette();
+         PaletteDrawingTools = PaletteFactory.CreateParulaPalette();
 
          MinValue = 0;
          MaxValue = 1;
@@ -60,15 +60,17 @@ namespace ControlLibrary.Controls
 
       protected override void OnPaint(PaintEventArgs args)
       {
-         var drawingContext = args.Graphics;
-         drawingContext.SmoothingMode = SmoothingMode.AntiAlias;
+         Graphics g = args.Graphics;
+         g.SmoothingMode = SmoothingMode.AntiAlias;
 
-         var rectangle = new Rectangle(OffsetLeft, OffsetTop,
-                                       DisplayRectangle.Width - OffsetLeft - OffsetRight,
-                                       DisplayRectangle.Height - OffsetTop - OffsetBottom);
-         drawPaletteBar(drawingContext, rectangle);
-         drawingContext.DrawRectangle(PaletteBoxPen, rectangle);
-         drawAxisBar(drawingContext);
+         var rect = new Rectangle(
+            OffsetLeft, OffsetTop,
+            DisplayRectangle.Width - OffsetLeft - OffsetRight,
+            DisplayRectangle.Height - OffsetTop - OffsetBottom);
+
+         drawPaletteBar(g, rect);
+         g.DrawRectangle(PaletteBoxPen, rect);
+         drawAxisBar(g);
       }
 
       protected override void OnResize(EventArgs e)
@@ -77,18 +79,18 @@ namespace ControlLibrary.Controls
          Invalidate();
       }
 
-      private void drawPaletteBar(Graphics drawingContext, Rectangle rectangle)
+      private void drawPaletteBar(Graphics g, Rectangle rect)
       {
-         var step = (float) rectangle.Height / (PaletteDrawingTools.MaxDensity - PaletteDrawingTools.MinDensity);
-         float x = rectangle.Left;
-         var y = rectangle.Bottom - step;
+         var step = (float) rect.Height / (PaletteDrawingTools.MaxDensity - PaletteDrawingTools.MinDensity);
+         float x = rect.Left;
+         var y = rect.Bottom - step;
 
          for (var i = PaletteDrawingTools.MinDensity; i < PaletteDrawingTools.MaxDensity; i++)
          {
             var pen = PaletteDrawingTools.GetPen(i);
             var brush = PaletteDrawingTools.GetBrush(i);
-            drawingContext.DrawRectangle(pen, x, y, rectangle.Width, step);
-            drawingContext.FillRectangle(brush, x, y, rectangle.Width, step);
+            g.DrawRectangle(pen, x, y, rect.Width, step);
+            g.FillRectangle(brush, x, y, rect.Width, step);
             y -= step;
          }
       }
