@@ -18,7 +18,7 @@ namespace ControlLibrary.Graphs.Graphs2D
             throw new ArgumentNullException(nameof(vectorPen));
          
          _vectorField = vectorField;
-         _vectorPen = vectorPen;
+         _vectorPen = (Pen) vectorPen.Clone();
       }
 
       public void Draw(Graphics drawingContext, CoordinatesConverter converter)

@@ -26,7 +26,7 @@ namespace ControlLibrary.Controls
 
       private const int ShiftFromLegend = 30;
       private const int LegendOffset = 20;
-      private const int LegendElementLength = 40;
+      private const int LegendElementLength = 25;
       private const int LegendItemsStep = 20;
       private const int LegendTextStep = 5;
 
@@ -149,10 +149,10 @@ namespace ControlLibrary.Controls
 
          drawCaption(g);
          drawAxisBars(g);
-         drawAxisBox(g, rectangle);
          drawAxisNames(g);
          drawLegend(g);
          drawGraphs(g, rectangle);
+         drawAxisBox(g, rectangle);
       }
 
       protected override void OnResize(EventArgs e)
