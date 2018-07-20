@@ -6,6 +6,8 @@ namespace LiquidDynamics.MathModel.TestProblem
 {
    public class Wind
    {
+      private static readonly double Coef = Sqrt(Rho0S * U0S * H0S * L0S / (Gamma * W0 * W0));
+
       public Wind(double[,] wx, double[,] wy, int nx, int ny)
       {
          if (wx == null)
@@ -39,8 +41,6 @@ namespace LiquidDynamics.MathModel.TestProblem
       // [out] = 1
       public static Wind Create(Tau tau)
       {
-         double coef = Sqrt(Rho0S * U0S * H0S * L0S / (Gamma * W0 * W0));
-
          double[,] wx = new double[tau.Nx, tau.Ny];
          double[,] wy = new double[tau.Nx, tau.Ny];
 
@@ -50,7 +50,7 @@ namespace LiquidDynamics.MathModel.TestProblem
             {
                double tx = tau.TauX[i, j];
                double ty = tau.TauY[i, j];
-               double c = coef / Pow(tx * tx + ty * ty, 0.25);
+               double c = Coef / Pow(tx * tx + ty * ty, 0.25);
 
                wx[i, j] = c * tx;
                wy[i, j] = c * ty;

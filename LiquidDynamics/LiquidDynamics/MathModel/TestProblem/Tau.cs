@@ -36,6 +36,7 @@ namespace LiquidDynamics.MathModel.TestProblem
       
       // [f1] = [f2] = 1
       // [r] = [q] = 1
+      // [gx] = [gy] = 1
       // [out] = 1
       public static Tau Calc(double f1, double f2, double r, double q, Grid gx, Grid gy)
       {

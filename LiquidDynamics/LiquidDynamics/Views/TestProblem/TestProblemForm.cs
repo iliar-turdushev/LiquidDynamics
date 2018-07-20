@@ -111,7 +111,7 @@ namespace LiquidDynamics.Views.TestProblem
             Tau t = DimTau(tau); // г/(см*с^2)
             Grid x = DimLen(gx); // см
             Grid y = DimLen(gy); // см
-            drawVectors(t.TauX, t.TauY, x, y, "г / (см * с^2)");
+            drawVectors(t.TauX, t.TauY, x, y, "г/(см*с^2)");
          }
       }
 
@@ -127,7 +127,7 @@ namespace LiquidDynamics.Views.TestProblem
             Wind w = DimWind(wind); // см/с
             Grid x = DimLen(gx); // см
             Grid y = DimLen(gy); // см
-            drawVectors(w.Wx, w.Wy, x, y, "см / с");
+            drawVectors(w.Wx, w.Wy, x, y, "см/с");
          }
       }
 
