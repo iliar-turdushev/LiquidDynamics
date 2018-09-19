@@ -17,7 +17,8 @@ namespace LiquidDynamics.Views.TestProblem
       private static readonly string[] Graphs =
          {
             "Касательное напряжение трения ветра",
-            "Скорость ветра"
+            "Скорость ветра",
+            "Баротропная компонента"
          };
 
       private static readonly Pen VectorPen = new Pen(Color.Black, 1) {EndCap = LineCap.ArrowAnchor};
@@ -39,6 +40,10 @@ namespace LiquidDynamics.Views.TestProblem
 
             case 1:
                buildWind();
+               break;
+
+            case 2:
+               buildBarotropicComponent();
                break;
          }
       }
@@ -137,16 +142,16 @@ namespace LiquidDynamics.Views.TestProblem
       {
          try
          {
-            double f1 = getF1(); // 1
-            double f2 = getF2(); // 1
             double r = getR(); // 1
             double q = getQ(); // 1
+            double f1 = getF1(); // 1
+            double f2 = getF2(); // 1
             int nx = getNx();
             int ny = getNy();
 
             gx = new Grid(r, nx); // 1
             gy = new Grid(q, ny); // 1
-            tau = Tau.Calc(f1, f2, r, q, gx, gy); // 1
+            tau = Tau.Calc(r, q, f1, f2, gx, gy); // 1
 
             return true;
          }
@@ -159,6 +164,18 @@ namespace LiquidDynamics.Views.TestProblem
             tau = null;
 
             return false;
+         }
+      }
+
+      private void buildBarotropicComponent()
+      {
+         try
+         {
+
+         }
+         catch (FormatException e)
+         {
+            showErrorMessage(e);
          }
       }
 

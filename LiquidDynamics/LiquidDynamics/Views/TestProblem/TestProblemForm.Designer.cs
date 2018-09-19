@@ -53,11 +53,31 @@
          this._pnlGraph = new System.Windows.Forms.Panel();
          this._pcColorMap = new ControlLibrary.Controls.PaletteControl();
          this._gcGraph = new ControlLibrary.Controls.GraphControl();
+         this._gbCoriolis = new System.Windows.Forms.GroupBox();
+         this._txtBeta = new System.Windows.Forms.TextBox();
+         this._lblBeta = new System.Windows.Forms.Label();
+         this._lblL0S = new System.Windows.Forms.Label();
+         this._txtL0S = new System.Windows.Forms.TextBox();
+         this._gbMu = new System.Windows.Forms.GroupBox();
+         this._txtMu = new System.Windows.Forms.TextBox();
+         this._lblMu = new System.Windows.Forms.Label();
+         this._gbSolutionParameters = new System.Windows.Forms.GroupBox();
+         this._lblK = new System.Windows.Forms.Label();
+         this._txtK = new System.Windows.Forms.TextBox();
+         this._lblM = new System.Windows.Forms.Label();
+         this._txtM = new System.Windows.Forms.TextBox();
+         this._txtS2 = new System.Windows.Forms.TextBox();
+         this._lblS2 = new System.Windows.Forms.Label();
+         this._txtS1 = new System.Windows.Forms.TextBox();
+         this._lblS1 = new System.Windows.Forms.Label();
          this._gbGraph.SuspendLayout();
          this._gbSizes.SuspendLayout();
          this._gbWind.SuspendLayout();
          this._gbGrid.SuspendLayout();
          this._pnlGraph.SuspendLayout();
+         this._gbCoriolis.SuspendLayout();
+         this._gbMu.SuspendLayout();
+         this._gbSolutionParameters.SuspendLayout();
          this.SuspendLayout();
          // 
          // _gbGraph
@@ -215,7 +235,7 @@
          this._gbGrid.Controls.Add(this._lblNz);
          this._gbGrid.Controls.Add(this._lblNy);
          this._gbGrid.Controls.Add(this._lblNx);
-         this._gbGrid.Location = new System.Drawing.Point(738, 171);
+         this._gbGrid.Location = new System.Drawing.Point(738, 356);
          this._gbGrid.Name = "_gbGrid";
          this._gbGrid.Size = new System.Drawing.Size(292, 47);
          this._gbGrid.TabIndex = 8;
@@ -311,11 +331,170 @@
          this._gcGraph.XAxisName = null;
          this._gcGraph.YAxisName = null;
          // 
+         // _gbCoriolis
+         // 
+         this._gbCoriolis.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+         this._gbCoriolis.Controls.Add(this._txtL0S);
+         this._gbCoriolis.Controls.Add(this._lblL0S);
+         this._gbCoriolis.Controls.Add(this._lblBeta);
+         this._gbCoriolis.Controls.Add(this._txtBeta);
+         this._gbCoriolis.Location = new System.Drawing.Point(738, 171);
+         this._gbCoriolis.Name = "_gbCoriolis";
+         this._gbCoriolis.Size = new System.Drawing.Size(292, 47);
+         this._gbCoriolis.TabIndex = 11;
+         this._gbCoriolis.TabStop = false;
+         this._gbCoriolis.Text = "Параметр Кориолиса";
+         // 
+         // _txtBeta
+         // 
+         this._txtBeta.Location = new System.Drawing.Point(191, 19);
+         this._txtBeta.Name = "_txtBeta";
+         this._txtBeta.Size = new System.Drawing.Size(48, 20);
+         this._txtBeta.TabIndex = 0;
+         // 
+         // _lblBeta
+         // 
+         this._lblBeta.AutoSize = true;
+         this._lblBeta.Location = new System.Drawing.Point(107, 22);
+         this._lblBeta.Name = "_lblBeta";
+         this._lblBeta.Size = new System.Drawing.Size(78, 13);
+         this._lblBeta.TabIndex = 1;
+         this._lblBeta.Text = "beta, 1/(см*с):";
+         // 
+         // _lblL0S
+         // 
+         this._lblL0S.AutoSize = true;
+         this._lblL0S.Location = new System.Drawing.Point(6, 22);
+         this._lblL0S.Name = "_lblL0S";
+         this._lblL0S.Size = new System.Drawing.Size(41, 13);
+         this._lblL0S.TabIndex = 2;
+         this._lblL0S.Text = "l0, 1/с:";
+         // 
+         // _txtL0S
+         // 
+         this._txtL0S.Location = new System.Drawing.Point(53, 19);
+         this._txtL0S.Name = "_txtL0S";
+         this._txtL0S.Size = new System.Drawing.Size(48, 20);
+         this._txtL0S.TabIndex = 3;
+         // 
+         // _gbMu
+         // 
+         this._gbMu.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+         this._gbMu.Controls.Add(this._lblMu);
+         this._gbMu.Controls.Add(this._txtMu);
+         this._gbMu.Location = new System.Drawing.Point(738, 224);
+         this._gbMu.Name = "_gbMu";
+         this._gbMu.Size = new System.Drawing.Size(292, 47);
+         this._gbMu.TabIndex = 12;
+         this._gbMu.TabStop = false;
+         this._gbMu.Text = "Параметр, характеризующий трение о дно";
+         // 
+         // _txtMu
+         // 
+         this._txtMu.Location = new System.Drawing.Point(59, 19);
+         this._txtMu.Name = "_txtMu";
+         this._txtMu.Size = new System.Drawing.Size(48, 20);
+         this._txtMu.TabIndex = 0;
+         // 
+         // _lblMu
+         // 
+         this._lblMu.AutoSize = true;
+         this._lblMu.Location = new System.Drawing.Point(6, 22);
+         this._lblMu.Name = "_lblMu";
+         this._lblMu.Size = new System.Drawing.Size(47, 13);
+         this._lblMu.TabIndex = 1;
+         this._lblMu.Text = "mu, 1/с:";
+         // 
+         // _gbSolutionParameters
+         // 
+         this._gbSolutionParameters.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+         this._gbSolutionParameters.Controls.Add(this._txtS2);
+         this._gbSolutionParameters.Controls.Add(this._lblS2);
+         this._gbSolutionParameters.Controls.Add(this._txtS1);
+         this._gbSolutionParameters.Controls.Add(this._lblS1);
+         this._gbSolutionParameters.Controls.Add(this._txtM);
+         this._gbSolutionParameters.Controls.Add(this._lblM);
+         this._gbSolutionParameters.Controls.Add(this._txtK);
+         this._gbSolutionParameters.Controls.Add(this._lblK);
+         this._gbSolutionParameters.Location = new System.Drawing.Point(738, 277);
+         this._gbSolutionParameters.Name = "_gbSolutionParameters";
+         this._gbSolutionParameters.Size = new System.Drawing.Size(292, 73);
+         this._gbSolutionParameters.TabIndex = 13;
+         this._gbSolutionParameters.TabStop = false;
+         this._gbSolutionParameters.Text = "Параметры решения";
+         // 
+         // _lblK
+         // 
+         this._lblK.AutoSize = true;
+         this._lblK.Location = new System.Drawing.Point(92, 22);
+         this._lblK.Name = "_lblK";
+         this._lblK.Size = new System.Drawing.Size(16, 13);
+         this._lblK.TabIndex = 0;
+         this._lblK.Text = "k:";
+         // 
+         // _txtK
+         // 
+         this._txtK.Location = new System.Drawing.Point(114, 19);
+         this._txtK.Name = "_txtK";
+         this._txtK.Size = new System.Drawing.Size(48, 20);
+         this._txtK.TabIndex = 1;
+         // 
+         // _lblM
+         // 
+         this._lblM.AutoSize = true;
+         this._lblM.Location = new System.Drawing.Point(9, 22);
+         this._lblM.Name = "_lblM";
+         this._lblM.Size = new System.Drawing.Size(18, 13);
+         this._lblM.TabIndex = 2;
+         this._lblM.Text = "m:";
+         // 
+         // _txtM
+         // 
+         this._txtM.Location = new System.Drawing.Point(33, 19);
+         this._txtM.Name = "_txtM";
+         this._txtM.Size = new System.Drawing.Size(48, 20);
+         this._txtM.TabIndex = 3;
+         // 
+         // _txtS2
+         // 
+         this._txtS2.Location = new System.Drawing.Point(114, 45);
+         this._txtS2.Name = "_txtS2";
+         this._txtS2.Size = new System.Drawing.Size(48, 20);
+         this._txtS2.TabIndex = 7;
+         // 
+         // _lblS2
+         // 
+         this._lblS2.AutoSize = true;
+         this._lblS2.Location = new System.Drawing.Point(87, 48);
+         this._lblS2.Name = "_lblS2";
+         this._lblS2.Size = new System.Drawing.Size(21, 13);
+         this._lblS2.TabIndex = 6;
+         this._lblS2.Text = "s2:";
+         // 
+         // _txtS1
+         // 
+         this._txtS1.Location = new System.Drawing.Point(33, 45);
+         this._txtS1.Name = "_txtS1";
+         this._txtS1.Size = new System.Drawing.Size(48, 20);
+         this._txtS1.TabIndex = 5;
+         // 
+         // _lblS1
+         // 
+         this._lblS1.AutoSize = true;
+         this._lblS1.Location = new System.Drawing.Point(6, 48);
+         this._lblS1.Name = "_lblS1";
+         this._lblS1.Size = new System.Drawing.Size(21, 13);
+         this._lblS1.TabIndex = 4;
+         this._lblS1.Text = "s1:";
+         // 
          // TestProblemForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.ClientSize = new System.Drawing.Size(1042, 494);
+         this.Controls.Add(this._gbSolutionParameters);
+         this.Controls.Add(this._gbMu);
+         this.Controls.Add(this._gbCoriolis);
          this.Controls.Add(this._pnlGraph);
          this.Controls.Add(this._gbGrid);
          this.Controls.Add(this._btnRun);
@@ -332,6 +511,12 @@
          this._gbGrid.ResumeLayout(false);
          this._gbGrid.PerformLayout();
          this._pnlGraph.ResumeLayout(false);
+         this._gbCoriolis.ResumeLayout(false);
+         this._gbCoriolis.PerformLayout();
+         this._gbMu.ResumeLayout(false);
+         this._gbMu.PerformLayout();
+         this._gbSolutionParameters.ResumeLayout(false);
+         this._gbSolutionParameters.PerformLayout();
          this.ResumeLayout(false);
 
       }
@@ -363,5 +548,22 @@
       private System.Windows.Forms.Label _lblNx;
       private ControlLibrary.Controls.PaletteControl _pcColorMap;
       private System.Windows.Forms.Panel _pnlGraph;
+      private System.Windows.Forms.GroupBox _gbCoriolis;
+      private System.Windows.Forms.TextBox _txtL0S;
+      private System.Windows.Forms.Label _lblL0S;
+      private System.Windows.Forms.Label _lblBeta;
+      private System.Windows.Forms.TextBox _txtBeta;
+      private System.Windows.Forms.GroupBox _gbMu;
+      private System.Windows.Forms.Label _lblMu;
+      private System.Windows.Forms.TextBox _txtMu;
+      private System.Windows.Forms.GroupBox _gbSolutionParameters;
+      private System.Windows.Forms.TextBox _txtS2;
+      private System.Windows.Forms.Label _lblS2;
+      private System.Windows.Forms.TextBox _txtS1;
+      private System.Windows.Forms.Label _lblS1;
+      private System.Windows.Forms.TextBox _txtM;
+      private System.Windows.Forms.Label _lblM;
+      private System.Windows.Forms.TextBox _txtK;
+      private System.Windows.Forms.Label _lblK;
    }
 }

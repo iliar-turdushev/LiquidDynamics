@@ -33,12 +33,16 @@ namespace LiquidDynamics.MathModel.TestProblem
 
       public int Nx { get; }
       public int Ny { get; }
-      
-      // [f1] = [f2] = 1
+
       // [r] = [q] = 1
+      // [f1] = [f2] = 1
       // [gx] = [gy] = 1
       // [out] = 1
-      public static Tau Calc(double f1, double f2, double r, double q, Grid gx, Grid gy)
+      public static Tau Calc(
+         double r, double q,
+         double f1, double f2,
+         Grid gx, Grid gy
+         )
       {
          if (r <= 0)
             throw new ArgumentException("r <= 0", nameof (r));
