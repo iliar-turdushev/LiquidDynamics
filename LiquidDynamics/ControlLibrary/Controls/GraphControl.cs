@@ -53,7 +53,7 @@ namespace ControlLibrary.Controls
       private static readonly Font LegendFont = new Font("Segoe UI", 10);
       private static readonly Brush LegendBrush = Brushes.Black;
 
-      private static readonly Font AxisNameFont = new Font("Segoe UI", 10, FontStyle.Bold);
+      private static readonly Font AxisNameFont = new Font("Segoe UI", 10);
       private static readonly Brush AxisNameBrush = Brushes.Black;
 
       #endregion
