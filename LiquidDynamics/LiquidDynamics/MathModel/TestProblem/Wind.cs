@@ -27,11 +27,8 @@ namespace LiquidDynamics.MathModel.TestProblem
          Nx = nx;
          Ny = ny;
       }
-
-      // [Wx] = 1
+      
       public double[,] Wx { get; }
-
-      // [Wy] = 1
       public double[,] Wy { get; }
 
       public int Nx { get; }

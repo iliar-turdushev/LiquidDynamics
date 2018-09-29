@@ -54,22 +54,22 @@
          this._pcColorMap = new ControlLibrary.Controls.PaletteControl();
          this._gcGraph = new ControlLibrary.Controls.GraphControl();
          this._gbCoriolis = new System.Windows.Forms.GroupBox();
-         this._txtBeta = new System.Windows.Forms.TextBox();
-         this._lblBeta = new System.Windows.Forms.Label();
-         this._lblL0S = new System.Windows.Forms.Label();
          this._txtL0S = new System.Windows.Forms.TextBox();
+         this._lblL0S = new System.Windows.Forms.Label();
+         this._lblBeta = new System.Windows.Forms.Label();
+         this._txtBeta = new System.Windows.Forms.TextBox();
          this._gbMu = new System.Windows.Forms.GroupBox();
-         this._txtMu = new System.Windows.Forms.TextBox();
          this._lblMu = new System.Windows.Forms.Label();
+         this._txtMu = new System.Windows.Forms.TextBox();
          this._gbSolutionParameters = new System.Windows.Forms.GroupBox();
-         this._lblK = new System.Windows.Forms.Label();
-         this._txtK = new System.Windows.Forms.TextBox();
-         this._lblM = new System.Windows.Forms.Label();
-         this._txtM = new System.Windows.Forms.TextBox();
          this._txtS2 = new System.Windows.Forms.TextBox();
          this._lblS2 = new System.Windows.Forms.Label();
          this._txtS1 = new System.Windows.Forms.TextBox();
          this._lblS1 = new System.Windows.Forms.Label();
+         this._txtM = new System.Windows.Forms.TextBox();
+         this._lblM = new System.Windows.Forms.Label();
+         this._txtK = new System.Windows.Forms.TextBox();
+         this._lblK = new System.Windows.Forms.Label();
          this._gbGraph.SuspendLayout();
          this._gbSizes.SuspendLayout();
          this._gbWind.SuspendLayout();
@@ -345,37 +345,39 @@
          this._gbCoriolis.TabStop = false;
          this._gbCoriolis.Text = "Параметр Кориолиса";
          // 
-         // _txtBeta
+         // _txtL0S
          // 
-         this._txtBeta.Location = new System.Drawing.Point(191, 19);
-         this._txtBeta.Name = "_txtBeta";
-         this._txtBeta.Size = new System.Drawing.Size(48, 20);
-         this._txtBeta.TabIndex = 0;
-         // 
-         // _lblBeta
-         // 
-         this._lblBeta.AutoSize = true;
-         this._lblBeta.Location = new System.Drawing.Point(107, 22);
-         this._lblBeta.Name = "_lblBeta";
-         this._lblBeta.Size = new System.Drawing.Size(78, 13);
-         this._lblBeta.TabIndex = 1;
-         this._lblBeta.Text = "beta, 1/(см*с):";
+         this._txtL0S.Location = new System.Drawing.Point(34, 19);
+         this._txtL0S.Name = "_txtL0S";
+         this._txtL0S.Size = new System.Drawing.Size(48, 20);
+         this._txtL0S.TabIndex = 3;
+         this._txtL0S.Text = "1";
          // 
          // _lblL0S
          // 
          this._lblL0S.AutoSize = true;
          this._lblL0S.Location = new System.Drawing.Point(6, 22);
          this._lblL0S.Name = "_lblL0S";
-         this._lblL0S.Size = new System.Drawing.Size(41, 13);
+         this._lblL0S.Size = new System.Drawing.Size(18, 13);
          this._lblL0S.TabIndex = 2;
-         this._lblL0S.Text = "l0, 1/с:";
+         this._lblL0S.Text = "l0:";
          // 
-         // _txtL0S
+         // _lblBeta
          // 
-         this._txtL0S.Location = new System.Drawing.Point(53, 19);
-         this._txtL0S.Name = "_txtL0S";
-         this._txtL0S.Size = new System.Drawing.Size(48, 20);
-         this._txtL0S.TabIndex = 3;
+         this._lblBeta.AutoSize = true;
+         this._lblBeta.Location = new System.Drawing.Point(88, 22);
+         this._lblBeta.Name = "_lblBeta";
+         this._lblBeta.Size = new System.Drawing.Size(31, 13);
+         this._lblBeta.TabIndex = 1;
+         this._lblBeta.Text = "beta:";
+         // 
+         // _txtBeta
+         // 
+         this._txtBeta.Location = new System.Drawing.Point(125, 19);
+         this._txtBeta.Name = "_txtBeta";
+         this._txtBeta.Size = new System.Drawing.Size(48, 20);
+         this._txtBeta.TabIndex = 0;
+         this._txtBeta.Text = "1";
          // 
          // _gbMu
          // 
@@ -389,13 +391,6 @@
          this._gbMu.TabStop = false;
          this._gbMu.Text = "Параметр, характеризующий трение о дно";
          // 
-         // _txtMu
-         // 
-         this._txtMu.Location = new System.Drawing.Point(59, 19);
-         this._txtMu.Name = "_txtMu";
-         this._txtMu.Size = new System.Drawing.Size(48, 20);
-         this._txtMu.TabIndex = 0;
-         // 
          // _lblMu
          // 
          this._lblMu.AutoSize = true;
@@ -404,6 +399,14 @@
          this._lblMu.Size = new System.Drawing.Size(47, 13);
          this._lblMu.TabIndex = 1;
          this._lblMu.Text = "mu, 1/с:";
+         // 
+         // _txtMu
+         // 
+         this._txtMu.Location = new System.Drawing.Point(59, 19);
+         this._txtMu.Name = "_txtMu";
+         this._txtMu.Size = new System.Drawing.Size(48, 20);
+         this._txtMu.TabIndex = 0;
+         this._txtMu.Text = "0.00005";
          // 
          // _gbSolutionParameters
          // 
@@ -423,44 +426,13 @@
          this._gbSolutionParameters.TabStop = false;
          this._gbSolutionParameters.Text = "Параметры решения";
          // 
-         // _lblK
-         // 
-         this._lblK.AutoSize = true;
-         this._lblK.Location = new System.Drawing.Point(92, 22);
-         this._lblK.Name = "_lblK";
-         this._lblK.Size = new System.Drawing.Size(16, 13);
-         this._lblK.TabIndex = 0;
-         this._lblK.Text = "k:";
-         // 
-         // _txtK
-         // 
-         this._txtK.Location = new System.Drawing.Point(114, 19);
-         this._txtK.Name = "_txtK";
-         this._txtK.Size = new System.Drawing.Size(48, 20);
-         this._txtK.TabIndex = 1;
-         // 
-         // _lblM
-         // 
-         this._lblM.AutoSize = true;
-         this._lblM.Location = new System.Drawing.Point(9, 22);
-         this._lblM.Name = "_lblM";
-         this._lblM.Size = new System.Drawing.Size(18, 13);
-         this._lblM.TabIndex = 2;
-         this._lblM.Text = "m:";
-         // 
-         // _txtM
-         // 
-         this._txtM.Location = new System.Drawing.Point(33, 19);
-         this._txtM.Name = "_txtM";
-         this._txtM.Size = new System.Drawing.Size(48, 20);
-         this._txtM.TabIndex = 3;
-         // 
          // _txtS2
          // 
          this._txtS2.Location = new System.Drawing.Point(114, 45);
          this._txtS2.Name = "_txtS2";
          this._txtS2.Size = new System.Drawing.Size(48, 20);
          this._txtS2.TabIndex = 7;
+         this._txtS2.Text = "0";
          // 
          // _lblS2
          // 
@@ -477,6 +449,7 @@
          this._txtS1.Name = "_txtS1";
          this._txtS1.Size = new System.Drawing.Size(48, 20);
          this._txtS1.TabIndex = 5;
+         this._txtS1.Text = "1";
          // 
          // _lblS1
          // 
@@ -486,6 +459,40 @@
          this._lblS1.Size = new System.Drawing.Size(21, 13);
          this._lblS1.TabIndex = 4;
          this._lblS1.Text = "s1:";
+         // 
+         // _txtM
+         // 
+         this._txtM.Location = new System.Drawing.Point(33, 19);
+         this._txtM.Name = "_txtM";
+         this._txtM.Size = new System.Drawing.Size(48, 20);
+         this._txtM.TabIndex = 3;
+         this._txtM.Text = "2";
+         // 
+         // _lblM
+         // 
+         this._lblM.AutoSize = true;
+         this._lblM.Location = new System.Drawing.Point(9, 22);
+         this._lblM.Name = "_lblM";
+         this._lblM.Size = new System.Drawing.Size(18, 13);
+         this._lblM.TabIndex = 2;
+         this._lblM.Text = "m:";
+         // 
+         // _txtK
+         // 
+         this._txtK.Location = new System.Drawing.Point(114, 19);
+         this._txtK.Name = "_txtK";
+         this._txtK.Size = new System.Drawing.Size(48, 20);
+         this._txtK.TabIndex = 1;
+         this._txtK.Text = "1";
+         // 
+         // _lblK
+         // 
+         this._lblK.AutoSize = true;
+         this._lblK.Location = new System.Drawing.Point(92, 22);
+         this._lblK.Name = "_lblK";
+         this._lblK.Size = new System.Drawing.Size(16, 13);
+         this._lblK.TabIndex = 0;
+         this._lblK.Text = "k:";
          // 
          // TestProblemForm
          // 

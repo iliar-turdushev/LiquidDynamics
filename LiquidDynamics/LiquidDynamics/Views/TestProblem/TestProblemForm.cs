@@ -21,7 +21,8 @@ namespace LiquidDynamics.Views.TestProblem
             "Баротропная компонента"
          };
 
-      private static readonly Pen VectorPen = new Pen(Color.Black, 1) {EndCap = LineCap.ArrowAnchor};
+      private static readonly Pen VectorPen =
+         new Pen(Color.Black, 1) {EndCap = LineCap.ArrowAnchor};
 
       public TestProblemForm()
       {
@@ -56,28 +57,6 @@ namespace LiquidDynamics.Views.TestProblem
          _cbGraph.EndUpdate();
       }
       
-      private int getNx()
-      {
-         return ToInt(_txtNx.Text, "Nx");
-      }
-
-      private int getNy()
-      {
-         return ToInt(_txtNy.Text, "Ny");
-      }
-
-      // [out] = 1
-      private double getF1()
-      {
-         return ToDouble(_txtF1.Text, "F1");
-      }
-
-      // [out] = 1
-      private double getF2()
-      {
-         return ToDouble(_txtF2.Text, "F2");
-      }
-
       // [out] = 1
       private double getR()
       {
@@ -92,11 +71,53 @@ namespace LiquidDynamics.Views.TestProblem
          return dimlLen(q, MeasureUnit.Km);
       }
 
+      // [out] = 1
+      private double getH()
+      {
+         double h = ToDouble(_txtH.Text, "H"); // м
+         double cm = ToCm(h, MeasureUnit.M); // см
+         return DimlH(cm);
+      }
+
+      // [out] = 1
+      private double getF1() => ToDouble(_txtF1.Text, "F1");
+
+      // [out] = 1
+      private double getF2() => ToDouble(_txtF2.Text, "F2");
+
+      // [out] = 1
+      private double getBeta() => ToDouble(_txtBeta.Text, "beta");
+
+      // [out] = 1
+      private double getMu()
+      {
+         double mu = ToDouble(_txtMu.Text, "mu"); // 1/c
+         return DimlMu(mu);
+      }
+
+      // [out] = 1
+      private int getM() => ToInt(_txtM.Text, "m");
+
+      // [out] = 1
+      private int getK() => ToInt(_txtK.Text, "k");
+
+      // [out] = 1
+      private double getS1() => ToDouble(_txtS1.Text, "s1");
+
+      // [out] = 1
+      private double getS2() => ToDouble(_txtS2.Text, "s2");
+
+      // [out] = 1
+      private int getNx() => ToInt(_txtNx.Text, "Nx");
+
+      // [out] = 1
+      private int getNy() => ToInt(_txtNy.Text, "Ny");
+
       // [len] = mu
       // [out] = 1
       private double dimlLen(double len, MeasureUnit mu)
       {
-         double cm = ToCm(len, mu);
+         double cm = ToCm(len, mu); // см
          return DimlLen(cm);
       }
 
@@ -146,8 +167,8 @@ namespace LiquidDynamics.Views.TestProblem
             double q = getQ(); // 1
             double f1 = getF1(); // 1
             double f2 = getF2(); // 1
-            int nx = getNx();
-            int ny = getNy();
+            int nx = getNx(); // 1
+            int ny = getNy(); // 1
 
             gx = new Grid(r, nx); // 1
             gy = new Grid(q, ny); // 1
@@ -171,7 +192,32 @@ namespace LiquidDynamics.Views.TestProblem
       {
          try
          {
+            double r = getR(); // 1
+            double q = getQ(); // 1
+            double h = getH(); // 1
+            double f1 = getF1(); // 1
+            double f2 = getF2(); // 1
+            double beta = getBeta(); // 1
+            double mu = getMu(); // 1
+            int m = getM(); // 1
+            int k = getK(); // 1
+            double s1 = getS1(); // 1
+            double s2 = getS2(); // 1
 
+            int nx = getNx(); // 1
+            int ny = getNy(); // 1
+            Grid gx = new Grid(r, nx); // 1
+            Grid gy = new Grid(q, ny); // 1
+
+            double t = 0; // 1
+            
+            Barotropic barot =
+               Barotropic.Calc(r, q, h, f1, f2, beta, mu, m, k, s1, s2, gx, gy, t); // 1
+
+            Barotropic b = DimBarot(barot); // см/с
+            Grid x = DimLen(gx); // см
+            Grid y = DimLen(gy); // см
+            drawVectors(b.U, b.V, x, y, "см/с");
          }
          catch (FormatException e)
          {

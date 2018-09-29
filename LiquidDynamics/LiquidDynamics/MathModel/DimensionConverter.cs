@@ -30,6 +30,10 @@ namespace LiquidDynamics.MathModel
       // [out] = 1
       public static double DimlLen(double len) => len / L0;
 
+      // [h] = см
+      // [out] = 1
+      public static double DimlH(double h) => h / H0S;
+
       // [tau] = 1
       // [out] = г/(см*с^2)
       public static double DimTau(double tau) => tau * TauCoef;
@@ -74,6 +78,29 @@ namespace LiquidDynamics.MathModel
          }
 
          return new Wind(wx, wy, wind.Nx, wind.Ny);
+      }
+
+      // [mu] = 1/c
+      // [out] = 1
+      public static double DimlMu(double mu) => mu / L0S;
+
+      // [b] = 1
+      // [out] = см/с
+      public static Barotropic DimBarot(Barotropic barot)
+      {
+         double[,] u = new double[barot.Nx, barot.Ny];
+         double[,] v = new double[barot.Nx, barot.Ny];
+
+         for (int i = 0; i < barot.Nx; i++)
+         {
+            for (int j = 0; j < barot.Ny; j++)
+            {
+               u[i, j] = U0S * barot.U[i, j];
+               v[i, j] = U0S * barot.V[i, j];
+            }
+         }
+
+         return new Barotropic(u, v, barot.Nx, barot.Ny);
       }
    }
 }
