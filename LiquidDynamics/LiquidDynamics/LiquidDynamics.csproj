@@ -248,6 +248,7 @@
     <Compile Include="MathModel\MeasureUnit.cs" />
     <Compile Include="MathModel\MeasureUnitConverter.cs" />
     <Compile Include="MathModel\TestProblem\Barotropic.cs" />
+    <Compile Include="MathModel\TestProblem\BarotropicCalc.cs" />
     <Compile Include="MathModel\TestProblem\Wind.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -31,7 +31,36 @@ namespace LiquidDynamics.Views.TestProblem
          initCbGraphs();
       }
 
-      private void btnRun_Click(object sender, EventArgs e)
+      private void cbGraph_SelectedIndexChanged(object sender, EventArgs e)
+      {
+         bool visible;
+
+         switch (_cbGraph.SelectedIndex)
+         {
+            case 2:
+               visible = true;
+               break;
+
+            default:
+               visible = false;
+               break;
+         }
+
+         _btnBegin.Visible = visible;
+         _btnStep.Visible = visible;
+      }
+
+      private void btnBegin_Click(object sender, EventArgs e)
+      {
+         .
+      }
+
+      private void btnStep_Click(object sender, EventArgs e)
+      {
+
+      }
+
+      private void btnRunStop_Click(object sender, EventArgs e)
       {
          switch (_cbGraph.SelectedIndex)
          {
@@ -112,6 +141,13 @@ namespace LiquidDynamics.Views.TestProblem
 
       // [out] = 1
       private int getNy() => ToInt(_txtNy.Text, "Ny");
+
+      // [out] = 1
+      private double getTau()
+      {
+         double tau = ToDouble(_txtTau.Text, "tau"); // с
+         return DimlT(tau);
+      }
 
       // [len] = mu
       // [out] = 1
@@ -208,11 +244,11 @@ namespace LiquidDynamics.Views.TestProblem
             int ny = getNy(); // 1
             Grid gx = new Grid(r, nx); // 1
             Grid gy = new Grid(q, ny); // 1
-
-            double t = 0; // 1
+            double tau = getTau(); // 1
             
-            Barotropic barot =
-               Barotropic.Calc(r, q, h, f1, f2, beta, mu, m, k, s1, s2, gx, gy, t); // 1
+            var calc = new BarotropicCalc(
+               r, q, h, f1, f2, beta, mu, m, k, s1, s2, gx, gy, tau);
+            Barotropic barot = calc.Begin(); // 1
 
             Barotropic b = DimBarot(barot); // см/с
             Grid x = DimLen(gx); // см

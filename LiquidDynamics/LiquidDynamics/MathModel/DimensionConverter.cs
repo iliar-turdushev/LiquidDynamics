@@ -6,6 +6,7 @@ namespace LiquidDynamics.MathModel
    {
       public const double L0 = 1E+7;            // см
       public const double H0S = 3 * 1E+4;       // см
+      public const double T0S = 1E+4;           // с
       public const double U0S = 5;              // см/с
       public const double L0S = 1E-4;           // 1/с
       public const double Rho0S = 1;            // г/см^3
@@ -33,6 +34,10 @@ namespace LiquidDynamics.MathModel
       // [h] = см
       // [out] = 1
       public static double DimlH(double h) => h / H0S;
+
+      // [t] = с
+      // [out] = 1
+      public static double DimlT(double t) => t / T0S;
 
       // [tau] = 1
       // [out] = г/(см*с^2)

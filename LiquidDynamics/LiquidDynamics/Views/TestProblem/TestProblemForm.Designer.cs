@@ -42,8 +42,10 @@
          this._lblF2 = new System.Windows.Forms.Label();
          this._txtF1 = new System.Windows.Forms.TextBox();
          this._lblF1 = new System.Windows.Forms.Label();
-         this._btnRun = new System.Windows.Forms.Button();
+         this._btnRunStop = new System.Windows.Forms.Button();
          this._gbGrid = new System.Windows.Forms.GroupBox();
+         this._txtTau = new System.Windows.Forms.TextBox();
+         this._lblTau = new System.Windows.Forms.Label();
          this._txtNz = new System.Windows.Forms.TextBox();
          this._txtNy = new System.Windows.Forms.TextBox();
          this._txtNx = new System.Windows.Forms.TextBox();
@@ -70,6 +72,8 @@
          this._lblM = new System.Windows.Forms.Label();
          this._txtK = new System.Windows.Forms.TextBox();
          this._lblK = new System.Windows.Forms.Label();
+         this._btnStep = new System.Windows.Forms.Button();
+         this._btnBegin = new System.Windows.Forms.Button();
          this._gbGraph.SuspendLayout();
          this._gbSizes.SuspendLayout();
          this._gbWind.SuspendLayout();
@@ -99,6 +103,7 @@
          this._cbGraph.Name = "_cbGraph";
          this._cbGraph.Size = new System.Drawing.Size(280, 21);
          this._cbGraph.TabIndex = 0;
+         this._cbGraph.SelectedIndexChanged += new System.EventHandler(this.cbGraph_SelectedIndexChanged);
          // 
          // _gbSizes
          // 
@@ -215,20 +220,22 @@
          this._lblF1.TabIndex = 0;
          this._lblF1.Text = "F1:";
          // 
-         // _btnRun
+         // _btnRunStop
          // 
-         this._btnRun.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-         this._btnRun.Location = new System.Drawing.Point(955, 459);
-         this._btnRun.Name = "_btnRun";
-         this._btnRun.Size = new System.Drawing.Size(75, 23);
-         this._btnRun.TabIndex = 7;
-         this._btnRun.Text = "Построить";
-         this._btnRun.UseVisualStyleBackColor = true;
-         this._btnRun.Click += new System.EventHandler(this.btnRun_Click);
+         this._btnRunStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+         this._btnRunStop.Location = new System.Drawing.Point(955, 459);
+         this._btnRunStop.Name = "_btnRunStop";
+         this._btnRunStop.Size = new System.Drawing.Size(75, 23);
+         this._btnRunStop.TabIndex = 7;
+         this._btnRunStop.Text = "Построить";
+         this._btnRunStop.UseVisualStyleBackColor = true;
+         this._btnRunStop.Click += new System.EventHandler(this.btnRunStop_Click);
          // 
          // _gbGrid
          // 
          this._gbGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+         this._gbGrid.Controls.Add(this._txtTau);
+         this._gbGrid.Controls.Add(this._lblTau);
          this._gbGrid.Controls.Add(this._txtNz);
          this._gbGrid.Controls.Add(this._txtNy);
          this._gbGrid.Controls.Add(this._txtNx);
@@ -237,14 +244,31 @@
          this._gbGrid.Controls.Add(this._lblNx);
          this._gbGrid.Location = new System.Drawing.Point(738, 356);
          this._gbGrid.Name = "_gbGrid";
-         this._gbGrid.Size = new System.Drawing.Size(292, 47);
+         this._gbGrid.Size = new System.Drawing.Size(292, 73);
          this._gbGrid.TabIndex = 8;
          this._gbGrid.TabStop = false;
          this._gbGrid.Text = "Узлы сетки";
          // 
+         // _txtTau
+         // 
+         this._txtTau.Location = new System.Drawing.Point(53, 45);
+         this._txtTau.Name = "_txtTau";
+         this._txtTau.Size = new System.Drawing.Size(48, 20);
+         this._txtTau.TabIndex = 7;
+         this._txtTau.Text = "60";
+         // 
+         // _lblTau
+         // 
+         this._lblTau.AutoSize = true;
+         this._lblTau.Location = new System.Drawing.Point(10, 48);
+         this._lblTau.Name = "_lblTau";
+         this._lblTau.Size = new System.Drawing.Size(37, 13);
+         this._lblTau.TabIndex = 6;
+         this._lblTau.Text = "tau, с:";
+         // 
          // _txtNz
          // 
-         this._txtNz.Location = new System.Drawing.Point(198, 19);
+         this._txtNz.Location = new System.Drawing.Point(217, 19);
          this._txtNz.Name = "_txtNz";
          this._txtNz.Size = new System.Drawing.Size(48, 20);
          this._txtNz.TabIndex = 5;
@@ -252,7 +276,7 @@
          // 
          // _txtNy
          // 
-         this._txtNy.Location = new System.Drawing.Point(117, 19);
+         this._txtNy.Location = new System.Drawing.Point(136, 19);
          this._txtNy.Name = "_txtNy";
          this._txtNy.Size = new System.Drawing.Size(48, 20);
          this._txtNy.TabIndex = 4;
@@ -260,7 +284,7 @@
          // 
          // _txtNx
          // 
-         this._txtNx.Location = new System.Drawing.Point(34, 19);
+         this._txtNx.Location = new System.Drawing.Point(53, 19);
          this._txtNx.Name = "_txtNx";
          this._txtNx.Size = new System.Drawing.Size(48, 20);
          this._txtNx.TabIndex = 3;
@@ -269,7 +293,7 @@
          // _lblNz
          // 
          this._lblNz.AutoSize = true;
-         this._lblNz.Location = new System.Drawing.Point(171, 22);
+         this._lblNz.Location = new System.Drawing.Point(190, 22);
          this._lblNz.Name = "_lblNz";
          this._lblNz.Size = new System.Drawing.Size(23, 13);
          this._lblNz.TabIndex = 2;
@@ -278,7 +302,7 @@
          // _lblNy
          // 
          this._lblNy.AutoSize = true;
-         this._lblNy.Location = new System.Drawing.Point(88, 22);
+         this._lblNy.Location = new System.Drawing.Point(107, 22);
          this._lblNy.Name = "_lblNy";
          this._lblNy.Size = new System.Drawing.Size(23, 13);
          this._lblNy.TabIndex = 1;
@@ -287,7 +311,7 @@
          // _lblNx
          // 
          this._lblNx.AutoSize = true;
-         this._lblNx.Location = new System.Drawing.Point(6, 22);
+         this._lblNx.Location = new System.Drawing.Point(25, 22);
          this._lblNx.Name = "_lblNx";
          this._lblNx.Size = new System.Drawing.Size(23, 13);
          this._lblNx.TabIndex = 0;
@@ -494,17 +518,43 @@
          this._lblK.TabIndex = 0;
          this._lblK.Text = "k:";
          // 
+         // _btnStep
+         // 
+         this._btnStep.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+         this._btnStep.Location = new System.Drawing.Point(874, 459);
+         this._btnStep.Name = "_btnStep";
+         this._btnStep.Size = new System.Drawing.Size(75, 23);
+         this._btnStep.TabIndex = 14;
+         this._btnStep.Text = "Шаг";
+         this._btnStep.UseVisualStyleBackColor = true;
+         this._btnStep.Visible = false;
+         this._btnStep.Click += new System.EventHandler(this.btnStep_Click);
+         // 
+         // _btnBegin
+         // 
+         this._btnBegin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+         this._btnBegin.Location = new System.Drawing.Point(793, 459);
+         this._btnBegin.Name = "_btnBegin";
+         this._btnBegin.Size = new System.Drawing.Size(75, 23);
+         this._btnBegin.TabIndex = 15;
+         this._btnBegin.Text = "Начать";
+         this._btnBegin.UseVisualStyleBackColor = true;
+         this._btnBegin.Visible = false;
+         this._btnBegin.Click += new System.EventHandler(this.btnBegin_Click);
+         // 
          // TestProblemForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.ClientSize = new System.Drawing.Size(1042, 494);
+         this.Controls.Add(this._btnRunStop);
+         this.Controls.Add(this._btnBegin);
+         this.Controls.Add(this._btnStep);
          this.Controls.Add(this._gbSolutionParameters);
          this.Controls.Add(this._gbMu);
          this.Controls.Add(this._gbCoriolis);
          this.Controls.Add(this._pnlGraph);
          this.Controls.Add(this._gbGrid);
-         this.Controls.Add(this._btnRun);
          this.Controls.Add(this._gbWind);
          this.Controls.Add(this._gbSizes);
          this.Controls.Add(this._gbGraph);
@@ -545,7 +595,7 @@
       private System.Windows.Forms.Label _lblF2;
       private System.Windows.Forms.TextBox _txtF1;
       private System.Windows.Forms.Label _lblF1;
-      private System.Windows.Forms.Button _btnRun;
+      private System.Windows.Forms.Button _btnRunStop;
       private System.Windows.Forms.GroupBox _gbGrid;
       private System.Windows.Forms.TextBox _txtNz;
       private System.Windows.Forms.TextBox _txtNy;
@@ -572,5 +622,9 @@
       private System.Windows.Forms.Label _lblM;
       private System.Windows.Forms.TextBox _txtK;
       private System.Windows.Forms.Label _lblK;
+      private System.Windows.Forms.Button _btnStep;
+      private System.Windows.Forms.Button _btnBegin;
+      private System.Windows.Forms.TextBox _txtTau;
+      private System.Windows.Forms.Label _lblTau;
    }
 }
