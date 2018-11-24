@@ -1,17 +1,37 @@
+using System.Numerics;
 using static System.Math;
+using static System.Numerics.Complex;
 
 namespace LiquidDynamics.MathModel.TestProblem
 {
-   internal sealed class BarotropicCalc
+   internal sealed class BaroclinicCalc
    {
+      private static readonly Complex I = ImaginaryOne;
+
+      private readonly double _r; // 1
+      private readonly double _q; // 1
       private readonly double _h; // 1
+
+      private readonly double _f1; // 1
+      private readonly double _f2; // 1
+
+      private readonly double _l0; // 1
       private readonly double _beta; // 1
+
       private readonly double _mu; // 1
+
+      private readonly double _nu; // 1
+
+      private readonly int _m; // 1
+      private readonly int _k; // 1
+
       private readonly double _s1; // 1
       private readonly double _s2; // 1
 
       private readonly Grid _gx; // 1
       private readonly Grid _gy; // 1
+      private readonly Grid _gz; // 1
+
       private readonly double _tau; // 1
 
       private readonly double _a; // 1
@@ -26,36 +46,46 @@ namespace LiquidDynamics.MathModel.TestProblem
       private readonly double _rm; // 1
       private readonly double _qk; // 1
       private readonly double _sqrt; // 1
+      private readonly double _alpha; // 1
 
-      private readonly double _pir; // 1
-      private readonly double _piq; // 1
-      
       // [r] = [q] = [h] = 1
       // [f1] = [f2] = 1
+      // [l0] = 1
       // [beta] = 1
       // [mu] = 1
+      // [nu] = 1
       // [m] = [k] = 1
       // [s1] = [s2] = 1
-      // [gx] = [gy] = 1
+      // [gx] = [gy] = [gz] = 1
       // [tau] = 1
-      public BarotropicCalc(
+      public BaroclinicCalc(
          double r, double q, double h,
          double f1, double f2,
-         double beta,
+         double l0, double beta,
          double mu,
+         double nu,
          int m, int k,
          double s1, double s2,
-         Grid gx, Grid gy,
+         Grid gx, Grid gy, Grid gz,
          double tau
          )
       {
+         _r = r;
+         _q = q;
          _h = h;
+         _f1 = f1;
+         _f2 = f2;
+         _l0 = l0;
          _beta = beta;
          _mu = mu;
+         _nu = nu;
+         _m = m;
+         _k = k;
          _s1 = s1;
          _s2 = s2;
          _gx = gx;
          _gy = gy;
+         _gz = gz;
          _tau = tau;
 
          _a = calcA(q, beta, mu);
@@ -70,9 +100,7 @@ namespace LiquidDynamics.MathModel.TestProblem
          _rm = PI * m / r;
          _qk = PI * k / q;
          _sqrt = Sqrt(sqr(_rm) + sqr(_qk));
-
-         _pir = PI / r;
-         _piq = PI / q;
+         _alpha = beta / (2 * _sqrt);
 
          T = -_tau;
       }
@@ -81,12 +109,12 @@ namespace LiquidDynamics.MathModel.TestProblem
       public double T { get; private set; }
 
       // [out] = 1
-      public Barotropic Next()
+      public Baroclinic Next()
       {
          T += _tau;
-         return calcBarot(T);
+         return calcBaroc(T);
       }
-      
+
       // [q] = 1
       // [beta] = 1
       // [mu] = 1
@@ -161,53 +189,70 @@ namespace LiquidDynamics.MathModel.TestProblem
          return Pow(x, 2);
       }
 
-      // [t] = 1
       // [out] = 1
-      private Barotropic calcBarot(double t)
+      private Baroclinic calcBaroc(double t)
       {
-         double btsqrt = _beta * t / (2 * _sqrt);
-         double emut = Exp(-_mu * t);
+         .
+      }
 
-         double[,] u = new double[_gx.N, _gy.N];
-         double[,] v = new double[_gx.N, _gy.N];
+      // [y] = 1
+      // [out] = 1
+      private double calcL(double y)
+      {
+         return _l0 + _beta * y;
+      }
 
-         for (int i = 0; i < _gx.N; i++)
-         {
-            double x = _gx[i];
+      // [y] = 1
+      // [out] = 1
+      private Complex calcLamda1(double l)
+      {
+         return (1 + I) * Sqrt(l / (2 * _nu));
+      }
 
-            double ea = Exp(_a * x);
-            double eb = Exp(_b * x);
+      // [y] = 1
+      // [out] = 1
+      private Complex calcLamda2(double l)
+      {
+         double d = Sqrt(sqr(_mu) + sqr(l + _alpha));
+         return (l + _alpha) / Sqrt(2 * _nu * (_mu + d)) + I * Sqrt((_mu + d) / (2 * _nu));
+      }
 
-            double cosr = Cos(_pir * x);
-            double sinr = Sin(_pir * x);
+      // [y] = 1
+      // [out] = 1
+      private Complex calcLamda3(double l)
+      {
+         double e = Sqrt(sqr(_mu) + sqr(l - _alpha));
+         return (l - _alpha) / Sqrt(2 * _nu * (_mu + e)) + I * Sqrt((_mu + e) / (2 * _nu));
+      }
 
-            double cosrm = Cos(_rm * x);
-            double sinrm = Sin(_rm * x);
+      // [x] = [y] = 1
+      // [out] = 1
+      private Complex calcAf(double x, double y)
+      {
+         double ea = Exp(_a * x);
+         double eb = Exp(_b * x);
 
-            double arg = x * _sqrt + btsqrt;
-            double cosarg = Cos(arg);
-            double sinarg = Sin(arg);
+         double cosr = Cos(PI * x / _r);
+         double sinr = Sin(PI * x / _r);
+         double cosq = Cos(PI * y / _q);
+         double sinq = Sin(PI * y / _q);
 
-            for (int j = 0; j < _gy.N; j++)
-            {
-               double y = _gy[j];
+         return -PI / _q * (1 - _c1 * ea - _c2 * eb - _c3 - _c4 * cosr - _c5 * sinr) * cosq -
+                I * (_c1 * _a * ea + _c2 * _b * eb - _c4 * PI / _r * sinr + _c5 * PI / _r * cosr) * sinq;
+      }
 
-               double cosq = Cos(_piq * y);
-               double sinq = Sin(_piq * y);
+      // [x] = [y] = 1
+      // [out] = 1
+      private Complex calcBf(double x, double y)
+      {
+         .
+      }
 
-               double cosqk = Cos(_qk * y);
-               double sinqk = Sin(_qk * y);
-
-               u[i, j] = (-_piq * cosq * (1 - _c1 * ea - _c2 * eb - _c3 - _c4 * cosr - _c5 * sinr) -
-                          2 * _qk * sinrm * cosqk * (_s1 * cosarg - _s2 * sinarg) * emut) / _h;
-
-               v[i, j] = (-sinq * (_c1 * _a * ea + _c2 * _b * eb - _c4 * _pir * sinr + _c5 * _pir * cosr) +
-                          2 * sinqk * emut * (_rm * cosrm * (_s1 * cosarg - _s2 * sinarg) +
-                                              _sqrt * sinrm * (-_s1 * sinarg - _s2 * cosarg))) / _h;
-            }
-         }
-
-         return new Barotropic(u, v, _gx.N, _gy.N);
+      // [x] = [y] = 1
+      // [out] = 1
+      private Complex calcCf(double x, double y)
+      {
+         .
       }
    }
 }
