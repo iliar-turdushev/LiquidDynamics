@@ -29,7 +29,7 @@ namespace LiquidDynamics.MathModel.TestProblem
 
       private readonly double _pir; // 1
       private readonly double _piq; // 1
-
+      
       // [r] = [q] = [h] = 1
       // [f1] = [f2] = 1
       // [beta] = 1
@@ -73,25 +73,20 @@ namespace LiquidDynamics.MathModel.TestProblem
 
          _pir = PI / r;
          _piq = PI / q;
+
+         T = -_tau;
       }
 
       // [out] = 1
       public double T { get; private set; }
 
       // [out] = 1
-      public Barotropic Begin()
-      {
-         T = 0;
-         return calcBarot(T);
-      }
-
-      // [out] = 1
-      public Barotropic Step()
+      public Barotropic Next()
       {
          T += _tau;
          return calcBarot(T);
       }
-
+      
       // [q] = 1
       // [beta] = 1
       // [mu] = 1

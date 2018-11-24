@@ -28,6 +28,7 @@
       /// </summary>
       private void InitializeComponent()
       {
+         this.components = new System.ComponentModel.Container();
          this._gbGraph = new System.Windows.Forms.GroupBox();
          this._cbGraph = new System.Windows.Forms.ComboBox();
          this._gbSizes = new System.Windows.Forms.GroupBox();
@@ -74,6 +75,10 @@
          this._lblK = new System.Windows.Forms.Label();
          this._btnStep = new System.Windows.Forms.Button();
          this._btnBegin = new System.Windows.Forms.Button();
+         this._gbTime = new System.Windows.Forms.GroupBox();
+         this._lblTime = new System.Windows.Forms.Label();
+         this._txtTime = new System.Windows.Forms.TextBox();
+         this._timer = new System.Windows.Forms.Timer(this.components);
          this._gbGraph.SuspendLayout();
          this._gbSizes.SuspendLayout();
          this._gbWind.SuspendLayout();
@@ -82,6 +87,7 @@
          this._gbCoriolis.SuspendLayout();
          this._gbMu.SuspendLayout();
          this._gbSolutionParameters.SuspendLayout();
+         this._gbTime.SuspendLayout();
          this.SuspendLayout();
          // 
          // _gbGraph
@@ -223,7 +229,7 @@
          // _btnRunStop
          // 
          this._btnRunStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-         this._btnRunStop.Location = new System.Drawing.Point(955, 459);
+         this._btnRunStop.Location = new System.Drawing.Point(955, 505);
          this._btnRunStop.Name = "_btnRunStop";
          this._btnRunStop.Size = new System.Drawing.Size(75, 23);
          this._btnRunStop.TabIndex = 7;
@@ -327,7 +333,7 @@
          this._pnlGraph.Controls.Add(this._gcGraph);
          this._pnlGraph.Location = new System.Drawing.Point(12, 12);
          this._pnlGraph.Name = "_pnlGraph";
-         this._pnlGraph.Size = new System.Drawing.Size(720, 470);
+         this._pnlGraph.Size = new System.Drawing.Size(720, 516);
          this._pnlGraph.TabIndex = 10;
          // 
          // _pcColorMap
@@ -338,7 +344,7 @@
          this._pcColorMap.MaxValue = 1F;
          this._pcColorMap.MinValue = 0F;
          this._pcColorMap.Name = "_pcColorMap";
-         this._pcColorMap.Size = new System.Drawing.Size(107, 462);
+         this._pcColorMap.Size = new System.Drawing.Size(107, 508);
          this._pcColorMap.TabIndex = 9;
          // 
          // _gcGraph
@@ -350,7 +356,7 @@
          this._gcGraph.Caption = "График";
          this._gcGraph.Location = new System.Drawing.Point(3, 3);
          this._gcGraph.Name = "_gcGraph";
-         this._gcGraph.Size = new System.Drawing.Size(599, 462);
+         this._gcGraph.Size = new System.Drawing.Size(599, 508);
          this._gcGraph.TabIndex = 0;
          this._gcGraph.XAxisName = null;
          this._gcGraph.YAxisName = null;
@@ -521,7 +527,7 @@
          // _btnStep
          // 
          this._btnStep.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-         this._btnStep.Location = new System.Drawing.Point(874, 459);
+         this._btnStep.Location = new System.Drawing.Point(874, 505);
          this._btnStep.Name = "_btnStep";
          this._btnStep.Size = new System.Drawing.Size(75, 23);
          this._btnStep.TabIndex = 14;
@@ -533,7 +539,7 @@
          // _btnBegin
          // 
          this._btnBegin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-         this._btnBegin.Location = new System.Drawing.Point(793, 459);
+         this._btnBegin.Location = new System.Drawing.Point(793, 505);
          this._btnBegin.Name = "_btnBegin";
          this._btnBegin.Size = new System.Drawing.Size(75, 23);
          this._btnBegin.TabIndex = 15;
@@ -542,11 +548,46 @@
          this._btnBegin.Visible = false;
          this._btnBegin.Click += new System.EventHandler(this.btnBegin_Click);
          // 
+         // _gbTime
+         // 
+         this._gbTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+         this._gbTime.Controls.Add(this._lblTime);
+         this._gbTime.Controls.Add(this._txtTime);
+         this._gbTime.Location = new System.Drawing.Point(738, 435);
+         this._gbTime.Name = "_gbTime";
+         this._gbTime.Size = new System.Drawing.Size(292, 47);
+         this._gbTime.TabIndex = 16;
+         this._gbTime.TabStop = false;
+         this._gbTime.Text = "Текущее время";
+         // 
+         // _lblTime
+         // 
+         this._lblTime.AutoSize = true;
+         this._lblTime.Location = new System.Drawing.Point(6, 22);
+         this._lblTime.Name = "_lblTime";
+         this._lblTime.Size = new System.Drawing.Size(13, 13);
+         this._lblTime.TabIndex = 1;
+         this._lblTime.Text = "t:";
+         // 
+         // _txtTime
+         // 
+         this._txtTime.BorderStyle = System.Windows.Forms.BorderStyle.None;
+         this._txtTime.Location = new System.Drawing.Point(25, 22);
+         this._txtTime.Name = "_txtTime";
+         this._txtTime.ReadOnly = true;
+         this._txtTime.Size = new System.Drawing.Size(100, 13);
+         this._txtTime.TabIndex = 0;
+         // 
+         // _timer
+         // 
+         this._timer.Tick += new System.EventHandler(this.timer_Tick);
+         // 
          // TestProblemForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(1042, 494);
+         this.ClientSize = new System.Drawing.Size(1042, 540);
+         this.Controls.Add(this._gbTime);
          this.Controls.Add(this._btnRunStop);
          this.Controls.Add(this._btnBegin);
          this.Controls.Add(this._btnStep);
@@ -574,6 +615,8 @@
          this._gbMu.PerformLayout();
          this._gbSolutionParameters.ResumeLayout(false);
          this._gbSolutionParameters.PerformLayout();
+         this._gbTime.ResumeLayout(false);
+         this._gbTime.PerformLayout();
          this.ResumeLayout(false);
 
       }
@@ -626,5 +669,9 @@
       private System.Windows.Forms.Button _btnBegin;
       private System.Windows.Forms.TextBox _txtTau;
       private System.Windows.Forms.Label _lblTau;
+      private System.Windows.Forms.GroupBox _gbTime;
+      private System.Windows.Forms.Label _lblTime;
+      private System.Windows.Forms.TextBox _txtTime;
+      private System.Windows.Forms.Timer _timer;
    }
 }

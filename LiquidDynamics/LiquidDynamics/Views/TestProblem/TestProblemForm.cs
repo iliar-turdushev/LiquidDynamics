@@ -14,6 +14,10 @@ namespace LiquidDynamics.Views.TestProblem
 {
    public partial class TestProblemForm : Form
    {
+      private const string BtnBuild = "Построить";
+      private const string BtnRun = "Запустить";
+      private const string BtnStop = "Остановить";
+
       private static readonly string[] Graphs =
          {
             "Касательное напряжение трения ветра",
@@ -24,6 +28,11 @@ namespace LiquidDynamics.Views.TestProblem
       private static readonly Pen VectorPen =
          new Pen(Color.Black, 1) {EndCap = LineCap.ArrowAnchor};
 
+      private Grid _gx; // 1
+      private Grid _gy; // 1
+
+      private BarotropicCalc _calc;
+
       public TestProblemForm()
       {
          InitializeComponent();
@@ -33,31 +42,33 @@ namespace LiquidDynamics.Views.TestProblem
 
       private void cbGraph_SelectedIndexChanged(object sender, EventArgs e)
       {
-         bool visible;
-
          switch (_cbGraph.SelectedIndex)
          {
-            case 2:
-               visible = true;
+            case 0:
+            case 1:
+               prepareStaticUi();
                break;
 
             default:
-               visible = false;
+               prepareDynamicUi();
                break;
          }
 
-         _btnBegin.Visible = visible;
-         _btnStep.Visible = visible;
+         _timer.Enabled = false;
       }
 
       private void btnBegin_Click(object sender, EventArgs e)
       {
-         .
+         buildCalc();
+         buildNext();
+
+         _btnStep.Enabled = true;
+         _btnRunStop.Enabled = true;
       }
 
       private void btnStep_Click(object sender, EventArgs e)
       {
-
+         buildNext();
       }
 
       private void btnRunStop_Click(object sender, EventArgs e)
@@ -72,10 +83,15 @@ namespace LiquidDynamics.Views.TestProblem
                buildWind();
                break;
 
-            case 2:
-               buildBarotropicComponent();
+            default:
+               updateDynamicUi();
                break;
          }
+      }
+
+      private void timer_Tick(object sender, EventArgs e)
+      {
+         buildNext();
       }
 
       private void initCbGraphs()
@@ -85,7 +101,46 @@ namespace LiquidDynamics.Views.TestProblem
          _cbGraph.SelectedItem = Graphs[0];
          _cbGraph.EndUpdate();
       }
-      
+
+      private void prepareDynamicUi()
+      {
+         _btnBegin.Visible = true;
+         _btnStep.Visible = true;
+
+         _btnBegin.Enabled = true;
+         _btnStep.Enabled = false;
+         _btnRunStop.Enabled = false;
+
+         _btnRunStop.Text = BtnRun;
+
+         _gbTime.Visible = true;
+         setTime(0);
+      }
+
+      private void prepareStaticUi()
+      {
+         _btnBegin.Visible = false;
+         _btnStep.Visible = false;
+
+         _btnBegin.Enabled = false;
+         _btnStep.Enabled = false;
+         _btnRunStop.Enabled = true;
+
+         _btnRunStop.Text = BtnBuild;
+
+         _gbTime.Visible = false;
+      }
+
+      private void updateDynamicUi()
+      {
+         bool e = !_timer.Enabled;
+
+         _timer.Enabled = e;
+         _btnBegin.Enabled = !e;
+         _btnStep.Enabled = !e;
+         _btnRunStop.Text = e ? BtnStop : BtnRun;
+      }
+
       // [out] = 1
       private double getR()
       {
@@ -224,7 +279,7 @@ namespace LiquidDynamics.Views.TestProblem
          }
       }
 
-      private void buildBarotropicComponent()
+      private void buildCalc()
       {
          try
          {
@@ -242,23 +297,37 @@ namespace LiquidDynamics.Views.TestProblem
 
             int nx = getNx(); // 1
             int ny = getNy(); // 1
-            Grid gx = new Grid(r, nx); // 1
-            Grid gy = new Grid(q, ny); // 1
             double tau = getTau(); // 1
             
-            var calc = new BarotropicCalc(
-               r, q, h, f1, f2, beta, mu, m, k, s1, s2, gx, gy, tau);
-            Barotropic barot = calc.Begin(); // 1
+            _gx = new Grid(r, nx); // 1
+            _gy = new Grid(q, ny); // 1
 
-            Barotropic b = DimBarot(barot); // см/с
-            Grid x = DimLen(gx); // см
-            Grid y = DimLen(gy); // см
-            drawVectors(b.U, b.V, x, y, "см/с");
+            _calc = new BarotropicCalc(
+               r, q, h, f1, f2, beta, mu, m, k, s1, s2, _gx, _gy, tau);
          }
          catch (FormatException e)
          {
             showErrorMessage(e);
          }
+      }
+
+      private void buildNext()
+      {
+         if (_calc == null)
+            throw new InvalidOperationException($"{nameof(_calc)} is null");
+
+         if (_gx == null)
+            throw new InvalidOperationException($"{nameof(_gx)} is null");
+
+         if (_gy == null)
+            throw new InvalidOperationException($"{nameof(_gy)} is null");
+
+         Barotropic barot = _calc.Next(); // 1
+         Barotropic b = DimBarot(barot); // см/с
+         Grid x = DimLen(_gx); // см
+         Grid y = DimLen(_gy); // см
+         drawVectors(b.U, b.V, x, y, "см/с");
+         setTime(_calc.T);
       }
 
       // [vx] = [vy] = размерные величины
@@ -309,6 +378,13 @@ namespace LiquidDynamics.Views.TestProblem
          float h = (float) ToKm(gy.H, MeasureUnit.Cm); // км
 
          return new SquareVelocityField(vecs, w, h);
+      }
+
+      // [t] = 1
+      private void setTime(double t)
+      {
+         double sec = DimT(t); // с
+         _txtTime.Text = $"{TimeSpan.FromSeconds(sec):g}";
       }
    }
 }

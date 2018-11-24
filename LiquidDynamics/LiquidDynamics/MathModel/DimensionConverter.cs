@@ -35,6 +35,10 @@ namespace LiquidDynamics.MathModel
       // [out] = 1
       public static double DimlH(double h) => h / H0S;
 
+      // [t] = 1
+      // [out] = с
+      public static double DimT(double t) => t * T0S;
+
       // [t] = с
       // [out] = 1
       public static double DimlT(double t) => t / T0S;
