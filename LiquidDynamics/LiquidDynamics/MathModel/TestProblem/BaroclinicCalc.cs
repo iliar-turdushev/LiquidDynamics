@@ -192,7 +192,7 @@ namespace LiquidDynamics.MathModel.TestProblem
       // [out] = 1
       private Baroclinic calcBaroc(double t)
       {
-         .
+         return null;
       }
 
       // [y] = 1
@@ -245,14 +245,14 @@ namespace LiquidDynamics.MathModel.TestProblem
       // [out] = 1
       private Complex calcBf(double x, double y)
       {
-         .
+         return default (Complex);
       }
 
       // [x] = [y] = 1
       // [out] = 1
       private Complex calcCf(double x, double y)
       {
-         .
+         return default (Complex);
       }
    }
 }
